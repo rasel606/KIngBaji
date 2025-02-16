@@ -1,0 +1,11 @@
+<div  id="main-page-user-info-section" class="nav-category nav-balance ">
+<div  class="balance-box ">
+<div  class="username">Saikat</div>
+<div  class="balance">
+<i  class="balance-value"><i id="locale-util-dicrective-5" style="display: initial;">৳ ০.৮০</i></i><div  class="icon refresh" ></div></div></div>
+<ul  class="nav-group"><li  class="nav-item" tabindex="0">
+<img  src="/assets/images/icon-set/theme-icon/side-nav/icon-promotion.png"><span >প্রমোশন</span></li>
+<li  class="nav-item" tabindex="0"><img  src="/assets/images/icon-set/theme-icon/side-nav/icon-deposit.png"><span >ডিপোজিট</span>
+</li>
+</ul>
+</div>
