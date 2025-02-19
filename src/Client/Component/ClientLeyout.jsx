@@ -978,7 +978,7 @@ export default () => {
         {/* ========================================= */}
           <GiftPointsModel modalName="GiftPointsModel"></GiftPointsModel>
         {/* ========================================= */}  
-        <VipGiftPointsPopupModel modalName="GiftPointsModel" ></VipGiftPointsPopupModel>
+        <VipGiftPointsPopupModel modalName="VipGiftPointsPopupModel" ></VipGiftPointsPopupModel>
 
 
         {/* ========================================= */}

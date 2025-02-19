@@ -36,8 +36,6 @@ export default ({ modalName }) => {
     setTransactions([]); // Placeholder for dynamic data fetching
   };
 
-
-
   const [activeTab, setActiveTab] = useState("আজ");
   const tabs = ["আজ", "আগামীকাল", "এই সপ্তাহ"];
 
@@ -50,55 +48,107 @@ export default ({ modalName }) => {
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="content mcd-style player-content">
-            <div className="searchpage">
-            <div className="ng-tns-c2862789022-5 ng-trigger ng-trigger-staggerFadeAnimation tab filter-tab ng-star-inserted">
-      <ul className="item-ani ng-tns-c2862789022-5">
-        {tabs.map((tab) => (
-          <li
-            key={tab}
-            className={`ng-tns-c2862789022-5 ng-star-inserted ${activeTab === tab ? "active" : ""}`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </li>
-        ))}
-      </ul>
-      <div className="btn search-btn ng-tns-c2862789022-5 ng-star-inserted">
-        <span
-          className="item-icon ng-tns-c2862789022-5 ng-star-inserted"
-          style={{
-            backgroundImage: "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/games-filter-icon.svg?v=1737700422219)",
-            // WebkitMaskImage: "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/games-filter-icon.svg?v=1737700422219)",
-          }}
-        ></span>
-      </div>
-    </div>
-            </div>
 
-
-            <div className="record-item item-title transaction-record-list">
-              <div className="item type">টাইপ</div>
-              <div className="item amount">এমাউন্ট</div>
-              <div className="item status">স্ট্যাটাস</div>
-              <div className="item time">Txn তারিখ</div>
-            </div>
-
-            {transactions.length === 0 ? (
-              <div className="no-result">
-                <div className="pic">
-                  <img
-                    src="https://img.c88rx.com/cx/h5/assets/images/no-data.png"
-                    alt="no-data"
-                  />
+              <div className="content">
+                <div className="searchpage">
+                  <div className="tab filter-tab">
+                    <ul className="item-ani">
+                      {["Today", "Yesterday", "Last 7 days"].map((tab) => (
+                        <li
+                          key={tab}
+                          className={activeTab === tab ? "active" : ""}
+                          onClick={() => setActiveTab(tab)}
+                        >
+                          {tab}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="btn search-btn">
+                      <span className="item-icon"></span>
+                    </div>
+                  </div>
                 </div>
-                <div className="text">কোনও ডেটা নেই</div>
+
+                <div className="searchpage-main">
+                  <div className="search-checkbox-group">
+                    <h2>Status</h2>
+                    <ul>
+                      {["Processing", "Rejected", "Approved"].map((status) => (
+                        <li key={status}>
+                          <input
+                            type="checkbox"
+                            onChange={() => handleStatusChange(status)}
+                          />
+                          <label>{status}</label>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="search-checkbox-group">
+                    <h2>Payment Type</h2>
+                    <ul>
+                      {["Deposit", "Withdrawal", "Adjustment"].map((type) => (
+                        <li key={type}>
+                          <input
+                            type="checkbox"
+                            onChange={() => handlePaymentChange(type)}
+                          />
+                          <label>{type}</label>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="search-checkbox-group">
+                    <h2>Date</h2>
+                    <ul>
+                      {["Today", "Yesterday", "Last 7 days"].map((date) => (
+                        <li key={date}>
+                          <input
+                            type="radio"
+                            name="date"
+                            checked={selectedDate === date}
+                            onChange={() => handleDateChange(date)}
+                          />
+                          <label>{date}</label>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="searchpage-bar">
+                    <button className="button" onClick={handleConfirm}>
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+
+                <div className="record-item item-title transaction-record-list">
+                  <div className="item type">Type</div>
+                  <div className="item amount">Amount</div>
+                  <div className="item status">Status</div>
+                  <div className="item time">Txn Date</div>
+                </div>
+
+                {transactions.length === 0 ? (
+                  <div className="no-result">
+                    <div className="pic">
+                      <img
+                        src="https://img.c88rx.com/cx/h5/assets/images/no-data.png"
+                        alt="no-data"
+                      />
+                    </div>
+                    <div className="text">No Data</div>
+                  </div>
+                ) : (
+                  <div>{/* Render transaction data here */}</div>
+                )}
               </div>
-            ) : (
-              <div>{/* Render transaction data here */}</div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
+ 
     </div>
   );
 };

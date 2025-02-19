@@ -1321,7 +1321,7 @@
     .fixed-tab .tab-btn-section:not(.no-fix) {
       position: fixed;
       z-index: 4;
-      top: 40px;
+      /* top: 40px; */
     }
     .tab-btn-wrap:before {
       content: "";
@@ -5047,7 +5047,7 @@ select, input {
       transition: all 0.3s;
       background: #005dac;
       z-index: 3;
-      top: 10px;
+      /* top: 10px; */
     }
     .tab-btn-page:first-child:before {
       opacity: 0;
