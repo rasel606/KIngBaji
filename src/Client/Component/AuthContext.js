@@ -16,7 +16,7 @@ const AuthContextProvider = ({ children }) => {
   const [userDeatils, setUserDeatils] = useState(null || "");
   const [loading, setLoading] = useState(true);
 
-const [email, setEmail] = useState(null);
+const [email, setEmail] = useState(null||"");
 
 
 

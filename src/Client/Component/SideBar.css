@@ -1464,13 +1464,13 @@
       margin: 4.2666666667vw;
       padding: 2.1333333333vw 0 2.1333333333vw 4.2666666667vw;
       border-radius: 2.6666666667vw;
-      background: #ffffff;
+      background: #380582;
     }
     .option-group h2 {
       position: relative;
       width: 100%;
       padding-left: 4.2666666667vw;
-      color: #000;
+      color: #fff;
       font-size: 4vw;
       font-weight: 500;
       line-height: 2;
@@ -1485,7 +1485,7 @@
       height: 4.2666666667vw;
       margin-right: 1.3333333333vw;
       border-radius: 0.5333333333vw;
-      background: #0e2749;
+      background: #fff;
       vertical-align: middle;
     }
   
@@ -4194,7 +4194,7 @@ select, input {
   position: relative;
   width: 100%;
   padding-left: 4.2666666667vw;
-  color: #000;
+  color: #fff;
   font-size: 4vw;
   font-weight: 500;
   line-height: 2
@@ -4210,7 +4210,7 @@ select, input {
   height: 4.2666666667vw;
   margin-right: 1.3333333333vw;
   border-radius: .5333333333vw;
-  background: #0d095d;
+  background: #fff;
   vertical-align: middle
 }
 
@@ -4221,7 +4221,7 @@ select, input {
   margin: 4.2666666667vw;
   padding: 2.1333333333vw 0 2.1333333333vw 4.2666666667vw;
   border-radius: 2.6666666667vw;
-  background: var(--form-box-bg)
+  background: #380582
 }
 
 .option-group.select-bar .option-wrap {
@@ -4988,7 +4988,7 @@ select, input {
   height: 4.2666666667vw;
   margin-right: 1.3333333333vw;
   border-radius: .5333333333vw;
-  background: #0d095d;
+  background: #fff;
   vertical-align: middle;
 }.option-group {
   display: flex;
@@ -5004,7 +5004,7 @@ select, input {
   margin: 4.2666666667vw;
   padding: 2.1333333333vw 0 2.1333333333vw 4.2666666667vw;
   border-radius: 2.6666666667vw;
-  background: var(--form-box-bg);
+  background: #380582;
 }.option-group.select-bar {
   padding: 2.1333333333vw 0 2.1333333333vw 2.1333333333vw;
   border-radius: 1.3333333333vw;
@@ -7662,7 +7662,7 @@ header .header-title {
     height: auto;
     margin-bottom: 13.3333333333vw;
     padding: 0 2.6666666667vw;
-    background: #e6e6e6
+    background: #ffffff
 }
 
 .footer-top {
@@ -35599,8 +35599,8 @@ header .logo {
     background-color: #fd1f4c
 }
 
-.player-deposit-step1 .option-group.select-bar select {
-    color: #000
+.player-deposit-step .option-group.select-bar select {
+    color: #380582
 }
 
 .member-content .signup a,.login-biometric-content .signup a,.member-content p a,.login-biometric-content p a {

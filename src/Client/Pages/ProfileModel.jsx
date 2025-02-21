@@ -398,7 +398,7 @@ export default ({ modalName }) => {
                       "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/header-logout-icon.svg?v=1739269017539)",
                   }}
                 ></span>
-                <div className="text">
+                <div className="text" onClick={()=>logout()}>
                   <p>লগ আউট</p>
                 </div>
               </a>

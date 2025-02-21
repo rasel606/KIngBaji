@@ -708,7 +708,7 @@ export default (props) => {
   };
 
 
-  const [balance, setBalance] = useState(0.8);
+  const [balance, setBalance] = useState(userDeatils.balance);
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -716,16 +716,22 @@ export default (props) => {
     setRefreshing(true);
 
     try {
-      const response = await axios.get("http://localhost:5000/api/v1/user_balance"); 
+      
+      const response = await axios.post("http://localhost:5000/api/v1/user_balance",{userId}); 
       console.log(response.data.balance);
-      setBalance("0.8");
+      setBalance(response.data.balance);
     } catch (error) {
       console.error("Error fetching balance:", error);
     }
 
+
     setTimeout(() => setRefreshing(false), 1000); // Reset animation after 1s
   };
-
+  // useEffect(() => {
+  //   if (userId) {
+  //     handleRefresh(); // Call the function whenever userId changes
+  //   }
+  // }, [userId]);
   console.log("active", userDeatils);
 
   return (
@@ -800,11 +806,11 @@ export default (props) => {
           className="nav-category nav-balance "
         >
           <div className="balance-box ">
-            <div className="username">{userDeatils.userId}</div>
+            <div className="username">{userDeatils?.userId}</div>
             <div className="balance">
               <i className="balance-value">
                 <i id="" style={{display: "initial", color: "white"}} >
-                  ৳ {userDeatils.balance}
+                  ৳ {balance}
                 </i>
               </i>
               <div

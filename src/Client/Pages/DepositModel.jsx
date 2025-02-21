@@ -27,40 +27,38 @@ export default ({ modalName }) => {
   const paymentMethods = [
     {
       id: "paymentMethod_2048",
-      name: "bKash",
-      image:
-        "https://img.m2911p.com/mp/h5/assets/images/payment/bkash.png?v=1736848792125&source=mcdsrc",
-      rebate: "+3.25%",
+      name: "বিকাশ",
+      img: "https://img.c88rx.com/cx/h5/assets/images/payment/bkash.png?v=1739862678809&source=mcdsrc",
     },
     {
       id: "paymentMethod_8192",
-      name: "Nagad",
-      image:
-        "https://img.m2911p.com/mp/h5/assets/images/payment/nagad.png?v=1736848792125&source=mcdsrc",
-      rebate: "+3.25%",
+      name: "নগদ",
+      img: "https://img.c88rx.com/cx/h5/assets/images/payment/nagad.png?v=1739862678809&source=mcdsrc",
     },
     {
       id: "paymentMethod_4096",
-      name: "Rocket",
-      image:
-        "https://img.m2911p.com/mp/h5/assets/images/payment/rocket.png?v=1736848792125&source=mcdsrc",
-      rebate: "+3.25%",
+      name: "রকেট",
+      img: "https://img.c88rx.com/cx/h5/assets/images/payment/rocket.png?v=1739862678809&source=mcdsrc",
     },
     {
       id: "paymentMethod_16777216",
       name: "UPay",
-      image:
-        "https://img.m2911p.com/mp/h5/assets/images/payment/upay.png?v=1736848792125&source=mcdsrc",
-      rebate: "+3.25%",
+      img: "https://img.c88rx.com/cx/h5/assets/images/payment/upay.png?v=1739862678809&source=mcdsrc",
     },
     {
       id: "paymentMethod_1",
-      name: "Local Bank",
-      image:
-        "https://img.m2911p.com/mp/h5/assets/images/payment/bank-card.png?v=1736848792125&source=mcdsrc",
-      status: "under maintenance",
-      maintenanceUntil: "08:00",
-      rebate: "+3.25%",
+      name: "লোকাল ব্যাংক",
+      img: "https://img.c88rx.com/cx/h5/assets/images/payment/bank-card.png?v=1739862678809&source=mcdsrc",
+    },
+    {
+      id: "paymentMethod_trc20",
+      name: "USDT TRC20",
+      img: "https://img.c88rx.com/cx/h5/assets/images/icon-set/player/crypto/trc20.svg?v=1739862678809&source=mcdsrc",
+    },
+    {
+      id: "paymentMethod_erc20",
+      name: "USDT ERC20",
+      img: "https://img.c88rx.com/cx/h5/assets/images/icon-set/player/crypto/erc20.svg?v=1739862678809&source=mcdsrc",
     },
   ];
 
@@ -149,8 +147,6 @@ export default ({ modalName }) => {
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">
-          {/* userVarifayed ?( */}
-          
             <div className="content fixed-tab player-content">
               <div className="tab-btn-section tab-btn-wrap">
                 <div className="Mytab-btn tab-btn-bar">
@@ -167,7 +163,7 @@ export default ({ modalName }) => {
                       <div className="badge"></div>
                     </div>
                   </div>
-                  
+
                   <div className="btn">
                     <div
                       className="text"
@@ -183,8 +179,15 @@ export default ({ modalName }) => {
                 <div className="inner-wrap">
                   <div className="inner-box deposit-wallet">
                     <div className="player-deposit-wrap">
-                      <div className="player-deposit-step1">
+                      <div className="player-deposit-step">
                         <div className="option-group select-bar">
+                          {/* <span
+                            className="item-icon"
+                            style={{
+                              backgroundImage:
+                                "url('https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-selectpromotion.svg?v=1739862678809')",
+                            }}
+                          ></span> */}
                           <h2>Promotion</h2>
                           <div className="option-wrap">
                             <select
@@ -205,51 +208,70 @@ export default ({ modalName }) => {
                               <span>Payment Method</span>
                             </h2>
                           </div>
-                          <div className="check-group">
+
+                          <div className="select-group checkbox-style">
                             <ul className="col3">
                               {paymentMethods.map((payment, index) => (
                                 <li
-                                  onClick={() =>
-                                    setPayment(payment) && setPaymentAct(index)
-                                  }
-                                  className={` alt ${
-                                    index === PaymentAct ? "active" : ""
-                                  }`}
+                                  key={payment.id}
+                                  className="ng-star-inserted"
                                 >
                                   <input
                                     type="radio"
                                     name="paymentMethod"
-                                    id="paymentMethod_2048"
+                                    id={payment.id}
+                                    checked={selectedPayment === payment.id}
+                                    onChange={() =>
+                                      setPayment(payment) &&
+                                      setPaymentAct(index)
+                                    }
                                   />
-                                  <label>
-                                    <div className="payment-img">
+                                  <label htmlFor={payment.id}>
+                                    <div className="bank ng-star-inserted">
                                       <img
-                                        alt="bkash"
-                                        src={payment.image}
+                                        src={payment.img}
+                                        alt={payment.name}
                                         loading="lazy"
                                       />
                                     </div>
                                     <span>{payment.name}</span>
+                                    <div className="tag-rebate-money ng-star-inserted">
+                                      <p>
+                                        <span>+</span>3.5<span>%</span>
+                                      </p>
+                                    </div>
+                                    <span
+                                      className="item-icon"
+                                      style={{
+                                        maskImage: `url(https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809)`,
+                                      }}
+                                    ></span>
                                   </label>
-                                  <div className="tag-rebate-money">
-                                    <p>
-                                      <span>+</span>3.25 <span>%</span>
-                                    </p>
-                                  </div>
                                 </li>
                               ))}
                             </ul>
                           </div>
-                          <div className="check-group">
-                            <ul className="col2">
-                              <li class="">
+
+                          <div className="select-group ng-tns-c324864554-10 ng-star-inserted">
+                            <ul className="col2 ng-tns-c324864554-10">
+                              <li className="ng-star-inserted">
                                 <input
                                   type="radio"
                                   name="paymentType"
                                   id="paymentType_0"
+                                  value="বিকাশ পেমেন্ট"
+                                  checked={Payment.name === Payment.name}
+                                  // onChange={handlePaymentTypeChange}
                                 />
-                                <label>
+                                <label htmlFor="paymentType_0">
                                   <span>{Payment.name}</span>
+                                  <span
+                                    className="item-icon"
+                                    style={{
+                                      maskImage:
+                                        'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
+                                    }}
+                                  ></span>
                                 </label>
                               </li>
                             </ul>
@@ -282,6 +304,17 @@ export default ({ modalName }) => {
                               </ul>
                             </div>
                           </div>
+
+
+
+
+
+
+
+
+
+
+                          
                         </div>
                         <div className="menu-box">
                           <div className="title">
@@ -383,65 +416,6 @@ export default ({ modalName }) => {
                 </div>
               </div>
             </div>
-          
-          {/* ): (
-          <div className="deposit-withdraw-container">
-            <div className="tab-header">
-              <button
-                className={activeTab === "deposit" ? "active" : ""}
-                onClick={() => handleTabChange("deposit")}
-              >
-                ডিপোজিট (Deposit)
-              </button>
-              <button
-                className={activeTab === "withdraw" ? "active" : ""}
-                onClick={() => handleTabChange("withdraw")}
-              >
-                উত্তোলন (Withdraw)
-              </button>
-            </div>
-
-            <div className="content">
-              <div className="promotion-section">
-                <label>অগ্রিম প্রচার নির্বাচন করুন</label>
-                <select>
-                  <option value="">-- নির্বাচন করুন --</option>
-                  <option value="promo1">প্রচার ১</option>
-                  <option value="promo2">প্রচার ২</option>
-                </select>
-              </div>
-
-              <div className="payment-methods">
-                <label>পেমেন্ট পদ্ধতি নির্বাচন করুন</label>
-                <div className="methods">
-                  {["bKash", "Nagad", "Rocket", "UPay", "Local Bank"].map(
-                    (method) => (
-                      <button
-                        key={method}
-                        className={selectedPayment === method ? "selected" : ""}
-                        onClick={() => handlePaymentSelect(method)}
-                      >
-                        {method}
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {selectedPayment && (
-                <div className="verification-section">
-                  <p>
-                    আপনি কি নিশ্চিত যে আপনি {selectedPayment} ব্যবহার করতে চান?
-                  </p>
-                  <button onClick={() => setShowVerification(true)}>
-                    হ্যাঁ
-                  </button>
-                  <button onClick={() => setSelectedPayment(null)}>না</button>
-                </div>
-              )}
-            </div>
-          </div>
-          ) */}
           </div>
         </div>
       </div>
