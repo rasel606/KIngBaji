@@ -225,7 +225,7 @@ export default ({ modalName }) => {
                           deposit.
                         </p>
                       </div>
-                      <div className="register-success-btn">
+                      <div className="register-success-btn" onClick={()=>openModal("Deposit")}>
                         <a className="button btn-default">এখনি ডিপোজিট করুন</a>
                       </div>
                     </div>

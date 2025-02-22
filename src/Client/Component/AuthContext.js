@@ -23,32 +23,7 @@ const [email, setEmail] = useState(null||"");
 
 
 
-  
-  // const adminlogin = async (userId, password) => {
-    
-  //   try {
-      
-  //     const response = await LoginUser( userId, password);
-  //     console.log(response)
-  //     localStorage.setItem('authAdminToken', response.data.token);
-  //     console.log(response.data)
-  //     console.log(response.data.user[0].userId)
-  //     setIsAuthenticatedAdmin(true);
-  //     setEmail(response.data.userId[0].userId);
-  //     console.log(response.data.userId[0].userId);
 
-  //     setToken(token)
-  //     if(localStorage.getItem('authAdminToken')){
-  //       return response.data.token
-  //     }
-      
-      
-      
-  //   } catch (error) {
-  //     console.error(error);
-      
-  //   }
-  // };
 
   const verifyUser = async (token) => {
     if (!token) return;
@@ -57,6 +32,8 @@ const [email, setEmail] = useState(null||"");
     console.log(data)
     if (data.message === 'User authenticated') {
       setIsAuthenticated(true);
+      setUserId(data.user.userId);
+      setUserDeatils(data.user);
      
       console.log(data)
     } else {
@@ -64,31 +41,33 @@ const [email, setEmail] = useState(null||"");
     }
 }
 
+const verifyUserToken = async (token) => {
+  if (!token) {
+    console.log('No token found');
+    setIsAuthenticated(false);
+    setLoading(false);
+    return;
+  }
 
+  setLoading(true);
+  axios.get('http://localhost:6000/api/v1/verify', {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+  })
+    .then((response) => {
+      setIsAuthenticated(true);
+      setUserId(response.data.userId);
+      setUserDeatils(response.data.user);
+    })
+    .catch(() => {
+      setIsAuthenticated(false);
+      setUserId(null);
+    })
+    .finally(() => setLoading(false));
+}
 
 
   useEffect(() => {
-    if (!token) {
-      console.log('No token found');
-      setIsAuthenticated(false);
-      setLoading(false);
-      return;
-    }
-  
-    setLoading(true);
-    axios.get('http://localhost:5000/api/v1/verify', {
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    })
-      .then((response) => {
-        setIsAuthenticated(true);
-        setUserId(response.data.userId);
-        setUserDeatils(response.data.user);
-      })
-      .catch(() => {
-        setIsAuthenticated(false);
-        setUserId(null);
-      })
-      .finally(() => setLoading(false));
+    verifyUserToken(token);
   }, [token]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
 
   // Login function

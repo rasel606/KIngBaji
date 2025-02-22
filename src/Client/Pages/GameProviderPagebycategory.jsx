@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../Component/AuthContext";
 import { useModal } from "../Component/ModelContext";
+import axios from "axios";
 export default ({ modalName }) => {
   // const { activeModal, openModal, closeModal } = useModal();
   // if (activeModal !== modalName) return null;
@@ -12,8 +13,8 @@ export default ({ modalName }) => {
   const [Loading, setLoading] = useState(true);
   const { category_name, providercode } = useParams();
   const [showPopup, setShowPopup] = useState(false);
-  const { isAuthenticated, loginUser, logoutUser, verifyUser, userId } =
-    useAuth();
+  const { isAuthenticated, loginUser, logoutUser, verifyUser,token,userDeatils ,userId } =
+  useAuth();
   const decodedCategory = decodeURIComponent(category_name);
   const decodedProvider = decodeURIComponent(providercode);
 
@@ -23,6 +24,8 @@ export default ({ modalName }) => {
   console.log("user", userId);
 
   const handleOpenPopup = () => {
+
+
     window.open(
       `${playGameData.gameUrl}`, // URL of the popup page
       "_blank", // Open in new tab/popup
@@ -31,7 +34,7 @@ export default ({ modalName }) => {
   };
 
   useEffect(() => {
-    const url = `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`;
+    const url = `http://localhost:6000/api/v1/New-table-Games-with-Providers?category=${category_name}`;
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -47,7 +50,7 @@ export default ({ modalName }) => {
   }, []);
 
   useEffect(() => {
-    const url = `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}`;
+    const url = `http://localhost:6000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}`;
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -70,7 +73,7 @@ export default ({ modalName }) => {
   const handleplay = (userId, game_id) => {
     console.log(userId, game_id);
 
-    const url = `http://localhost:5000/api/v1/launch_game`;
+    const url = `http://localhost:6000/api/v1/launch_game`;
     const response = fetch(url, {
       method: "POST",
       headers: {
@@ -87,8 +90,34 @@ export default ({ modalName }) => {
         setShowPopup(true);
       });
   };
+  const [balance, setBalance] = useState(userDeatils.balance);
 
-  console.log(active);
+
+  const handleRefresh = async (userId) => {
+    
+    try {
+      const response = await axios.post("http://localhost:6000/api/v1/user_balance", { userId });
+      setBalance(response.data.balance);
+      if(response.data.balance){
+        verifyUser(token)
+      }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+    
+  };
+
+const handelShowPopup =()=>{
+
+  
+  setShowPopup(false);
+}
+useEffect(() => {
+  if (!showPopup) {
+    handleRefresh(userId);
+  }
+}, []);
+
   console.log(playGameData);
 
   return (
@@ -187,14 +216,14 @@ export default ({ modalName }) => {
         </div>
       </div>
       {showPopup && playGameData?.gameUrl && (
-        <div className="modal-overlay" onClick={() => setShowPopup(false)}>
+        <div className="modal-overlay" onClick={()=>handelShowPopup()}>
           <div onClick={(e) => e.stopPropagation()}>
             <div className="popup-page__main popup-page-main popup-page-main--show">
               <div className="popup-page-main__header new-login-tab">
-                <div className="popup-page-main__title"> SignUp </div>
+                <div className="popup-page-main__title"> KingBaji </div>
                 <div
                   className="popup-page-main__close"
-                  onClick={() => setShowPopup(false)}
+                  onClick={()=>handelShowPopup()}
                 ></div>
               </div>
               <div className="popup-page-main__container">

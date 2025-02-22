@@ -66,7 +66,7 @@ import GiftPointsModel from "../Pages/GiftPointsModel";
 import VipGiftPointsPopupModel from "../Pages/VipGiftPointsPopupModel";
 import SideNavPopUp from "../Pages/SideNavPopUp";
 import HeaderGroup from "./HeaderGroup";
-import GamePlay from "../Pages/GamePlay";
+
 // import logo from "../../assets/images/Logo.svg";
 // import {getUserDetails, removeSessions} from "../../helper/SessionHelper";
 export default () => {
@@ -75,45 +75,45 @@ export default () => {
     sideNavRef,
     topNavRef = useRef();
 
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
 
-  const MenuBarClickHandler = () => {
-    let sideNav = sideNavRef;
-    let content = contentRef;
-    let topNav = topNavRef;
-    if (sideNav.classList.contains("side-nav-open")) {
-      sideNav.classList.add("side-nav-close");
-      sideNav.classList.remove("side-nav-open");
-      content.classList.add("content-expand");
-      content.classList.remove("content");
-      topNav.classList.remove("top-nav-open");
-      topNav.classList.add("top-nav-close");
-    } else {
-      sideNav.classList.remove("side-nav-close");
-      sideNav.classList.add("side-nav-open");
-      content.classList.remove("content-expand");
-      content.classList.add("content");
-      topNav.classList.add("top-nav-open");
-      topNav.classList.remove("top-nav-close");
-    }
-  };
+  // const MenuBarClickHandler = () => {
+  //   let sideNav = sideNavRef;
+  //   let content = contentRef;
+  //   let topNav = topNavRef;
+  //   if (sideNav.classList.contains("side-nav-open")) {
+  //     sideNav.classList.add("side-nav-close");
+  //     sideNav.classList.remove("side-nav-open");
+  //     content.classList.add("content-expand");
+  //     content.classList.remove("content");
+  //     topNav.classList.remove("top-nav-open");
+  //     topNav.classList.add("top-nav-close");
+  //   } else {
+  //     sideNav.classList.remove("side-nav-close");
+  //     sideNav.classList.add("side-nav-open");
+  //     content.classList.remove("content-expand");
+  //     content.classList.add("content");
+  //     topNav.classList.add("top-nav-open");
+  //     topNav.classList.remove("top-nav-close");
+  //   }
+  // };
 
-  const isSidebarAccordionActive = () => {
-    let urlList = [];
-    sidebarItems.map((item) => {
-      urlList.push(
-        item.subMenu.map((subItem) => {
-          return subItem?.url;
-        })
-      );
-    });
-    return urlList.findIndex((items) =>
-      items.includes(window.location.pathname)
-    );
-  };
+  // const isSidebarAccordionActive = () => {
+  //   let urlList = [];
+  //   sidebarItems.map((item) => {
+  //     urlList.push(
+  //       item.subMenu.map((subItem) => {
+  //         return subItem?.url;
+  //       })
+  //     );
+  //   });
+  //   return urlList.findIndex((items) =>
+  //     items.includes(window.location.pathname)
+  //   );
+  // };
 
   const images = [
     "https://i.ibb.co.com/DChN5S5/img-1.jpg",
@@ -778,7 +778,7 @@ export default () => {
 
   // const { openModal } = useContext()
   const user = false;
-  const { openModal } = useModal();
+  const { activeModal, openModal, closeModal } = useModal();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const {isAuthenticated, loginUser, logoutUser, verifyUser } = useAuth();
@@ -800,7 +800,13 @@ export default () => {
     if (referralCode) {
       openModal("SingUpModal");
     }
-  }, [location.search, openModal]);
+  }, [location.search, openModal,]);
+
+  //  useEffect(() => {
+  //   if (isSignedUp) {
+  //     closeModal("SignUpModal");
+  //   }
+  // }, [isSignedUp, closeModal]);
 
   const onLogout = () => {
     // removeSessions();
@@ -933,9 +939,7 @@ export default () => {
 
       <div ref={(div) => (contentRef = div)} className="content">
         <Outlet />
-      </div>
-
-      <div className="fixed-bottom px-0">
+        <div className="fixed-bottom px-0">
         <TransactionRecordModal modalName="TransactionRecordModal"></TransactionRecordModal>
 
         {/* ========================================= */}
@@ -994,6 +998,9 @@ export default () => {
 
         <SideNavPopUp modalName="SideNavPopUp"></SideNavPopUp>
       </div>
+      </div>
+
+      
     </>
   );
 };
