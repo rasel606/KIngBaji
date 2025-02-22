@@ -34,7 +34,7 @@ export default ({ modalName }) => {
   };
 
   useEffect(() => {
-    const url = `http://localhost:6000/api/v1/New-table-Games-with-Providers?category=${category_name}`;
+    const url = `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`;
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -50,7 +50,7 @@ export default ({ modalName }) => {
   }, []);
 
   useEffect(() => {
-    const url = `http://localhost:6000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}`;
+    const url = `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}`;
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -73,7 +73,7 @@ export default ({ modalName }) => {
   const handleplay = (userId, game_id) => {
     console.log(userId, game_id);
 
-    const url = `http://localhost:6000/api/v1/launch_game`;
+    const url = `http://localhost:5000/api/v1/launch_game`;
     const response = fetch(url, {
       method: "POST",
       headers: {
@@ -96,7 +96,7 @@ export default ({ modalName }) => {
   const handleRefresh = async (userId) => {
     
     try {
-      const response = await axios.post("http://localhost:6000/api/v1/user_balance", { userId });
+      const response = await axios.post("http://localhost:5000/api/v1/user_balance", { userId });
       setBalance(response.data.balance);
       if(response.data.balance){
         verifyUser(token)
@@ -116,7 +116,7 @@ useEffect(() => {
   if (!showPopup) {
     handleRefresh(userId);
   }
-}, []);
+}, [showPopup]);
 
   console.log(playGameData);
 

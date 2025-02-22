@@ -94,7 +94,7 @@ export default (props) => {
   let scrollTimeout;
 
   useEffect(() => {
-    const url = "http://localhost:6000/api/v1/New-table-categories";
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -197,32 +197,7 @@ export default (props) => {
             </ul>
           </div>
         </div>
-        {/* <div className="nav-category nav-balance ">
-          <div className="balance-box ">
-            <div className="balance">
-              <span className="balance-value">৳ 0</span>
-              <div className="icon refresh">
-                <LuRefreshCcw className=" refreshi" />
-              </div>
-            </div>
-            <ul className="nav-group">
-              <li className="nav-item">
-                <img
-                  src='https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-promotion.png?v=1735554244437"'
-                  alt=""
-                />
-                <span>Promosions</span>
-              </li>
-              <li className="nav-item">
-                <img
-                  src="https://i.ibb.co.com/DRsnG9j/icon-deposit.png"
-                  alt=""
-                />
-                <span>Deposit</span>
-              </li>
-            </ul>
-          </div>
-        </div> */}
+       
 
         {
           isAuthenticated ? (

@@ -939,7 +939,9 @@ export default () => {
 
       <div ref={(div) => (contentRef = div)} className="content">
         <Outlet />
-        <div className="fixed-bottom px-0">
+        
+      </div>
+      <div className="fixed-bottom px-0">
         <TransactionRecordModal modalName="TransactionRecordModal"></TransactionRecordModal>
 
         {/* ========================================= */}
@@ -997,7 +999,6 @@ export default () => {
         <CurrencyLanguageSelector modalName="CurrencyLanguageSelector"></CurrencyLanguageSelector>
 
         <SideNavPopUp modalName="SideNavPopUp"></SideNavPopUp>
-      </div>
       </div>
 
       

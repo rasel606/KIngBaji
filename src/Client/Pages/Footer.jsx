@@ -29,24 +29,24 @@ export default () => {
               {[
                 {
                   name: "facebook",
-                  link: "https://facebook.com/crickexbangladesh1",
+                  link: "",
                 },
                 {
                   name: "instagram",
-                  link: "https://www.instagram.com/Crickexinfo/",
+                  link: "",
                 },
-                { name: "twitter", link: "https://twitter.com/crickex_info" },
+                { name: "twitter", link: "" },
                 {
                   name: "telegram-channel",
-                  link: "https://t.me/crickexbangladesh1",
+                  link: "",
                 },
                 {
                   name: "pinterest",
-                  link: "https://in.pinterest.com/Crickex_info/",
+                  link: "",
                 },
                 {
                   name: "youtube",
-                  link: "https://www.youtube.com/@Crickex-cx/videos",
+                  link: "",
                 },
               ].map((social, index) => (
                 <li key={index}>
@@ -175,63 +175,50 @@ export default () => {
             <ul>
               <li>
                 <a
-                  href="https://cvipx.link/en-bd/about-us"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  
                 >
                   About Us
                 </a>
               </li>
               <li>
                 <a
-                  href="https://cvipx.link/en-bd/contact-us"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                
                 >
                   Contact Us
                 </a>
               </li>
               <li>
                 <a
-                  href="https://cvipx.link/bd-en/terms-and-conditions"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                
                 >
                   Terms & Conditions
                 </a>
               </li>
               <li>
                 <a
-                  href="https://cvipx.link/en-bd/FAQ"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                 
                 >
                   FAQ
                 </a>
               </li>
               <li>
                 <a
-                  href="https://cvipx.link/bd-en/affiliatepartner"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  
                 >
                   Affiliate
                 </a>
               </li>
               <li>
                 <a
-                  href="https://cvipx.link/sponsor"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                 
+                 
                 >
                   Sponsor
                 </a>
               </li>
               <li>
                 <a
-                  href="https://cvipx.link/bd-en/blog"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  
                 >
                   KingBaji Blog
                 </a>

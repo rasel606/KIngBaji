@@ -50,7 +50,7 @@ const verifyUserToken = async (token) => {
   }
 
   setLoading(true);
-  axios.get('http://localhost:6000/api/v1/verify', {
+  axios.get('http://localhost:5000/api/v1/verify', {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
   })
     .then((response) => {

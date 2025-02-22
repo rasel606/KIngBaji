@@ -218,7 +218,7 @@ export default ({ modalName }) => {
                           </div>
                         </div>
                         <h3 className="">
-                          একজন CRICKEX সদস্য হওয়ার জন্য অভিনন্দন!
+                          একজন KINGBAJI সদস্য হওয়ার জন্য অভিনন্দন!
                         </h3>
                         <p>
                           Congratulations! To start playing, please perform a
