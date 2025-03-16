@@ -49,6 +49,7 @@ export default ({ modalName }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const [selectedCountry, setSelectedCountry] = useState(selectedCurrency.code);
   const [phoneNumber, setPhoneNumber] = useState();
+  const [referredbyCode, setreferredbyCode] = useState(localStorage.getItem("referralCode"));
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState("");
@@ -152,25 +153,31 @@ export default ({ modalName }) => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-
+  
   const handleSubmit = async () => {
-    if (!userId || !password || !selectedCountry || !phoneNumber) {
-      alert("All fields are required!");
-      return;
-    }
-
+    if (!userId || !password || !selectedCountry || !phoneNumber || !referredbyCode) {
+      
+    
+    // const referralCode = localStorage.setItem("referralCode", referralCode)
+    console.log(referredbyCode)
+    
     console.log(userId, password, selectedCountry, phoneNumber);
     const data = {
       userId,
       password,
       countryCode: selectedCountry,
       phone: phoneNumber,
+      referredbyCode:referredbyCode
     };
+  
     console.log(data);
     const result = await userRegistar(data);
     console.log(result);
-    alert("Form submitted successfully!");
+    // alert("Form submitted successfully!");
     // closeModal();
+  }
+  alert("All fields are required!");
+      return;
   };
 
   // const [selectedCurrency, setSelectedCurrency] = useState("BDT");

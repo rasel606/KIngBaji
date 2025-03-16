@@ -65,10 +65,15 @@ import CurrencyLanguageSelector from "./CurrencyLanguageSelector";
 import GiftPointsModel from "../Pages/GiftPointsModel";
 import VipGiftPointsPopupModel from "../Pages/VipGiftPointsPopupModel";
 import SideNavPopUp from "../Pages/SideNavPopUp";
-import HeaderGroup from "./HeaderGroup";
 
-// import logo from "../../assets/images/Logo.svg";
-// import {getUserDetails, removeSessions} from "../../helper/SessionHelper";
+import HeaderGroup from "./HeaderGroup";
+import BkashModal from "../Pages/BkashModal";
+import NagadModal from "../Pages/NagadModal";
+import RocketModal from "../Pages/RocketModal";
+import UpayModal from "../Pages/UpayModal";
+
+
+
 export default () => {
   const getUserDetails = "";
   let contentRef,
@@ -798,9 +803,9 @@ export default () => {
 
     // If referral code exists, open the SignUpModal
     if (referralCode) {
-      openModal("SingUpModal");
+      localStorage.setItem("referralCode", referralCode);
     }
-  }, [location.search, openModal,]);
+  }, []);
 
   //  useEffect(() => {
   //   if (isSignedUp) {
@@ -945,6 +950,14 @@ export default () => {
         <TransactionRecordModal modalName="TransactionRecordModal"></TransactionRecordModal>
 
         {/* ========================================= */}
+  <BkashModal modalName="Bkash"></BkashModal>
+        {/* ========================================= */}
+  <NagadModal modalName="Nagad"></NagadModal>
+        {/* ========================================= */}
+<RocketModal modalName="Rocket"></RocketModal>
+        {/* ========================================= */}
+<UpayModal modalName="Upay"></UpayModal>
+        {/* ========================================= */}
         <TurnOverModal modalName="TurnOverModal"></TurnOverModal>
         {/* <TransactionRecordModal modalName="TurnOverModal"></TransactionRecordModal> */}
 
@@ -991,6 +1004,7 @@ export default () => {
         <LoginModel modalName="LoginModel"></LoginModel>
 
         <ProfileModel modalName="modal1"></ProfileModel>
+     
         <SingUpModal modalName="SingUpModal"></SingUpModal>
 
         <DepositModel modalName="DepositModel"></DepositModel>

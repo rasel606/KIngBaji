@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../Component/AuthContext";
 import { useModal } from "../Component/ModelContext";
 import axios from "axios";
+import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
 export default ({ modalName }) => {
   // const { activeModal, openModal, closeModal } = useModal();
   // if (activeModal !== modalName) return null;
@@ -20,6 +21,8 @@ export default ({ modalName }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [active, setActive] = useState([providercode]);
+  const [categories, setCategories] = useState([]);
+
 
   console.log("user", userId);
 
@@ -33,6 +36,10 @@ export default ({ modalName }) => {
     );
   };
 
+
+
+  console.log(playGameData);
+
   useEffect(() => {
     const url = `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`;
     const response = fetch(url, {
@@ -44,13 +51,15 @@ export default ({ modalName }) => {
       .then((response) => response.json())
       .then((data) => {
         setLoading(false);
-        setData(data[0].uniqueProviders);
-        console.log(data[0].uniqueProviders);
+        setData(data[0].uniqueProviders,data[0].categories);
+        setCategories(data[0].categories[0].p_type);
+        console.log(data[0].uniqueProviders,data[0].categories[0].p_type);
+        
       });
   }, []);
-
+  console.log(categories);
   useEffect(() => {
-    const url = `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}`;
+    const url = `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`;
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -61,64 +70,87 @@ export default ({ modalName }) => {
       .then((data) => {
         setLoading(false);
         setGameData(data);
-        // console.log(data);
+        console.log(data);
       });
-  }, [active, category_name]);
+  }, [active, categories]);
 
   const handleItemClick = (index, item) => {
     setActiveIndex(index);
     setActive(item);
   };
 
-  const handleplay = (userId, game_id) => {
-    console.log(userId, game_id);
 
-    const url = `http://localhost:5000/api/v1/launch_game`;
-    const response = fetch(url, {
+  const [isPlaying, setIsPlaying] = useState(false);
+    const [balance, setBalance] = useState(userDeatils.balance || 0);
+const [userData, setUserData] = useState(userId);
+const handleplay = async (userId, game_id, p_type, p_code) => {
+  if (isPlaying) return; // Prevent multiple clicks
+  
+  setIsPlaying(true);
+  setLoading(true);
+
+  try {
+    const response = await fetch("http://localhost:5000/api/v1/launch_gamePlayer", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId, game_id }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setLoading(false);
-        setplayGameData(data);
-        // openModal("GamePlay");
-        console.log(data);
-        setShowPopup(true);
-      });
-  };
-  const [balance, setBalance] = useState(userDeatils.balance);
+      body: JSON.stringify({ userId, game_id, p_type, p_code }),
+    });
 
+    const data = await response.json();
+    setplayGameData(data);
+    console.log(data);
+
+    if (data?.gameUrl) {
+      setShowPopup(true);
+    }
+  } catch (error) {
+    console.error("Error launching game:", error);
+  } finally {
+    setIsPlaying(false); // Reset after API call is complete
+    setLoading(false);
+  }
+};
+  
+  
+
+  // if(GameData?.length !== 0){
+  //   setShowPopup(true);
+  // }
 
   const handleRefresh = async (userId) => {
     
     try {
+      handelUserDetails(userId)
       const response = await axios.post("http://localhost:5000/api/v1/user_balance", { userId });
-      setBalance(response.data.balance);
-      if(response.data.balance){
-        verifyUser(token)
-      }
+      console.log(response.data);
+
     } catch (error) {
       console.error("Error fetching balance:", error);
     }
     
   };
 
+  const handelUserDetails = async (userId) => {
+      const result = await UserAllDetails(userId);
+      // console.log( result = await UserAllDetails(userId))
+      console.log(result.data.user.balance);
+      setBalance(result.data.user.balance);
+      setUserData(result.data.user.userId);
+    }
 const handelShowPopup =()=>{
 
   
   setShowPopup(false);
 }
 useEffect(() => {
-  if (!showPopup) {
+  if (showPopup === false) {
     handleRefresh(userId);
   }
-}, [showPopup]);
+}, [showPopup,userData, userId,active,category_name]);
 
-  console.log(playGameData);
+  // console.log(playGameData);
 
   return (
     <div className="wrap">
@@ -177,7 +209,7 @@ useEffect(() => {
                   <div
                     className={`btn ${index === activeIndex ? "selected" : ""}`}
                     key={index}
-                    onClick={() => handleItemClick(index, item.providercode)}
+                    onClick={() => handleItemClick(index, item.providercode,item.category_name,item.p_type)}
                   >
                     <div className="icon">
                       <p>{item.providercode}</p>
@@ -193,7 +225,7 @@ useEffect(() => {
                     <div
                       className="pic"
                       onClick={() =>
-                        handleplay(userId, game.g_code) && { handleOpenPopup }
+                        handleplay(userId, game.g_code,game.p_type,game.p_code)
                       }
                     >
                       <p>

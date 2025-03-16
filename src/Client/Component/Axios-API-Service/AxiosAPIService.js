@@ -24,7 +24,12 @@ export const verify = async () => {
 
 export const CreateUser = (data) => API.post("/createUser", data);
 export const LoginUser =async (userId, password) => await API.post("/login_user", { userId, password });
+export const UserAllDetails =async (userId) => await API.post("/user_details",{userId});
 export const UpdateName = (name, userId) => API.post("/update-name", { name, userId });
 export const UpdateBirthDate = (formData) => API.post("/update-birthday", formData);
+export const searchTransactionsbyUserId = (data) => API.post("/searchTransactionsbyUserId", data);
+export const UserHistory = (data) => API.post("/user-history", data);
 export const verifyEmail = (formData) => API.post("/verify-email", formData);
 export const Emailsend = (formData) => API.post("/send-otp", formData);
+export const GatWaySystem = (data) => API.post("/subadmingetwaylistfor_user", data);
+export const GetPaymentMethodsUser = (paydata) => API.post("/deposit_with_bonus", paydata);

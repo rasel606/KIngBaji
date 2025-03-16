@@ -36,6 +36,7 @@ const [email, setEmail] = useState(null||"");
       setUserDeatils(data.user);
      
       console.log(data)
+      return data
     } else {
       setIsAuthenticated(false);
     }
@@ -57,6 +58,7 @@ const verifyUserToken = async (token) => {
       setIsAuthenticated(true);
       setUserId(response.data.userId);
       setUserDeatils(response.data.user);
+      console.log(response.data.user);
     })
     .catch(() => {
       setIsAuthenticated(false);
@@ -118,11 +120,11 @@ const verifyUserToken = async (token) => {
 
   
 
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('authAdminToken');
+  const logout = async () => {
+    await localStorage.removeItem('authToken');
+   
     setIsAuthenticated(false);
-    setIsAuthenticatedAdmin(false);
+    
     setUserId(null);
     setEmail(null);
   };

@@ -8,8 +8,8 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, loginUser, logoutUser, verifyUser, userId } =
-    useAuth();
+ const { isAuthenticated, loginUser,logout, logoutUser,verifyUserToken, verifyUser,token,userDeatils ,userId } =
+     useAuth();
 
   const [timer, setTimer] = useState(60);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
@@ -76,7 +76,7 @@ export default ({ modalName }) => {
                   <div className="verification-txt">
                     <p>
                       Please enter the 4-digit code sent to{" "}
-                      <span className="player">email</span>
+                      <span className="player">{userDeatils.email}</span>
                     </p>
                   </div>
                   <div className="verification-content">

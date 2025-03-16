@@ -11,6 +11,8 @@ import promotionImg from "../../assets/toolbar-icon-promotion.svg";
 import depositImg from "../../assets/toolbar-icon-deposit.svg";
 import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
+import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
+import { use } from "react";
 
 export default (props) => {
   const { modalShow, setModalShow } = props;
@@ -27,17 +29,17 @@ export default (props) => {
 
   const scrollimages = [
     {
-      src: "https://img.c88rx.com/upload/announcement/image_206351.jpg",
+      src: "https://i.ibb.co.com/DChN5S5/img-1.jpg",
       alt: "Image 1",
       link: "#",
     },
     {
-      src: "https://img.c88rx.com/upload/announcement/image_206121.jpg",
+      src: "https://i.ibb.co.com/VqtD7Tq/img-2.jpg",
       alt: "Image 2",
       link: "#",
     },
     {
-      src: "https://img.c88rx.com/upload/announcement/image_206122.jpg",
+      src: "https://i.ibb.co.com/7Kkr63k/img-3.jpg",
       alt: "Image 3",
       link: "#",
     },
@@ -46,45 +48,45 @@ export default (props) => {
   const games = [
     {
       name: "Super Ace",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-027.png",
+      imgSrc: "https://i.ibb.co.com/DChN5S5/img-1.jpg",
     },
     {
       name: "Crazy777",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-014.png",
+      imgSrc: "https://i.ibb.co.com/VqtD7Tq/img-2.jpg",
     },
     {
       name: "Alibaba",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-049.png",
+      imgSrc: "https://i.ibb.co.com/7Kkr63k/img-3.jpg",
     },
     {
       name: "Fortune Gems 2",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-076.png",
+      imgSrc: "https://i.ibb.co.com/LQB0VW7/img-4.jpg",
     },
     {
       name: "Golden Empire",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-042.png",
+      imgSrc: "https://i.ibb.co.com/gdQVX9d/image-5.jpg",
     },
-    {
-      name: "Golden Bank",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-023.png",
-    },
-    {
-      name: "Boxing King",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-031.png",
-    },
-    {
-      name: "Fortune Gems",
-      imgSrc: "https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-043.png",
-    },
+    
   ];
 
-  const { isAuthenticated, loginUser, logoutUser,verifyUserToken, verifyUser,token,userDeatils ,userId } =
-    useAuth();
+  const {
+    isAuthenticated,
+    loginUser,
+    logoutUser,
+    verifyUserToken,
+    verifyUser,
+    token,
+    userDeatils,
+    userId,
+  } = useAuth();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [active, setActive] = useState([data[0]?.category || ""]);
+  const [active, setActive] = useState([data[0]?.category]);
+  console.log(data[0]?.category.uniqueProviders);
+  console.log("active",active);
   const handleItemClick = (index, item) => {
     setActiveIndex(index);
     setActive(item);
+    console.log(item);
   };
 
   const [isFixed, setIsFixed] = useState(false);
@@ -136,28 +138,58 @@ export default (props) => {
     navigate("/modal1");
   };
 
-
   const [balance, setBalance] = useState(userDeatils.balance);
   const [refreshing, setRefreshing] = useState(false);
-
+const [userData, setUserData] = useState(userId);
   const handleRefresh = async () => {
     if (refreshing) return;
-    setRefreshing(true);
-  if (userId) {
     
-    await verifyUser(token);
+    setRefreshing(true);
+
+    // handelUserDetails(userId);
+    try {
+      handelUserDetails(userId);
+      
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/user_balance",
+        {userId} 
+      );
+      console.log(response);
+      setBalance(response.data.balance);
+      
+      
+      if (response.data.hasOwnProperty("balance")) {
+        verifyUser(token); // Ensure token is available in scope
+      }
+    } catch (error) {
+      // console.error("Error fetching balance:", error);
+    } finally {
+      setTimeout(() => setRefreshing(false), 1000); // Proper finally block
+    }
+  };
+
+
+  const handelUserDetails = async (userId) => {
+    const result = await UserAllDetails(userId);
+    // console.log( result = await UserAllDetails(userId))
+    console.log(result.data.user.balance);
+    setBalance(result.data.user.balance);
+    setUserData(result.data.user);
   }
 
+  useEffect(() => {
+    if (refreshing) {
+      
+    }
+  },[setRefreshing]);
 
-    setTimeout(() => setRefreshing(false), 1000); // Reset animation after 1s
-  };
+
   useEffect(() => {
     if (userId) {
-     
       handleRefresh(); // Call the function whenever userId changes
+      
     }
-  }, [userId]);
-  console.log("active", userDeatils);
+  }, [setRefreshing, userId, balance]);
 
   return (
     <div className="">
@@ -183,7 +215,7 @@ export default (props) => {
                         rel="noopener noreferrer"
                       >
                         <span className="link-text">🔗kingbaji.com/</span> থেকে
-                        আমাদের ব্যাকআপ লিংকগুলি পান৷ Crickex-এ যোগ দিন, আপনার
+                        আমাদের ব্যাকআপ লিংকগুলি পান৷ kingbaji-এ যোগ দিন, আপনার
                         বিশ্বস্ত ক্রিকেট ট্রেডিং প্ল্যাটফর্ম। ব্যাক অ্যান্ড লে,
                         প্রিমিয়াম ক্রিকেট, অভিনব বাজি এবং আরও অনেক কিছু।👥৩
                         স্তর পর্যন্ত প্রতিটি রেফার থেকে সীমাহীন রিবেট কমিশন
@@ -197,41 +229,37 @@ export default (props) => {
             </ul>
           </div>
         </div>
-       
 
-        {
-          isAuthenticated ? (
-            <div
-          
-          className="nav-category nav-balance "
-        >
-          <div className="balance-box ">
-            <div className="username">{userDeatils?.userId}</div>
-            <div className="balance">
-              <i className="balance-value">
-                <i id="" style={{display: "initial", color: "white"}} >
-                  ৳ {userDeatils.balance}
+        {isAuthenticated ? (
+          <div className="nav-category nav-balance ">
+            <div className="balance-box ">
+              <div className="username">{userData.userId}</div>
+              <div className="balance">
+                <i className="balance-value">
+                  <i id="" style={{ display: "initial", color: "white" }}>
+                    ৳ {balance}
+                  </i>
                 </i>
-              </i>
-              <div
-            className={`icon refresh ${refreshing ? "active" : ""}`}
-            onClick={handleRefresh}
-          ></div>
+                <div
+                  className={`icon refresh ${refreshing ? "active" : ""}`}
+                  onClick={handleRefresh}
+                ></div>
+              </div>
             </div>
+            <ul className="nav-group">
+              <li className="nav-item" tabindex="0">
+                <img src={promotionImg} />
+                <span>প্রমোশন</span>
+              </li>
+              <li className="nav-item" tabindex="0">
+                <img src={depositImg} />
+                <span>ডিপোজিট</span>
+              </li>
+            </ul>
           </div>
-          <ul className="nav-group">
-            <li className="nav-item" tabindex="0">
-              <img src={promotionImg} />
-              <span>প্রমোশন</span>
-            </li>
-            <li className="nav-item" tabindex="0">
-              <img src={depositImg} />
-              <span>ডিপোজিট</span>
-            </li>
-          </ul>
-        </div>
-          ):""
-        }
+        ) : (
+          ""
+        )}
         <div className="">
           <div
             className={`${
@@ -244,7 +272,7 @@ export default (props) => {
                 key={index}
                 onClick={() => handleItemClick(index, item?.category)}
               >
-                {console.log(item.category)}
+                {/* {console.log(item.category)} */}
                 <div className="icon">
                   <span
                     className="item-icon"

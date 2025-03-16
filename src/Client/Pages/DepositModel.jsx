@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
+import { useAuth } from "../Component/AuthContext";
+import { GatWaySystem, GetPaymentMethodsUser } from "../Component/Axios-API-Service/AxiosAPIService";
+import { usePayNow } from "../PaymentContext/PaymenyContext";
 
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
@@ -22,44 +25,6 @@ export default ({ modalName }) => {
     "৩.২৫% আনলিমিটেড ডিপোজিট বোনাস",
     "অন্য বিকল্প",
     "আরও একটি বিকল্প",
-  ];
-
-  const paymentMethods = [
-    {
-      id: "paymentMethod_2048",
-      name: "বিকাশ",
-      img: "https://img.c88rx.com/cx/h5/assets/images/payment/bkash.png?v=1739862678809&source=mcdsrc",
-    },
-    {
-      id: "paymentMethod_8192",
-      name: "নগদ",
-      img: "https://img.c88rx.com/cx/h5/assets/images/payment/nagad.png?v=1739862678809&source=mcdsrc",
-    },
-    {
-      id: "paymentMethod_4096",
-      name: "রকেট",
-      img: "https://img.c88rx.com/cx/h5/assets/images/payment/rocket.png?v=1739862678809&source=mcdsrc",
-    },
-    {
-      id: "paymentMethod_16777216",
-      name: "UPay",
-      img: "https://img.c88rx.com/cx/h5/assets/images/payment/upay.png?v=1739862678809&source=mcdsrc",
-    },
-    {
-      id: "paymentMethod_1",
-      name: "লোকাল ব্যাংক",
-      img: "https://img.c88rx.com/cx/h5/assets/images/payment/bank-card.png?v=1739862678809&source=mcdsrc",
-    },
-    {
-      id: "paymentMethod_trc20",
-      name: "USDT TRC20",
-      img: "https://img.c88rx.com/cx/h5/assets/images/icon-set/player/crypto/trc20.svg?v=1739862678809&source=mcdsrc",
-    },
-    {
-      id: "paymentMethod_erc20",
-      name: "USDT ERC20",
-      img: "https://img.c88rx.com/cx/h5/assets/images/icon-set/player/crypto/erc20.svg?v=1739862678809&source=mcdsrc",
-    },
   ];
 
   const PaymentMood = [
@@ -99,35 +64,129 @@ export default ({ modalName }) => {
     { id: "7", value: "200", label: "200" },
   ];
 
+  const {
+    isAuthenticated,
+    loginUser,
+    logoutUser,
+    verifyUserToken,
+    verifyUser,
+    token,
+    userDeatils,
+    userId,
+  } = useAuth();
+
+  const data = {
+    userId: userDeatils.userId,
+  };
+
+const {setAmountPay,
+  gateway_name,
+  setGateway_name,
+  setGateway_Number,
+  setPayment_type} = usePayNow();
+  
+  const [paymentMethods, setpaymentMethods] = useState([]);
+  const [Payment, setPayment] = useState(null );
+  const [activeTab, setActiveTab] = useState("deposit");
+  const [selectedPayment, setSelectedPayment] = useState(null );
+  const [showVerification, setShowVerification] = useState(false);
+  const[loading,setLoading]=useState(true)
+
+  let [amount, setAmount] = useState(0);
+  // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
+  const [PaymentAct, setPaymentAct] = useState("");
+  const [Mood, setMood] = useState(); //paymentMethods[0]
+  // let amount =0
+  const handelAmount = (blance) => {
+    amount += parseInt(blance);
+    setAmount(amount);
+    console.log(amount);
+  };
+
+  useEffect(() => {
+    // Fetch gateway list from backend on component mount
+    const fetchGateways = async () => {
+      console.log(data);
+      try {
+        const response = await GatWaySystem(data);
+        setpaymentMethods(response?.data?.paymentMethods);
+        // setGatewaysCount(response.data.Getwaycount);
+        console.log(response.data.paymentMethods);
+        if(response.data.paymentMethods.length>0){
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error("Error fetching gateways:", error);
+      }
+    };
+    fetchGateways();
+  }, [userDeatils.userId,token]);
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
+  const handlePaySubmit = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
-  const [amount, setAmount] = useState("");
-  const [Payment, setPayment] = useState(paymentMethods[0]);
-  const [PaymentAct, setPaymentAct] = useState("");
-  const [Mood, setMood] = useState(paymentMethods[0]);
   // const inputRef = useRef(null);
 
   const [isHovered, setIsHovered] = useState(false);
   useEffect(() => {}, []);
 
-  const handleClearsetAmount = () => setAmount("");
+  const handleClearsetAmount = () => (amount = "");
   const handleChangeamount = (e) => {
-    setAmount(e.target.value);
+    amount = e.target.value;
   };
 
-  const clearInput = () => {
-    setAmount("");
-  };
+
+    // userId: userId,
+    setAmountPay(amount)
+    setGateway_name( Payment === null  ? paymentMethods[0]?.gateway_name :  Payment?.gateway_name)
+    setGateway_Number( Payment === null  ? paymentMethods[0]?.gateway_Number :  Payment?.gateway_Number)
+    setPayment_type( Payment === null  ? paymentMethods[0]?.payment_type :  Payment?.payment_type)
+    // referredbyCode: userDeatils.referredbyCode
+    
+  
+  const navigate = useNavigate();
+
+
+  // console.log(paydata.payment_type)
+
+  const handlePaymentSubmit = () => {
+    if (!userId || !amount || !token) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    if (amount > 0) {
+        // console.log("Submitting Payment Data:", paydata);
+
+        // GetPaymentMethodsUser(paydata)
+        //     .then((res) => {
+        //         console.log("API Response:", res.data);
+        //         if (res.data && typeof res.data === "string" && res.data.startsWith("http")) {
+        //           window.open(res.data, "_self")
+        //         } else {
+        //             console.error("Invalid redirect URL:", res.data);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error in payment API:", error);
+        //     });
+        openModal(`${gateway_name}`);
+    }
+};
+
+  // const clearInput = () => {
+  //   setAmount("");
+  // };
 
   const userVarifayed = false;
 
-  const [activeTab, setActiveTab] = useState("deposit");
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [showVerification, setShowVerification] = useState(false);
+  console.log(paymentMethods);
+  console.log(Payment);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -146,6 +205,8 @@ export default ({ modalName }) => {
             <div className="popup-page-main__title">My wallet</div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
+          {loading?<p style={{color:"#fff"}}>gateway not available</p>:
+          (paymentMethods.length) &&(
           <div className="popup-page-main__container">
             <div className="content fixed-tab player-content">
               <div className="tab-btn-section tab-btn-wrap">
@@ -213,31 +274,29 @@ export default ({ modalName }) => {
                             <ul className="col3">
                               {paymentMethods.map((payment, index) => (
                                 <li
-                                  key={payment.id}
+                                  key={payment._id}
                                   className="ng-star-inserted"
                                 >
                                   <input
                                     type="radio"
                                     name="paymentMethod"
-                                    id={payment.id}
-                                    checked={selectedPayment === payment.id}
-                                    onChange={() =>
-                                      setPayment(payment) &&
-                                      setPaymentAct(index)
-                                    }
+                                    id={payment._id}
+                                    checked={Payment?._id === payment._id}
+                                    onChange={() => setPayment(payment)}
+                                    // setPaymentAct(index)
                                   />
-                                  <label htmlFor={payment.id}>
+                                  <label htmlFor={payment._id}>
                                     <div className="bank ng-star-inserted">
                                       <img
-                                        src={payment.img}
-                                        alt={payment.name}
+                                        src={payment.image_url}
+                                        alt={payment.gateway_name}
                                         loading="lazy"
                                       />
                                     </div>
-                                    <span>{payment.name}</span>
+                                    <span>{payment.gateway_name}</span>
                                     <div className="tag-rebate-money ng-star-inserted">
                                       <p>
-                                        <span>+</span>3.5<span>%</span>
+                                        <span>+</span>3<span>%</span>
                                       </p>
                                     </div>
                                     <span
@@ -260,11 +319,12 @@ export default ({ modalName }) => {
                                   name="paymentType"
                                   id="paymentType_0"
                                   value="বিকাশ পেমেন্ট"
-                                  checked={Payment.name === Payment.name}
+                                  // checked={Payment?._id === Payment?._id}
                                   // onChange={handlePaymentTypeChange}
                                 />
                                 <label htmlFor="paymentType_0">
-                                  <span>{Payment.name}</span>
+                                  {/* <span>{Payment?.gateway_name}</span> */}
+                                  <span>{Payment === null  ? paymentMethods[0]?.gateway_name : Payment?.gateway_name  }</span>
                                   <span
                                     className="item-icon"
                                     style={{
@@ -286,7 +346,7 @@ export default ({ modalName }) => {
                           <div className="check-group">
                             <div className="check-group">
                               <ul className="col2">
-                                {PaymentMood.map((Mathod, index) => (
+                                {/* {PaymentMood.map((Mathod, index) => (
                                   <li
                                     class=""
                                     onClick={() => setMood(Mathod, index)}
@@ -300,21 +360,23 @@ export default ({ modalName }) => {
                                       <span>{Mathod.value}</span>
                                     </label>
                                   </li>
-                                ))}
+                                ))} */}
+                                <li
+                                  class=""
+                                  // onClick={() => setMood(Mathod, index)}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="paymentType"
+                                    id="paymentType_0"
+                                  />
+                                  <label>
+                                    <span>{Payment === null  ? paymentMethods[0]?.payment_type :  Payment?.payment_type}</span>
+                                  </label>
+                                </li>
                               </ul>
                             </div>
                           </div>
-
-
-
-
-
-
-
-
-
-
-                          
                         </div>
                         <div className="menu-box">
                           <div className="title">
@@ -329,7 +391,7 @@ export default ({ modalName }) => {
                                 {Amount.map((Mathod, index) => (
                                   <li
                                     class=""
-                                    onClick={() => setAmount(Mathod.value)}
+                                    onClick={() => handelAmount(Mathod.value)}
                                   >
                                     <input
                                       type="radio"
@@ -337,7 +399,7 @@ export default ({ modalName }) => {
                                       id="paymentType_0"
                                     />
                                     <label>
-                                      <span>{Mathod.value}</span>
+                                      <span>+ {Mathod.value}</span>
                                     </label>
                                   </li>
                                 ))}
@@ -347,10 +409,10 @@ export default ({ modalName }) => {
 
                           <div className="check-group money">
                             <ul className="cal1">
-                              <li
+                              {/* <li
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
-                              >
+                              > */}
                                 <label htmlFor="amount">৳</label>
                                 <input
                                   id="amount"
@@ -371,8 +433,30 @@ export default ({ modalName }) => {
                                     onClick={handleClearsetAmount}
                                   />
                                 )}
-                              </li>
+                              {/* </li> */}
                             </ul>
+                          </div>
+
+                          <div className="check-group money">
+                          <label htmlFor="amount">৳</label>
+                            <input
+                              type="text"
+                              id="userId"
+                              name="userId"
+                              placeholder="4-15 char, allow numbers, no space"
+                              className="input"
+                              value={amount}
+                              onChange={handleChangeamount}
+                              />
+                              {amount && (
+                                <input
+                                  type="button"
+                                  className={`clear ${
+                                    amount ? "active" : ""
+                                  }`}
+                                  onClick={handleClearsetAmount}
+                                />
+                            )}
                           </div>
                         </div>
                         <div className="menu-box">
@@ -407,7 +491,7 @@ export default ({ modalName }) => {
                         </div>
                         <div className="deposit-content">
                           <div className="button btn-primary">
-                            <Link>submit</Link>
+                            <Link onClick={()=> handlePaymentSubmit()}>submit</Link>
                           </div>
                         </div>
                       </div>
@@ -416,9 +500,11 @@ export default ({ modalName }) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>)
+}
         </div>
       </div>
+
     </div>
   );
 };

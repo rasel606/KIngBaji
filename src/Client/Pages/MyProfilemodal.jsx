@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
+import { useAuth } from "../Component/AuthContext";
 
 export default ({ modalName}) => {
    const {  activeModal, openModal, closeModal  } = useModal();
     if (activeModal !== modalName) return null;
 
   const [isOpenTaggle, setIsOpenTaggle] = useState(false);
-
+ const { isAuthenticated, loginUser,logout, logoutUser,verifyUserToken, verifyUser,token,userDeatils ,userId } =
+     useAuth();
   const toggleList = () => {
     setIsOpenTaggle(!isOpenTaggle);
   };
@@ -47,11 +49,15 @@ export default ({ modalName}) => {
                   ></div>
                 </div>
                 <div className="membername-wrap">
-                  <div className="membername">saikat19960808</div>
+                  <div className="membername">{userDeatils.name}</div>
                   <div className="level">Bronze</div>
                   <br />
                   <div className="register-date">
-                    রেজিস্ট্রেশনের তারিখ : <i>2024/12/31</i>
+                  Date of Registration : <i>{new Date(userDeatils.datetime).toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })}</i>
                   </div>
                 </div>
               </div>
