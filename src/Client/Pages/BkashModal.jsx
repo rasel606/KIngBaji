@@ -81,24 +81,23 @@ const {gateway_name,
      e.preventDefault();
      try {
        const response = await axios.post(
-         `https://localhost:5000/api/v1/submitTransaction`,
-        //  {
-        //     userId:userDeatils.userId,
-        //     gateway_name:gateway_name,
-        //     amount:amount,
-        //     referredbyCode:userDeatils.referredbyCode,
-        //     payment_type:payment_type,
-        //     gateway_Number:gateway_Number,
-        //     transactionID,
-        //     mobile:userDeatils.phone,
-        //     type:parseInt(0),
-        //   },
-        userId,
-        //  {
-        //    headers: {
-        //      Authorization: `Bearer ${token}`,
-        //    },
-        //  }
+         `https://kingbajiback.onrender.com/api/v1/submitTransaction`,
+         {
+            userId:userDeatils.userId,
+            gateway_name:gateway_name,
+            amount:amount,
+            referredbyCode:userDeatils.referredbyCode,
+            payment_type:payment_type,
+            gateway_Number:gateway_Number,
+            transactionID,
+            mobile:userDeatils.phone,
+            type:parseInt(0),
+          },
+         {
+           headers: {
+             Authorization: `Bearer ${token}`,
+           },
+         }
        );
    
        setGateways(response.data.paymentMethods);

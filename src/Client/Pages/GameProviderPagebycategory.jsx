@@ -41,7 +41,7 @@ export default ({ modalName }) => {
   console.log(playGameData);
 
   useEffect(() => {
-    const url = `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`;
+    const url = `https://kingbajiback.onrender.com/api/v1/New-table-Games-with-Providers?category=${category_name}`;
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -59,7 +59,7 @@ export default ({ modalName }) => {
   }, []);
   console.log(categories);
   useEffect(() => {
-    const url = `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`;
+    const url = `https://kingbajiback.onrender.com/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`;
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -90,7 +90,7 @@ const handleplay = async (userId, game_id, p_type, p_code) => {
   setLoading(true);
 
   try {
-    const response = await fetch("http://localhost:5000/api/v1/launch_gamePlayer", {
+    const response = await fetch("https://kingbajiback.onrender.com/api/v1/launch_gamePlayer", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -123,7 +123,7 @@ const handleplay = async (userId, game_id, p_type, p_code) => {
     
     try {
       handelUserDetails(userId)
-      const response = await axios.post("http://localhost:5000/api/v1/user_balance", { userId });
+      const response = await axios.post("https://kingbajiback.onrender.com/api/v1/user_balance", { userId });
       console.log(response.data);
 
     } catch (error) {

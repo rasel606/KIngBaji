@@ -139,7 +139,7 @@ const {gateway_name,
       <div onClick={(e) => e.stopPropagation()}>
         <div className="popup-page__main popup-page-main popup-page-main--show">
           <div className="popup-page-main__header new-login-tab">
-            <div className="popup-page-main__title"> Bkash </div>
+            <div className="popup-page-main__title"> Nagad </div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">

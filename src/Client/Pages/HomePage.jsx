@@ -96,7 +96,7 @@ export default (props) => {
   let scrollTimeout;
 
   useEffect(() => {
-    const url = "http://localhost:5000/api/v1/New-table-categories";
+    const url = "https://kingbajiback.onrender.com/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -151,7 +151,7 @@ const [userData, setUserData] = useState(userId);
       handelUserDetails(userId);
       
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user_balance",
+        "https://kingbajiback.onrender.com/api/v1/user_balance",
         {userId} 
       );
       console.log(response);
@@ -177,11 +177,11 @@ const [userData, setUserData] = useState(userId);
     setUserData(result.data.user);
   }
 
-  useEffect(() => {
-    if (refreshing) {
+  // useEffect(() => {
+  //   if (refreshing) {
       
-    }
-  },[setRefreshing]);
+  //   }
+  // },[setRefreshing]);
 
 
   useEffect(() => {

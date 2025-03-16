@@ -74,16 +74,8 @@ const {gateway_name,
      setTransactionID(value);
      setIsTransactionValid(/^[a-zA-Z0-9]{10}$/.test(value));
    };
-   const params = {
-     userId,
-     gateway_name,
-     amount,
-     referredbyCode:userDeatils.referredbyCode,
-     payment_type,
-     gateway_Number,
-     transactionID,
-     type,
-   }
+
+
    console.log(params)
  
    const handlePayment = async (e) => {
@@ -139,7 +131,7 @@ const {gateway_name,
       <div onClick={(e) => e.stopPropagation()}>
         <div className="popup-page__main popup-page-main popup-page-main--show">
           <div className="popup-page-main__header new-login-tab">
-            <div className="popup-page-main__title"> Bkash </div>
+            <div className="popup-page-main__title"> Upay </div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">
