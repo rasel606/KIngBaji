@@ -16,7 +16,7 @@ import { use } from "react";
 
 export default (props) => {
   const { modalShow, setModalShow } = props;
-  const [Loading, setLoading] = useState(true);
+  // const [Loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   const images = [
@@ -78,6 +78,7 @@ export default (props) => {
     token,
     userDeatils,
     userId,
+    loading,setLoading
   } = useAuth();
   const [activeIndex, setActiveIndex] = useState(0);
   const [active, setActive] = useState([data[0]?.category]);
@@ -89,6 +90,11 @@ export default (props) => {
     console.log(item);
   };
 
+
+    const referralCode = localStorage.getItem("referralCode");
+    console.log(localStorage.getItem("referralCode"))
+    console.log(referralCode)
+
   const [isFixed, setIsFixed] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -96,7 +102,8 @@ export default (props) => {
   let scrollTimeout;
 
   useEffect(() => {
-    const url = "https://kingbajiback.onrender.com/api/v1/New-table-categories";
+    setLoading(true);
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -145,13 +152,13 @@ const [userData, setUserData] = useState(userId);
     if (refreshing) return;
     
     setRefreshing(true);
-
+setLoading(true);
     // handelUserDetails(userId);
     try {
       handelUserDetails(userId);
       
       const response = await axios.post(
-        "https://kingbajiback.onrender.com/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         {userId} 
       );
       console.log(response);
@@ -161,6 +168,7 @@ const [userData, setUserData] = useState(userId);
       if (response.data.hasOwnProperty("balance")) {
         verifyUser(token); // Ensure token is available in scope
       }
+      setLoading(false);
     } catch (error) {
       // console.error("Error fetching balance:", error);
     } finally {
@@ -170,26 +178,23 @@ const [userData, setUserData] = useState(userId);
 
 
   const handelUserDetails = async (userId) => {
+    setLoading(true);
     const result = await UserAllDetails(userId);
     // console.log( result = await UserAllDetails(userId))
     console.log(result.data.user.balance);
     setBalance(result.data.user.balance);
     setUserData(result.data.user);
+    setLoading(false);
   }
 
-  // useEffect(() => {
-  //   if (refreshing) {
-      
-  //   }
-  // },[setRefreshing]);
-
+ 
 
   useEffect(() => {
     if (userId) {
       handleRefresh(); // Call the function whenever userId changes
       
     }
-  }, [setRefreshing, userId, balance]);
+  }, [setRefreshing, userId, balance,loading]);
 
   return (
     <div className="">
@@ -233,11 +238,11 @@ const [userData, setUserData] = useState(userId);
         {isAuthenticated ? (
           <div className="nav-category nav-balance ">
             <div className="balance-box ">
-              <div className="username">{userData.userId}</div>
+              <div className="username">{userDeatils? userId : loading ? "...." : "User"}</div>
               <div className="balance">
                 <i className="balance-value">
                   <i id="" style={{ display: "initial", color: "white" }}>
-                    ৳ {balance}
+                    ৳ {userDeatils ? balance : loading ? "...." : "0"}
                   </i>
                 </i>
                 <div

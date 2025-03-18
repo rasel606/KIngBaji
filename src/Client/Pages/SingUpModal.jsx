@@ -49,7 +49,8 @@ export default ({ modalName }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const [selectedCountry, setSelectedCountry] = useState(selectedCurrency.code);
   const [phoneNumber, setPhoneNumber] = useState();
-  const [referredbyCode, setreferredbyCode] = useState(localStorage.getItem("referralCode"));
+  // const [referredbyCode, setreferredbyCode] = useState(referralCode);
+
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState("");
@@ -153,42 +154,32 @@ export default ({ modalName }) => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  
-  const handleSubmit = async () => {
-    if (!userId || !password || !selectedCountry || !phoneNumber || !referredbyCode) {
-      
-    
-    // const referralCode = localStorage.setItem("referralCode", referralCode)
-    console.log(referredbyCode)
-    
-    console.log(userId, password, selectedCountry, phoneNumber);
-    const data = {
-      userId,
-      password,
-      countryCode: selectedCountry,
-      phone: phoneNumber,
-      referredbyCode:referredbyCode
-    };
-  
-    console.log(data);
-    const result = await userRegistar(data);
-    console.log(result);
-    // alert("Form submitted successfully!");
-    // closeModal();
-  }
-  alert("All fields are required!");
-      return;
-  };
 
-  // const [selectedCurrency, setSelectedCurrency] = useState("BDT");
-  // const currencies = [
-  //   { code: "INR", flag: "IN" },
-  //   { code: "BDT", flag: "BD" },
-  //   { code: "PKR", flag: "PK" },
-  //   { code: "USD", flag: "US" },
-  //   { code: "NPR", flag: "NP" },
-  //   { code: "LKR", flag: "LK" },
-  // ];
+  let referredbyCode = "";
+  const referralCode = localStorage.getItem("referralCode");
+  referredbyCode += referralCode;
+  console.log(referralCode);
+  const handleSubmit = async () => {
+    const referralCode = localStorage.getItem("referralCode");
+    console.log(referralCode);
+    // if (!userId || !password || !phoneNumber) {
+      // const referralCode = localStorage.setItem("referralCode", referralCode)
+      console.log(referredbyCode);
+      console.log(referralCode);
+      console.log(userId, password, selectedCountry, phoneNumber);
+      const data = {
+        userId,
+        password,
+        countryCode: selectedCountry,
+        phone: phoneNumber,
+        referredbyCode: referralCode,
+      };
+
+      console.log(data);
+      const result = await userRegistar(data);
+      console.log(result);
+     
+  };
 
   return (
     <div className="modal-overlay" onClick={closeModal}>
@@ -232,7 +223,10 @@ export default ({ modalName }) => {
                           deposit.
                         </p>
                       </div>
-                      <div className="register-success-btn" onClick={()=>openModal("Deposit")}>
+                      <div
+                        className="register-success-btn"
+                        onClick={() => openModal("Deposit")}
+                      >
                         <a className="button btn-default">এখনি ডিপোজিট করুন</a>
                       </div>
                     </div>
@@ -391,7 +385,7 @@ export default ({ modalName }) => {
                           )}
                           <div
                             className={`button ${
-                              userId && password &&phoneNumber > 1234567591
+                              userId && password && phoneNumber > 1234567591
                                 ? "active"
                                 : "btn-disabled"
                             }`}

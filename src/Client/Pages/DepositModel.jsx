@@ -103,6 +103,8 @@ const {setAmountPay,
     console.log(amount);
   };
 
+
+
   useEffect(() => {
     // Fetch gateway list from backend on component mount
     const fetchGateways = async () => {
@@ -242,13 +244,7 @@ const {setAmountPay,
                     <div className="player-deposit-wrap">
                       <div className="player-deposit-step">
                         <div className="option-group select-bar">
-                          {/* <span
-                            className="item-icon"
-                            style={{
-                              backgroundImage:
-                                "url('https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-selectpromotion.svg?v=1739862678809')",
-                            }}
-                          ></span> */}
+                          
                           <h2>Promotion</h2>
                           <div className="option-wrap">
                             <select
@@ -408,36 +404,6 @@ const {setAmountPay,
                           </div>
 
                           <div className="check-group money">
-                            <ul className="cal1">
-                              {/* <li
-                                onMouseEnter={() => setIsHovered(true)}
-                                onMouseLeave={() => setIsHovered(false)}
-                              > */}
-                                <label htmlFor="amount">৳</label>
-                                <input
-                                  id="amount"
-                                  className=""
-                                  placeholder="0.00"
-                                  type="number"
-                                  inputMode="decimal"
-                                  value={amount}
-                                  // ref={inputRef}
-                                  onChange={handleChangeamount}
-                                />
-                                {amount && (
-                                  <input
-                                    type="button"
-                                    className={`clear ${
-                                      amount ? "active" : ""
-                                    }`}
-                                    onClick={handleClearsetAmount}
-                                  />
-                                )}
-                              {/* </li> */}
-                            </ul>
-                          </div>
-
-                          <div className="check-group money">
                           <label htmlFor="amount">৳</label>
                             <input
                               type="text"
@@ -449,13 +415,13 @@ const {setAmountPay,
                               onChange={handleChangeamount}
                               />
                               {amount && (
-                                <input
+                                <Link
                                   type="button"
                                   className={`clear ${
                                     amount ? "active" : ""
                                   }`}
                                   onClick={handleClearsetAmount}
-                                />
+                                ></Link>
                             )}
                           </div>
                         </div>
@@ -468,7 +434,7 @@ const {setAmountPay,
 
                           <div className="check-group">
                             <div className="check-group">
-                              <p>
+                              <p style={{color:"#000"}}>
                                 1/Personal Information” before cashing out Add
                                 up to 3 mobile numbers and verify do
                                 <br />

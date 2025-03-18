@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useModal } from './ModelContext';
 import { CreateUser, LoginUser, verify } from './Axios-API-Service/AxiosAPIService';
 
+
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -51,7 +52,7 @@ const verifyUserToken = async (token) => {
   }
 
   setLoading(true);
-  axios.get('https://kingbajiback.onrender.com/api/v1/verify', {
+  axios.get('http://localhost:5000/api/v1/verify', {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
   })
     .then((response) => {
@@ -127,10 +128,11 @@ const verifyUserToken = async (token) => {
     
     setUserId(null);
     setEmail(null);
+    closeModal()
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout ,verifyUser,userRegistar,token, userId, userDeatils , loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout ,verifyUser,userRegistar,token, userId, userDeatils , loading,setLoading }}>
       {children}
     </AuthContext.Provider>
   );

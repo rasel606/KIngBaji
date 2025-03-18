@@ -13,95 +13,93 @@ import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
-  const { isAuthenticated, loginUser,logout, logoutUser,verifyUserToken, verifyUser,token,userDeatils ,userId } =
-     useAuth();
+  const {
+    isAuthenticated,
+    loginUser,
+    logout,
+    logoutUser,
+    verifyUserToken,
+    verifyUser,
+    token,
+    userDeatils,
+    userId,
+  } = useAuth();
 
-     const [balance, setBalance] = useState(userDeatils.balance);
-     const [userData, setUserData] = useState(userId);
-     const [refreshing, setRefreshing] = useState(false);
-   
-     const handleRefresh = async () => {
-       if (refreshing) return;
-       
-       setRefreshing(true);
-   
-       // handelUserDetails(userId);
-       try {
-         handelUserDetails(userId);
-         
-         const response = await axios.post(
-           "https://kingbajiback.onrender.com/api/v1/user_balance",
-           {userId} 
-         );
-         // console.log(response);
-        //  setBalance(response.data.balance);
-         
-         
-         if (response.data.hasOwnProperty("balance")) {
-           verifyUser(token); // Ensure token is available in scope
-         }
-       } catch (error) {
-         // console.error("Error fetching balance:", error);
-       } finally {
-         setTimeout(() => setRefreshing(false), 1000); // Proper finally block
-       }
-     };
-   
-   
-     const handelUserDetails = async (userId) => {
-       const result = await UserAllDetails(userId);
-       // console.log( result = await UserAllDetails(userId))
-       console.log(result.data.user.balance);
-       setBalance(result.data.user.balance);
-       setUserData(result.data.user);
-     }
-   
-     useEffect(() => {
-       if (refreshing) {
-         
-       }
-     },[setRefreshing]);
-   
-   
-     useEffect(() => {
-       if (userId) {
-         handleRefresh(); // Call the function whenever userId changes
-         
-       }
-     }, [setRefreshing, userId, balance]);
-   
+  const [balance, setBalance] = useState(userDeatils.balance);
+  const [userData, setUserData] = useState(userId);
+  const [refreshing, setRefreshing] = useState(false);
 
+  const handleRefresh = async () => {
+    if (refreshing) return;
 
-    //  const [refreshing, setRefreshing] = useState(false);
-   
-    //  const handleRefresh = async () => {
-    //    if (refreshing) return; 
-    //    setRefreshing(true);
-     
-    //    try {
-    //      const response = await axios.post("https://kingbajiback.onrender.com/api/v1/user_balance", {userId});
-    //      setBalance(response.data.balance);
-     
-    //      if (response.data.hasOwnProperty("balance")) {
-    //        verifyUser(token); // Ensure token is available in scope
-    //      }
-    //    } catch (error) {
-    //      console.error("Error fetching balance:", error);
-    //    } finally {
-    //      setTimeout(() => setRefreshing(false), 1000); // Proper finally block
-    //    }
-    //  };
+    setRefreshing(true);
 
-     
-    //    useEffect(() => {
-    //      if (userId) {
-           
-    //        handleRefresh(); // Call the function whenever userId changes
-    //      }
-    //    }, [setRefreshing, userId, balance]);
+    // handelUserDetails(userId);
+    try {
+      handelUserDetails(userId);
 
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/user_balance",
+        { userId }
+      );
+      // console.log(response);
+      //  setBalance(response.data.balance);
 
-     
+      if (response.data.hasOwnProperty("balance")) {
+        verifyUser(token); // Ensure token is available in scope
+      }
+    } catch (error) {
+      // console.error("Error fetching balance:", error);
+    } finally {
+      setTimeout(() => setRefreshing(false), 1000); // Proper finally block
+    }
+  };
+
+  const handelUserDetails = async (userId) => {
+    const result = await UserAllDetails(userId);
+    // console.log( result = await UserAllDetails(userId))
+    console.log(result.data.user.balance);
+    setBalance(result.data.user.balance);
+    setUserData(result.data.user);
+  };
+
+  useEffect(() => {
+    if (refreshing) {
+    }
+  }, [setRefreshing]);
+
+  useEffect(() => {
+    if (userId) {
+      handleRefresh(); // Call the function whenever userId changes
+    }
+  }, [setRefreshing, userId, balance]);
+
+  //  const [refreshing, setRefreshing] = useState(false);
+
+  //  const handleRefresh = async () => {
+  //    if (refreshing) return;
+  //    setRefreshing(true);
+
+  //    try {
+  //      const response = await axios.post("http://localhost:5000/api/v1/user_balance", {userId});
+  //      setBalance(response.data.balance);
+
+  //      if (response.data.hasOwnProperty("balance")) {
+  //        verifyUser(token); // Ensure token is available in scope
+  //      }
+  //    } catch (error) {
+  //      console.error("Error fetching balance:", error);
+  //    } finally {
+  //      setTimeout(() => setRefreshing(false), 1000); // Proper finally block
+  //    }
+  //  };
+
+  //    useEffect(() => {
+  //      if (userId) {
+
+  //        handleRefresh(); // Call the function whenever userId changes
+  //      }
+  //    }, [setRefreshing, userId, balance]);
 
   return (
     <div className="modal-overlay" onClick={closeModal}>
@@ -158,17 +156,17 @@ export default ({ modalName }) => {
                   <div className="text">
                     Main Wallet
                     <div
-                  className={`icon refresh ${refreshing ? "active" : ""}`}
-                  onClick={handleRefresh}
-                ></div>
+                      className={`icon refresh ${refreshing ? "active" : ""}`}
+                      onClick={handleRefresh}
+                    ></div>
                     <div className="icon eyes"></div>
                   </div>
                   <span className="amount totalBalanceWallet">
-                  <i className="balance-value">
-                  <i id="" style={{ display: "initial", color: "#380582" }}>
-                    ৳ {balance}
-                  </i>
-                </i>
+                    <i className="balance-value">
+                      <i id="" style={{ display: "initial", color: "#380582" }}>
+                        ৳ {balance}
+                      </i>
+                    </i>
                   </span>
                 </div>
               </div>
@@ -479,20 +477,25 @@ export default ({ modalName }) => {
                   </li>
                 </ul>
               </div>
-              <Link className="logout-button">
+
+              {/* <Link className="logout-button" >
                 <span
                   className="item-icon"
-                  style={{
-                    backgroundImage:
-                      "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/header-logout-icon.svg)",
-                      backgroundImage:
-                      "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/header-logout-icon.svg)",
-                  }}
                 ></span>
                 <div className="item-text" onClick={()=>logout()}>
                   <p>লগ আউট</p>
                 </div>
-              </Link>
+              </Link> */}
+
+              <div
+                className="deposit-content"
+                type="submit"
+                onClick={()=>logout()}
+              >
+                <div className="button btn-primary">
+                  <Link type="submit">LogOut</Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

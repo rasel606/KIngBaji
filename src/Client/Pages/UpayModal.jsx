@@ -76,13 +76,12 @@ const {gateway_name,
    };
 
 
-   console.log(params)
  
    const handlePayment = async (e) => {
      e.preventDefault();
      try {
        const response = await axios.post(
-         `https://kingpayment.onrender.com/api/v1/submitTransaction/`,
+         `http://localhost:5000/api/v1/submitTransaction/`,
          {
            userId:userDeatils.userId,
            gateway_name:gateway_name,
