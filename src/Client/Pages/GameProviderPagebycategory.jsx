@@ -33,7 +33,7 @@ export default ()=> {
     };
 
     // Load TrafficStatistics.js
-    loadScript("http://localhost:5000/js/jquery-1.9.1.min.js", () => {
+    loadScript("http://kingbaji.live/js/jquery-1.9.1.min.js", () => {
       if (typeof window.TrafficStatistics !== "undefined") {
         console.log("✅ TrafficStatistics loaded successfully.");
       } else {
@@ -43,7 +43,7 @@ export default ()=> {
         };
       }
     });
-    loadScript("http://localhost:5000/js/trafficStatistics.js", () => {
+    loadScript("http://kingbaji.live/js/trafficStatistics.js", () => {
       if (typeof window.TrafficStatistics !== "undefined") {
         console.log("✅ TrafficStatistics loaded successfully.");
       } else {
@@ -67,7 +67,7 @@ export default ()=> {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`,
+          `http://kingbaji.live/api/v1/New-table-Games-with-Providers?category=${category_name}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -91,7 +91,7 @@ export default ()=> {
     const fetchGames = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
+          `http://kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -117,7 +117,7 @@ export default ()=> {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/launch_gamePlayer", {
+      const response = await fetch("http://kingbaji.live/api/v1/launch_gamePlayer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, game_id, p_type, p_code }),
@@ -141,7 +141,7 @@ export default ()=> {
   const handleRefresh = async (userId) => {
     try {
       await handelUserDetails(userId);
-      const response = await axios.post("http://localhost:5000/api/v1/user_balance", { userId });
+      const response = await axios.post("http://kingbaji.live/api/v1/user_balance", { userId });
       console.log("Balance Data:", response.data);
     } catch (error) {
       console.error("Error fetching balance:", error);
