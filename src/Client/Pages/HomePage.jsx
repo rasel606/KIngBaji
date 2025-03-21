@@ -103,7 +103,7 @@ export default (props) => {
 
   useEffect(() => {
     setLoading(true);
-    const url = "http://kingbaji.live/api/v1/New-table-categories";
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -158,7 +158,7 @@ setLoading(true);
       handelUserDetails(userId);
       
       const response = await axios.post(
-        "http://kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         {userId} 
       );
       console.log(response);
