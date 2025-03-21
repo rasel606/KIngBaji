@@ -308,7 +308,7 @@ setLoading(true);
                           return (
                             <li>
                               {console.log(item.providercode)}
-                              <Link
+                              <Link 
                                 to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
                                   active.name
                                 )}/${encodeURIComponent(item.providercode)}`}
@@ -317,6 +317,8 @@ setLoading(true);
                                 <p>{item.company}</p>
                               </Link>
                             </li>
+
+// {`${activeIndex !== 0 ? `gamesProvidersPageWithCategory/${encodeURIComponent(active.name)}/${encodeURIComponent(item.providercode)}` : ""}`}
                           );
                         })}
                       </ul>
@@ -374,12 +376,7 @@ setLoading(true);
             <Footer></Footer>
           </div>
         </div>
-        {/* <Button
-          className="auth-container__button auth-container__button--primary"
-          onClick={() => setModalShow(true)} // Pass row data on click
-        >
-          Login
-        </Button> */}
+     
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
 import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
 
-export default ()=> {
+export default () => {
   const [data, setData] = useState([]);
   const [GameData, setGameData] = useState([]);
   const [playGameData, setPlayGameData] = useState();
@@ -20,47 +20,6 @@ export default ()=> {
   const [userData, setUserData] = useState(userId);
 
   console.log("User ID:", userId);
-
-  /** 🚀 Load Scripts Dynamically */
-  useEffect(() => {
-    const loadScript = (src, callback) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.async = true;
-      script.onload = callback;
-      script.onerror = () => console.error(`❌ Failed to load script: ${src}`);
-      document.body.appendChild(script);
-    };
-
-    // Load TrafficStatistics.js
-    loadScript("http://kingbaji.live/js/jquery-1.9.1.min.js", () => {
-      if (typeof window.TrafficStatistics !== "undefined") {
-        console.log("✅ TrafficStatistics loaded successfully.");
-      } else {
-        console.warn("⚠ TrafficStatistics failed to load, using fallback.");
-        window.TrafficStatistics = function () {
-          return { get: () => "fallback-value" };
-        };
-      }
-    });
-    loadScript("http://kingbaji.live/js/trafficStatistics.js", () => {
-      if (typeof window.TrafficStatistics !== "undefined") {
-        console.log("✅ TrafficStatistics loaded successfully.");
-      } else {
-        console.warn("⚠ TrafficStatistics failed to load, using fallback.");
-        window.TrafficStatistics = function () {
-          return { get: () => "fallback-value" };
-        };
-      }
-    });
-    console.log("✅ jQuery loaded.", loadScript);
-    // Load jQuery if not already available
-    if (typeof window.jQuery === "undefined") {
-      loadScript("https://statics3.fwick7ets.xyz/js/jquery-1.9.1.min.js?v=20170425", () => {
-        console.log("✅ jQuery loaded.");
-      });
-    }
-  }, [playGameData]);
 
   /** 🚀 Fetch Category Data */
   useEffect(() => {
@@ -117,17 +76,37 @@ export default ()=> {
     setLoading(true);
 
     try {
-      const response = await fetch("http://kingbaji.live/api/v1/launch_gamePlayer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, game_id, p_type, p_code }),
-      });
-
+      const response = await fetch(
+        "http://kingbaji.live/api/v1/launch_gamePlayer",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, game_id, p_type, p_code }),
+        }
+      );
+      console.log(response);
       const data = await response.json();
       setPlayGameData(data);
-
+      console.log(data);
       if (data?.gameUrl) {
-        setShowPopup(true);
+        const gameUrl = data.gameUrl;
+
+        // Extract cert and key from the URL using regex
+        const certMatch = gameUrl.match(/cert=([^&]+)/);
+        const keyMatch = gameUrl.match(/key=([^&]+)/);
+
+        if (certMatch && keyMatch) {
+          const cert = certMatch[1];
+          const key = keyMatch[1];
+
+          console.log("Extracted cert:", cert);
+          console.log("Extracted key:", key);
+
+          // Navigate to a new page with cert and key as query params
+          window.location.href = data.gameUrl;
+        } else if (data?.gameUrl) {
+          setShowPopup(true);
+        }
       }
     } catch (error) {
       console.error("Error launching game:", error);
@@ -141,7 +120,10 @@ export default ()=> {
   const handleRefresh = async (userId) => {
     try {
       await handelUserDetails(userId);
-      const response = await axios.post("http://kingbaji.live/api/v1/user_balance", { userId });
+      const response = await axios.post(
+        "http://kingbaji.live/api/v1/user_balance",
+        { userId }
+      );
       console.log("Balance Data:", response.data);
     } catch (error) {
       console.error("Error fetching balance:", error);
@@ -158,6 +140,7 @@ export default ()=> {
   /** 🚀 Handle Popup Close */
   const handleClosePopup = () => {
     setShowPopup(false);
+    handleRefresh(userId);
   };
 
   useEffect(() => {
@@ -172,7 +155,10 @@ export default ()=> {
         <div className="main-content">
           <div className="content-box">
             <div className="games">
-              <div className="nav nav-category nav-auto" style={{ height: "35px", marginTop: "2px" }}>
+              <div
+                className="nav nav-category nav-auto"
+                style={{ height: "35px", marginTop: "2px" }}
+              >
                 {data.map((item, index) => (
                   <div
                     className={`btn ${index === activeIndex ? "selected" : ""}`}
@@ -192,9 +178,23 @@ export default ()=> {
               <div className="games-main">
                 {GameData?.map((game, index) => (
                   <div className="games-box" key={index}>
-                    <div className="pic" onClick={() => handlePlay(userId, game.g_code, game.p_type, game.p_code)}>
+                    <div
+                      className="pic"
+                      onClick={() =>
+                        handlePlay(
+                          userId,
+                          game.g_code,
+                          game.p_type,
+                          game.p_code
+                        )
+                      }
+                    >
                       <p>
-                        <img src={game?.imgFileName} alt={game.name} loading="lazy" />
+                        <img
+                          src={game?.imgFileName}
+                          alt={game.name}
+                          loading="lazy"
+                        />
                       </p>
                     </div>
                     <div className="text">
@@ -214,10 +214,19 @@ export default ()=> {
             <div className="popup-page__main popup-page-main popup-page-main--show">
               <div className="popup-page-main__header new-login-tab">
                 <div className="popup-page-main__title">KingBaji</div>
-                <div className="popup-page-main__close" onClick={handleClosePopup}></div>
+                <div
+                  className="popup-page-main__close"
+                  onClick={handleClosePopup}
+                ></div>
               </div>
               <div className="popup-page-main__container">
-                <iframe src={playGameData.gameUrl} title="Game" width="100%" height="500px" allowFullScreen></iframe>
+                <iframe
+                  src={playGameData.gameUrl}
+                  title="Game"
+                  width="100%"
+                  height="500px"
+                  allowFullScreen
+                ></iframe>
               </div>
             </div>
           </div>
@@ -225,4 +234,4 @@ export default ()=> {
       )}
     </div>
   );
-}
+};
