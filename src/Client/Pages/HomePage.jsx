@@ -102,8 +102,9 @@ export default (props) => {
   let scrollTimeout;
 
   useEffect(() => {
+    handleRefresh(); 
     setLoading(true);
-    const url = "http://localhost:5000/api/v1/New-table-categories";
+    const url = "https://kingbaji.live/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -158,7 +159,7 @@ setLoading(true);
       handelUserDetails(userId);
       
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user_balance",
+        "https://kingbaji.live/api/v1/user_balance",
         {userId} 
       );
       console.log(response);
@@ -194,7 +195,7 @@ setLoading(true);
       handleRefresh(); // Call the function whenever userId changes
       
     }
-  }, [setRefreshing, userId, balance,loading]);
+  }, [setRefreshing, userId, balance,loading,token]);
 
   return (
     <div className="">

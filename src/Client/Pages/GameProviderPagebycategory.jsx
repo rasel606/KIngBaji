@@ -26,7 +26,7 @@ export default () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`,
+          `https://kingbaji.live/api/v1/New-table-Games-with-Providers?category=${category_name}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -50,7 +50,7 @@ export default () => {
     const fetchGames = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
+          `https://kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -77,7 +77,7 @@ export default () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/v1/launch_gamePlayer",
+        "https://kingbaji.live/api/v1/launch_gamePlayer",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -121,7 +121,7 @@ export default () => {
     try {
       await handelUserDetails(userId);
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user_balance",
+        "https://kingbaji.live/api/v1/user_balance",
         { userId }
       );
       console.log("Balance Data:", response.data);
