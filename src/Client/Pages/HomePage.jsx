@@ -80,13 +80,18 @@ export default (props) => {
     userId,
     loading,setLoading
   } = useAuth();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [active, setActive] = useState([data[0]?.category]);
+
+  const [active, setActive] = useState(data[0]?.category);
+  const [activeIndex, setActiveIndex] = useState(data[0]?.category.uniqueProviders);
+
+
+
+
   console.log(data[0]?.category.uniqueProviders);
   console.log("active",active);
   const handleItemClick = (index, item) => {
     setActiveIndex(index);
-    setActive(item);
+    setActive(item ? item :data[0]?.category?.uniqueProviders);
     console.log(item);
   };
 
@@ -104,7 +109,7 @@ export default (props) => {
   useEffect(() => {
     handleRefresh(); 
     setLoading(true);
-    const url = "https://kingbaji.live/api/v1/New-table-categories";
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -159,7 +164,7 @@ setLoading(true);
       handelUserDetails(userId);
       
       const response = await axios.post(
-        "https://kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         {userId} 
       );
       console.log(response);
@@ -303,12 +308,12 @@ setLoading(true);
                 <div className="content-box">
                   <div className="layout-brand">
                     <div className="card1">
-                      {console.log(active.name)}
+                      
                       <ul>
                         {active?.uniqueProviders?.map((item, index) => {
                           return (
                             <li>
-                              {console.log(item.providercode)}
+                              
                               <Link 
                                 to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
                                   active.name
