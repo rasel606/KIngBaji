@@ -80,7 +80,7 @@ export default () => {
         "https://api.kingbaji.live/api/v1/launch_gamePlayer",
         {
           method: "POST",
-          credentials: 'include', // Important for cookies
+          // credentials: 'include', // Important for cookies
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
