@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://35.207.202.6:5000/api/v1" });
+const API = axios.create({ baseURL: "https://api.kingbaji.live/api/v1" });
 
 // Interceptor to attach token to all requests
 API.interceptors.request.use((req) => {

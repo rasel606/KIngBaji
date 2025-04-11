@@ -52,7 +52,7 @@ const verifyUserToken = async (token) => {
   }
 
   setLoading(true);
-  axios.get('http://35.207.202.6:5000/api/v1/verify', {
+  axios.get('https://api.kingbaji.live/api/v1/verify', {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
   })
     .then((response) => {

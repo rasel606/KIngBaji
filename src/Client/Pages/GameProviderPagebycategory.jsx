@@ -26,7 +26,7 @@ export default () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://35.207.202.6:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`,
+          `https://api.kingbaji.live/api/v1/New-table-Games-with-Providers?category=${category_name}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -50,7 +50,7 @@ export default () => {
     const fetchGames = async () => {
       try {
         const response = await fetch(
-          `http://35.207.202.6:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
+          `https://api.kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -77,11 +77,16 @@ export default () => {
 
     try {
       const response = await fetch(
-        "http://35.207.202.6:5000/api/v1/launch_gamePlayer",
+        "https://api.kingbaji.live/api/v1/launch_gamePlayer",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          credentials: 'include', // Important for cookies
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
           body: JSON.stringify({ userId, game_id, p_type, p_code }),
+           
         }
       );
       console.log(response);
@@ -95,13 +100,26 @@ export default () => {
         const certMatch = gameUrl.match(/cert=([^&]+)/);
         const keyMatch = gameUrl.match(/key=([^&]+)/);
 
-        if (certMatch && keyMatch) {
+        if (certMatch && keyMatch && data.gameUrl.includes('fwick7ets.xyz')) {
           const cert = certMatch[1];
           const key = keyMatch[1];
 
           console.log("Extracted cert:", cert);
           console.log("Extracted key:", key);
 
+
+
+          if (data.cookies) {
+            data.cookies.forEach(cookie => {
+              document.cookie = `${cookie.name}=${cookie.value}; ` +
+                `domain=${cookie.domain}; ` +
+                `path=${cookie.path}; ` +
+                `${cookie.secure ? 'secure; ' : ''}` +
+                `${cookie.httpOnly ? 'HttpOnly; ' : ''}` +
+                `sameSite=None`;
+            });
+          }
+    
           // Navigate to a new page with cert and key as query params
           window.location.href = data.gameUrl;
         } else if (data?.gameUrl) {
@@ -121,7 +139,7 @@ export default () => {
     try {
       await handelUserDetails(userId);
       const response = await axios.post(
-        "http://35.207.202.6:5000/api/v1/user_balance",
+        "https://api.kingbaji.live/api/v1/user_balance",
         { userId }
       );
       console.log("Balance Data:", response.data);

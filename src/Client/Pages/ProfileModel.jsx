@@ -39,7 +39,7 @@ export default ({ modalName }) => {
       handelUserDetails(userId);
 
       const response = await axios.post(
-        "http://35.207.202.6:5000/api/v1/user_balance",
+        "https://api.kingbaji.live/api/v1/user_balance",
         { userId }
       );
       // console.log(response);
@@ -81,7 +81,7 @@ export default ({ modalName }) => {
   //    setRefreshing(true);
 
   //    try {
-  //      const response = await axios.post("http://35.207.202.6:5000/api/v1/user_balance", {userId});
+  //      const response = await axios.post("https://api.kingbaji.live/api/v1/user_balance", {userId});
   //      setBalance(response.data.balance);
 
   //      if (response.data.hasOwnProperty("balance")) {
