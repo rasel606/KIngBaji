@@ -96,7 +96,7 @@ export default () => {
       if (data?.gameUrl) {
         const gameUrl = data.gameUrl;
 
-        // Extract cert and key from the URL using regex
+        
         const certMatch = gameUrl.match(/cert=([^&]+)/);
         const keyMatch = gameUrl.match(/key=([^&]+)/);
 
