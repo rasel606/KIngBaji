@@ -18,7 +18,7 @@ export default () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [balance, setBalance] = useState(userDeatils.balance || 0);
   const [userData, setUserData] = useState(userId);
-
+  const [gameWindow, setGameWindow] = useState(null);
   console.log("User ID:", userId);
 
   /** 🚀 Fetch Category Data */
@@ -82,11 +82,10 @@ export default () => {
           method: "POST",
           // credentials: 'include', // Important for cookies
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            "Content-Type": "application/json",
+            Accept: "application/json",
           },
           body: JSON.stringify({ userId, game_id, p_type, p_code }),
-           
         }
       );
       console.log(response);
@@ -96,32 +95,45 @@ export default () => {
       if (data?.gameUrl) {
         const gameUrl = data.gameUrl;
 
-        
         const certMatch = gameUrl.match(/cert=([^&]+)/);
         const keyMatch = gameUrl.match(/key=([^&]+)/);
 
-        if (certMatch && keyMatch && data.gameUrl.includes('fwick7ets.xyz')) {
+        if (certMatch && keyMatch && data.gameUrl.includes("fwick7ets.xyz")) {
           const cert = certMatch[1];
           const key = keyMatch[1];
 
           console.log("Extracted cert:", cert);
           console.log("Extracted key:", key);
 
+          // if (data.cookies) {
+          //   data.cookies.forEach(cookie => {
+          //     document.cookie = `${cookie.name}=${cookie.value}; ` +
+          //       `domain=${cookie.domain}; ` +
+          //       `path=${cookie.path}; ` +
+          //       `${cookie.secure ? 'secure; ' : ''}` +
+          //       `${cookie.httpOnly ? 'HttpOnly; ' : ''}` +
+          //       `sameSite=None`;
+          //   });
+          // }
 
-
-          if (data.cookies) {
-            data.cookies.forEach(cookie => {
-              document.cookie = `${cookie.name}=${cookie.value}; ` +
-                `domain=${cookie.domain}; ` +
-                `path=${cookie.path}; ` +
-                `${cookie.secure ? 'secure; ' : ''}` +
-                `${cookie.httpOnly ? 'HttpOnly; ' : ''}` +
-                `sameSite=None`;
-            });
-          }
-    
           // Navigate to a new page with cert and key as query params
-          window.location.href = data.gameUrl;
+          const features = `
+  width=${window.screen.availWidth},
+  height=${window.screen.availHeight},
+  top=0,
+  left=0,
+  fullscreen=yes,
+  scrollbars=yes,
+  resizable=yes,
+  toolbar=no,
+  location=no,
+  status=no,
+  menubar=no
+`;
+
+          const newWindow = window.open(data.gameUrl, "_blank", features);
+          setGameWindow(newWindow);
+          // window.location.href = data.gameUrl;
         } else if (data?.gameUrl) {
           setShowPopup(true);
         }
@@ -133,6 +145,14 @@ export default () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (gameWindow && !gameWindow.closed) {
+        gameWindow.close();
+      }
+    };
+  }, [gameWindow]);
 
   /** 🚀 Refresh Balance */
   const handleRefresh = async (userId) => {
@@ -228,7 +248,10 @@ export default () => {
 
       {showPopup && playGameData?.gameUrl && (
         <div className="popup-page-wrapper active" onClick={handleClosePopup}>
-          <div    className="popup-page show-toolbar popup-page--active popup-page--align-top" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="popup-page show-toolbar popup-page--active popup-page--align-top"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="popup-page__main popup-page-main popup-page-main--show">
               <div className="popup-page-main__header new-login-tab">
                 <div className="popup-page-main__title">KingBaji</div>

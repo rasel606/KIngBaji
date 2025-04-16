@@ -113,6 +113,7 @@ export default (props) => {
       headers: {
         "Content-Type": "application/json",
       },
+      mood: "no-cors",
     })
       .then((response) => response.json())
       .then((data) => {
