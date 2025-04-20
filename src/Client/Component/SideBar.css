@@ -957,8 +957,9 @@ header .header-title {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     /* background-color: #3c1724; */
+    color:#fff
 }
 
 .toolbar ul li {
@@ -1004,7 +1005,7 @@ header .header-title {
 }
 
 .toolbar ul li.active .item-icon {
-    display: none
+    /* display: none */
 }
 
 .toolbar ul li.active .item-icon-active {
@@ -1558,14 +1559,15 @@ html.is-desktop .nav-category {
     padding-bottom: 6.6666666667vw;
     overflow-x: hidden;
     overflow-y: auto;
-    background: #fff;
+    background: #4C086C;
     box-shadow: .5333333333vw 0 .8vw #0000001a;
     -webkit-overflow-scrolling: touch
 }
 
 .menu-first ul {
     position: relative;
-    width: 100%
+    width: 100%;
+    display: block;
 }
 
 .menu-first ul:after {
@@ -1589,7 +1591,9 @@ html.is-desktop .nav-category {
     height: auto;
     padding: 2.6666666667vw;
     transition: all .3s;
-    font-size: 3.4666666667vw
+    font-size: 3.4666666667vw;
+    align-items: center;
+    background: #fff;
 }
 
 .menu-first ul li a {
@@ -1657,14 +1661,14 @@ html.is-desktop .nav-category {
     justify-content: flex-start;
     width: 45.3333333333vw;
     height: auto;
-    margin: 2.6666666667vw auto;
+    /* margin: 2.6666666667vw auto; */
     padding: 2.6666666667vw;
     overflow-x: hidden;
     overflow-y: auto;
-    border: .2666666667vw solid rgba(0,93,172,.1);
+    border: 2.2666666667vw solid rgba(0,93,172,.1);
     border-radius: .8vw;
     background: #f9fcff;
-    -webkit-overflow-scrolling: touch
+    -webkit-overflow-scrolling: touch;
 }
 
 .menu-first .service .item-icon {
@@ -29463,7 +29467,9 @@ header .logo {
 }
 
 .menu-first ul li {
-    padding: 0
+    padding-left: 2.6666666667vw;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .menu-first ul li:after {
@@ -29507,8 +29513,9 @@ header .logo {
     margin: 0;
     width: 100%;
     border: 0;
-    border-radius: 0;
-    background: transparent
+    /* border-radius: 0; */
+    background: red;
+    border: 2.66666667vw solid blue;
 }
 
 .menu-first .service.service:before {

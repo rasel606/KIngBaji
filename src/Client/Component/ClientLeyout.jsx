@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Accordion, Container, Navbar } from "react-bootstrap";
+// import { Accordion, Container, Navbar } from "react-bootstrap";
 import {
   Link,
   NavLink,
@@ -75,10 +75,10 @@ import UpayModal from "../Pages/UpayModal";
 
 
 export default () => {
-  const getUserDetails = "";
-  let contentRef,
-    sideNavRef,
-    topNavRef = useRef();
+  // const getUserDetails = "";
+  // let contentRef,
+  //   sideNavRef,
+  //   topNavRef = useRef();
 
   // const [show, setShow] = useState(false);
 
@@ -943,7 +943,7 @@ export default () => {
 
       
 
-      <div ref={(div) => (contentRef = div)} className="content">
+      <div >
         <Outlet />
         
       </div>

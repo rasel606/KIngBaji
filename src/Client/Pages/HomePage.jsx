@@ -5,7 +5,6 @@ import { LuRefreshCcw } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 
-import { Button } from "react-bootstrap";
 import Carousel from "./Carousel";
 // import promotionImg from "../../../public/assets/images/icon-set/toolbar-icon-deposit.svg";
 // import depositImg from "../../../public/assets/images/icon-set/toolbar-icon-deposit.svg";
@@ -107,7 +106,7 @@ export default (props) => {
   useEffect(() => {
     handleRefresh();
     setLoading(true);
-    const url = "https://api.kingbaji.live/api/v1/New-table-categories";
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -163,7 +162,7 @@ export default (props) => {
       handelUserDetails(userId);
 
       const response = await axios.post(
-        "https://api.kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         { userId }
       );
       console.log(response);

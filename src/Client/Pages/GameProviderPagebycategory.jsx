@@ -26,7 +26,7 @@ export default () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://api.kingbaji.live/api/v1/New-table-Games-with-Providers?category=${category_name}`,
+          `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -50,7 +50,7 @@ export default () => {
     const fetchGames = async () => {
       try {
         const response = await fetch(
-          `https://api.kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
+          `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -77,7 +77,7 @@ export default () => {
 
     try {
       const response = await fetch(
-        "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+        "http://localhost:5000/api/v1/launch_gamePlayer",
         {
           method: "POST",
           // credentials: 'include', // Important for cookies
@@ -159,7 +159,7 @@ export default () => {
     try {
       await handelUserDetails(userId);
       const response = await axios.post(
-        "https://api.kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         { userId }
       );
       console.log("Balance Data:", response.data);
