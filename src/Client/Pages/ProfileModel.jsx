@@ -25,7 +25,7 @@ export default ({ modalName }) => {
     userId,
   } = useAuth();
 
-  const [balance, setBalance] = useState(userDeatils.balance);
+  const [balance, setBalance] = useState(userId?.balance);
   const [userData, setUserData] = useState(userId);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -120,7 +120,7 @@ export default ({ modalName }) => {
             }}
           ></div>
           <div className="infor">
-            <div className="account">{userData.userId}</div>
+            {/* <div className="account">{userData.userId}</div> */}
             <div
               className="vip-points active"
               onClick={() => openModal("GiftPointsModel")}
@@ -219,7 +219,10 @@ export default ({ modalName }) => {
             </h2>
           </div>
           <ul className="align-center">
-            <li className="deposit">
+            <li
+              className="deposit"
+              onClick={() => openModal("BettingRecordModal")}
+            >
               <Link>
                 <span
                 // className="item-icon"
@@ -448,20 +451,12 @@ export default ({ modalName }) => {
           </ul>
         </div>
 
-        {/* <Link className="logout-button" >
-                <span
-                  className="item-icon"
-                ></span>
-                <div className="item-text" onClick={()=>logout()}>
-                  <p>লগ আউট</p>
-                </div>
-              </Link> */}
         <div
           className="member-menu-logout"
           type="submit"
           onClick={() => logout()}
         >
-          <Link type="submit">
+          <Link>
             <span
               className="item-icon"
               style={{

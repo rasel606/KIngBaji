@@ -10,7 +10,7 @@ const TransactionRecordsModal = ({ modalName }) => {
   const [filters, setFilters] = useState({
     status: [],
     paymentType: [],
-    date: "আজ"
+    date: "আজ",
   });
   const [transactions, setTransactions] = useState([]);
 
@@ -22,19 +22,19 @@ const TransactionRecordsModal = ({ modalName }) => {
   const tabs = ["Today", "Yesterday", "This Week"];
 
   const handleFilterChange = (type, value) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [type]: prev[type].includes(value) 
-        ? prev[type].filter(item => item !== value)
-        : [...prev[type], value]
+      [type]: prev[type].includes(value)
+        ? prev[type].filter((item) => item !== value)
+        : [...prev[type], value],
     }));
   };
 
   const fetchTransactions = async () => {
     try {
-      const response = await searchTransactionsbyUserId({ 
+      const response = await searchTransactionsbyUserId({
         userId,
-        filters 
+        filters,
       });
       setTransactions(response.data.transactionExists || []);
     } catch (error) {
@@ -53,7 +53,10 @@ const TransactionRecordsModal = ({ modalName }) => {
 
   return (
     <div className="popup-page-wrapper active" onClick={closeModal}>
-      <div className="popup-page show-toolbar popup-page--active popup-page--align-top" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="popup-page show-toolbar popup-page--active popup-page--align-top"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="popup-page__main popup-page-main popup-page-main--show">
           <div className="popup-page-main__header">
             <div className="popup-page-main__title">লেনদেনের রেকর্ড</div>
@@ -61,48 +64,44 @@ const TransactionRecordsModal = ({ modalName }) => {
           </div>
 
           <div className="content mcd-style player-content">
-            <div className={`searchpage ${isFilterOpen ? 'active' : ''}`}>
+            <div className={`searchpage ${isFilterOpen ? "active" : ""}`}>
               <div className="search-top-info">
                 <div className="back" onClick={() => setIsFilterOpen(false)}>
                   <span className="item-icon"></span>
                   পিছনে
                 </div>
-                <input 
-                  type="text" 
-                  placeholder="লেনদেন ফিল্টার" 
-                  disabled 
-                />
+                <input type="text" placeholder="লেনদেন ফিল্টার" disabled />
               </div>
 
               <div className="searchpage-main">
-                <FilterGroup 
+                <FilterGroup
                   title="স্ট্যাটাস"
                   type="checkbox"
                   options={statusOptions}
                   selected={filters.status}
-                  onChange={(val) => handleFilterChange('status', val)}
+                  onChange={(val) => handleFilterChange("status", val)}
                 />
 
-                <FilterGroup 
+                <FilterGroup
                   title="লেনদেন প্রকার"
                   type="checkbox"
                   options={paymentTypeOptions}
                   selected={filters.paymentType}
-                  onChange={(val) => handleFilterChange('paymentType', val)}
+                  onChange={(val) => handleFilterChange("paymentType", val)}
                 />
 
-                <FilterGroup 
+                <FilterGroup
                   title="তারিখ"
                   type="radio"
                   options={dateOptions}
                   selected={filters.date}
-                  onChange={(val) => handleFilterChange('date', val)}
+                  onChange={(val) => handleFilterChange("date", val)}
                 />
               </div>
 
               <div className="searchpage-bar">
-                <button 
-                  className="button" 
+                <button
+                  className="button"
                   onClick={() => setIsFilterOpen(false)}
                 >
                   প্রয়োগ করুন
@@ -111,23 +110,26 @@ const TransactionRecordsModal = ({ modalName }) => {
             </div>
 
             <div className="transaction-container">
-              <div className="filter-header" onClick={() => setIsFilterOpen(true)}>
-              <div className="tab filter-tab">
-      <ul className="item-ani">
-        {tabs.map(tab => (
-          <li 
-            key={tab}
-            className={activeTab === tab ? "active" : ""}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </li>
-        ))}
-      </ul>
-      <div className="btn search-btn">
-        <span className="item-icon"></span>
-      </div>
-    </div>
+              <div
+                className="filter-header"
+                onClick={() => setIsFilterOpen(true)}
+              >
+                <div className="tab filter-tab">
+                  <ul className="item-ani">
+                    {tabs.map((tab) => (
+                      <li
+                        key={tab}
+                        className={activeTab === tab ? "active" : ""}
+                        onClick={() => setActiveTab(tab)}
+                      >
+                        {tab}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="btn search-btn">
+                    <span className="item-icon"></span>
+                  </div>
+                </div>
               </div>
 
               <div className="record-item item-title">
@@ -141,9 +143,9 @@ const TransactionRecordsModal = ({ modalName }) => {
                 <NoData />
               ) : (
                 transactions.map((transaction) => (
-                  <TransactionItem 
-                    key={transaction._id} 
-                    transaction={transaction} 
+                  <TransactionItem
+                    key={transaction._id}
+                    transaction={transaction}
                   />
                 ))
               )}
@@ -159,12 +161,14 @@ const FilterGroup = ({ title, type, options, selected, onChange }) => (
   <div className="search-checkbox-group">
     <h2>{title}</h2>
     <ul>
-      {options.map(option => (
+      {options.map((option) => (
         <li key={option}>
-          <input 
+          <input
             type={type}
             name={title}
-            checked={type === 'radio' ? selected === option : selected.includes(option)}
+            checked={
+              type === "radio" ? selected === option : selected.includes(option)
+            }
             onChange={() => onChange(option)}
           />
           <label>{option}</label>
@@ -176,11 +180,15 @@ const FilterGroup = ({ title, type, options, selected, onChange }) => (
 
 const TransactionItem = ({ transaction }) => {
   const getStatus = () => {
-    switch(transaction.status) {
-      case 0: return "প্রক্রিয়াধীন";
-      case 1: return "অনুমোদিত";
-      case 2: return "প্রত্যাখ্যাত";
-      default: return "অজানা";
+    switch (transaction.status) {
+      case 0:
+        return "প্রক্রিয়াধীন";
+      case 1:
+        return "অনুমোদিত";
+      case 2:
+        return "প্রত্যাখ্যাত";
+      default:
+        return "অজানা";
     }
   };
 

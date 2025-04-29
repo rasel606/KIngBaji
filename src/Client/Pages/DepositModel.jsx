@@ -6,7 +6,7 @@ import {
   GatWaySystem,
   GetPaymentMethodsUser,
 } from "../Component/Axios-API-Service/AxiosAPIService";
-import { usePayNow } from "../PaymentContext/PaymenyContext";
+// import { usePayNow } from "../PaymentContext/PaymenyContext";
 
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
@@ -67,6 +67,45 @@ export default ({ modalName }) => {
     { id: "7", value: "200", label: "200" },
   ];
 
+  const promotions = [
+    { id: 0, name: "৪% সীমাহীন বোনাস+ফ্রি স্পিন" },
+    { id: 1, name: "২০০% HEYVIP বোনাস" },
+    { id: 2, name: "৩০০% IPL দৈনিক স্পোর্টস বোনাস" },
+    { id: 3, name: "১০৮০% স্লটস সাপ্তাহিক বোনাস" },
+    { id: 4, name: "৫৭০% সাপ্তাহিক ক্যাসিনো বোনাস" },
+    { id: 5, name: "নরমাল ডিপোজিট" },
+  ];
+
+  const paymentMethods = [
+    { id: "2048", name: "bKash", icon: "bkash.png", bonus: 4 },
+    { id: "8192", name: "Nagad", icon: "nagad.png", bonus: 4 },
+    { id: "4096", name: "Rocket", icon: "rocket.png", bonus: 4 },
+    { id: "16777216", name: "UPay", icon: "upay.png", bonus: 4 },
+    { id: "trc20", name: "USDT TRC20", icon: "trc20.svg", bonus: 0 },
+    { id: "erc20", name: "USDT ERC20", icon: "erc20.svg", bonus: 0 },
+    { id: "1", name: "Local Bank", icon: "bank-card.png", bonus: 4 },
+  ];
+
+  const paymentTypes = [{ id: "0", name: "bKash Payment" }];
+
+  const depositSettings = [
+    { id: "3367", name: "EP-ক্যাশ আউট" },
+    { id: "3705", name: "SP-ক্যাশ আউট" },
+    { id: "3371", name: "AP-ক্যাশ আউট" },
+    { id: "3508", name: "সেন্ড মানি" },
+  ];
+
+  const depositAmounts = [
+    { id: "0", amount: "2,000" },
+    { id: "1", amount: "5,000" },
+    { id: "2", amount: "10,000" },
+    { id: "3", amount: "15,000" },
+    { id: "4", amount: "20,000" },
+    { id: "5", amount: "30,000" },
+    { id: "6", amount: "1,000" },
+    { id: "7", amount: "200" },
+  ];
+
   const {
     isAuthenticated,
     loginUser,
@@ -90,15 +129,15 @@ export default ({ modalName }) => {
     setPayment_type,
   } = usePayNow();
 
-  const [paymentMethods, setpaymentMethods] = useState([]);
-  const [Payment, setPayment] = useState(null);
+  // const [paymentMethods, setpaymentMethods] = useState([]);
+  // const [Payment, setPayment] = useState(null);
   const [activeTab, setActiveTab] = useState("deposit");
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [showVerification, setShowVerification] = useState(false);
   const [loading, setLoading] = useState(true);
 
   let [amount, setAmount] = useState(0);
-  // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
+  const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
   const [PaymentAct, setPaymentAct] = useState("");
   const [Mood, setMood] = useState(); //paymentMethods[0]
   // let amount =0
@@ -146,18 +185,18 @@ export default ({ modalName }) => {
   };
 
   // userId: userId,
-  setAmountPay(amount);
-  setGateway_name(
-    Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
-  );
-  setGateway_Number(
-    Payment === null
-      ? paymentMethods[0]?.gateway_Number
-      : Payment?.gateway_Number
-  );
-  setPayment_type(
-    Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
-  );
+  // setAmountPay(amount);
+  // setGateway_name(
+  //   Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
+  // );
+  // setGateway_Number(
+  //   Payment === null
+  //     ? paymentMethods[0]?.gateway_Number
+  //     : Payment?.gateway_Number
+  // );
+  // setPayment_type(
+  //   Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
+  // );
   // referredbyCode: userDeatils.referredbyCode
 
   const navigate = useNavigate();
@@ -172,7 +211,6 @@ export default ({ modalName }) => {
 
     if (amount > 0) {
       // console.log("Submitting Payment Data:", paydata);
-
       // GetPaymentMethodsUser(paydata)
       //     .then((res) => {
       //         console.log("API Response:", res.data);
@@ -189,9 +227,9 @@ export default ({ modalName }) => {
     }
   };
 
-  // const clearInput = () => {
-  //   setAmount("");
-  // };
+  const clearInput = () => {
+    setAmount("");
+  };
 
   const userVarifayed = false;
 
@@ -205,6 +243,39 @@ export default ({ modalName }) => {
   };
   const handlePaymentSelect = (method) => {
     setSelectedPayment(method);
+  };
+
+  // const [activeTab, setActiveTab] = useState('deposit');
+  const [selectedPromotion, setSelectedPromotion] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentType, setPaymentType] = useState("");
+  const [depositSetting, setDepositSetting] = useState("");
+  const [depositAmount, setDepositAmount] = useState("");
+  const [customAmount, setCustomAmount] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
+
+  const handleSubmit = () => {
+    if (!isVerified) {
+      // navigate("/verify-phone");
+      openModal("modal2")
+      return;
+    }
+
+    // Handle deposit submission
+    console.log({
+      promotion: promotions[selectedPromotion].name,
+      paymentMethod,
+      paymentType,
+      depositSetting,
+      amount: depositAmount || customAmount,
+    });
+
+    // closeModal();
+  };
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value.replace(/[^0-9.]/g, "");
+    setCustomAmount(value);
   };
 
   return (
@@ -268,7 +339,46 @@ export default ({ modalName }) => {
                       </select>
                     </div>
 
+                    {!isVerified && (
+                      <div className="tips-info verify-tips tips-info-toggle">
+                        <div className="title-box">
+                          <h5>
+                            <i
+                              className="tips-icon"
+                              style={{
+                                maskImage:
+                                  "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-tips-type02.svg?v=1745315543147)",
+                              }}
+                            ></i>
+                            <span>
+                              Below info are required to proceed deposit
+                              request.
+                            </span>
+                          </h5>
+                        </div>
+                        <ol className="tips-info-block active">
+                          <li className="contact-info">
+                            <a onClick={() => openModal("modal2")}>
+                              <label>Contact Info</label>
+                              <ul>
+                                <li>Phone Number</li>
+                              </ul>
+                            </a>
+                          </li>
+                        </ol>
+                      </div>
+                    )}
+
                     <div className="menu-box">
+                      {!isVerified && (
+                        <div className="kyc-verify-mask">
+                          <div className="kyc-verify-mask-icon"></div>
+                          <div className="kyc-verify-mask-message">
+                            Please complete the verification.
+                          </div>
+                          <div className="kyc-verify-mask-blur"></div>
+                        </div>
+                      )}
                       <div className="title">
                         <h2>
                           <span>Payment Method</span>
@@ -401,9 +511,6 @@ export default ({ modalName }) => {
                           )}
                         </div>
                       </div>
-
-
-                      
                     </div>
                     <div className="tips-info note">
                       <h5>
@@ -418,22 +525,21 @@ export default ({ modalName }) => {
                         ></i>
                         <span>
                           ১/ব্যক্তিগত তথ্য"-এর অধীনে ক্যাশ আউট করার আগে সর্বোচ্চ
-                          ৩টি মোবাইল নম্বর যোগ করুন এবং ভেরিফাই করুন। 
-                          <br/>
-                          ২/আপনার
-                          ডিপোজিট প্রক্রিয়ার দ্রুত সফল করতে সঠিক ক্যাশ আউট
-                          নাম্বার , এমাউন্ট এবং ট্রানজেকশন আইডি সহ সাবমিট দিন।
-                          <br/>
+                          ৩টি মোবাইল নম্বর যোগ করুন এবং ভেরিফাই করুন।
+                          <br />
+                          ২/আপনার ডিপোজিট প্রক্রিয়ার দ্রুত সফল করতে সঠিক ক্যাশ
+                          আউট নাম্বার , এমাউন্ট এবং ট্রানজেকশন আইডি সহ সাবমিট
+                          দিন।
+                          <br />
                           ৩/যেকোনো ডিপোজিট করার আগে সবসময় আমাদের ডিপোজিট পেইজে
-                          নাম্বার চেক করুন । 
-                          <br/>
-                          ৪/ডিপোজিট পেন্ডিং অবস্থায় আপনি ২টি
-                          ডিপোজিট এর জন্য ট্রাই করতে পারবেন। আপনি কোনো সমস্যার
-                          সম্মুখীন হলে লাইভচ্যাট সহায়তা নিতে পারেন। 
-                          <br/>
-                          ৫/ ১.৩০-এর
-                          নিচের ODDs বাজি, উইথড্র টার্নওভারের প্রয়োজনীয়তার
-                          জন্য গণনা করা হবে না।
+                          নাম্বার চেক করুন ।
+                          <br />
+                          ৪/ডিপোজিট পেন্ডিং অবস্থায় আপনি ২টি ডিপোজিট এর জন্য
+                          ট্রাই করতে পারবেন। আপনি কোনো সমস্যার সম্মুখীন হলে
+                          লাইভচ্যাট সহায়তা নিতে পারেন।
+                          <br />
+                          ৫/ ১.৩০-এর নিচের ODDs বাজি, উইথড্র টার্নওভারের
+                          প্রয়োজনীয়তার জন্য গণনা করা হবে না।
                         </span>
                       </h5>
                     </div>
@@ -451,251 +557,346 @@ export default ({ modalName }) => {
       </div>
     </div>
 
-    // <div
-    //   className="mcd-popup-page popup-page-wrapper active"
-    //   onClick={closeModal}
-    // >
-    //   <div
-    //     className="popup-page show-toolbar popup-page--active popup-page--align-top"
-    //     onClick={(e) => e.stopPropagation()}
-    //   >
-    //     <div className="popup-page__backdrop"></div>
+    // <div className="mcd-popup-page popup-page-wrapper active">
+    //   <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
+    //     <div className="popup-page__backdrop" onClick={closeModal}></div>
     //     <div className="popup-page__main popup-page-main popup-page-main--show">
-    //       <div className="popup-page-main__header">
-    //         <div className="popup-page-main__title">My wallet</div>
+    //       <div className="popup-page-main__header wallet-header">
+    //         <div className="popup-page-main__title">Funds</div>
     //         <div className="popup-page-main__close" onClick={closeModal}></div>
     //       </div>
-    //       {/* {loading?<p style={{color:"#fff"}}>gateway not available</p>:
-    //       (paymentMethods.length) &&( */}
     //       <div className="popup-page-main__container">
     //         <div className="content mcd-style fixed-tab player-content">
     //           <div className="tab-btn-section tab-btn-wrap">
-
+    //             <div className="tab-btn tab-btn-bar">
+    //               <div
+    //                 className="line"
+    //                 style={{
+    //                   width: "50%",
+    //                   transform:
+    //                     activeTab === "deposit"
+    //                       ? "translate(0%, 0px)"
+    //                       : "translate(100%, 0px)",
+    //                 }}
+    //               ></div>
+    //               <div
+    //                 className={`btn ${activeTab === "deposit" ? "active" : ""}`}
+    //                 onClick={() => setActiveTab("deposit")}
+    //               >
+    //                 <div className="text">Deposit</div>
+    //               </div>
+    //               <div
+    //                 className={`btn ${
+    //                   activeTab === "withdrawal" ? "active" : ""
+    //                 }`}
+    //                 onClick={() => setActiveTab("withdrawal")}
+    //               >
+    //                 <div className="text">Withdrawal</div>
+    //               </div>
+    //             </div>
     //           </div>
-    //           <div className="tab-content tab-content-page">
-    //             <div className="inner-wrap">
-    //               <div className="inner-box deposit-wallet">
-    //                 <div className="option-group select-bar">
-    //                   <label>
-    //                     <span
-    //                       className="item-icon"
-    //                       style={{
-    //                         backgroundImage:
-    //                           "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-selectpromotion.svg?v=1742895464610)",
-    //                       }}
-    //                     ></span>
-    //                     <div>Select Promotion</div>
-    //                   </label>
-    //                   <div className="option-wrap">
 
-    //                   </div>
-    //                 </div>
-    //                 <div className="menu-box">
-    //                   <div className="title">
-    //                     <h2>
-    //                       <span>Payment Method</span>
-    //                     </h2>
-    //                   </div>
-
-    //                   <div className="select-group checkbox-style">
-    //                     <ul className="col3">
-    //                       {paymentMethods.map((payment, index) => (
-    //                         <li key={payment._id}>
-    //                           {console.log(payment)}
-    //                           <input
-    //                             type="radio"
-    //                             name="paymentMethod"
-    //                             id={payment._id}
-    //                             checked={Payment?._id === payment._id}
-    //                             onChange={() => setPayment(payment)}
-    //                             // setPaymentAct(index)
-    //                           />
-    //                           <label htmlFor={payment._id}>
-    //                             <div className="bank ">
-    //                               <img
-    //                                 src={payment.image_url}
-    //                                 alt={payment.gateway_name}
-    //                                 loading="lazy"
-    //                               />
-    //                             </div>
-    //                             <span>{payment.gateway_name}</span>
-    //                             {/* <div className="tag-rebate-money">
-    //                               <p>
-    //                                 +3%
-    //                               </p>
-    //                             </div> */}
-    //                           </label>
-    //                         </li>
-    //                       ))}
-    //                     </ul>
-    //                   </div>
-
-    //                   <div className="select-group">
-    //                     <ul className="col2 ">
-    //                       <li className="ng-star-inserted">
-    //                         <input
-    //                           type="radio"
-    //                           name="paymentType"
-    //                           id="paymentType_0"
-    //                           value="বিকাশ পেমেন্ট"
-    //                           // checked={Payment?._id === Payment?._id}
-    //                           // onChange={handlePaymentTypeChange}
-    //                         />
-    //                         <label htmlFor="paymentType_0">
-    //                           {/* <span>{Payment?.gateway_name}</span> */}
-    //                           <span>
-    //                             {Payment === null
-    //                               ? paymentMethods[0]?.gateway_name
-    //                               : Payment?.gateway_name}
-    //                           </span>
+    //           {activeTab === "deposit" && (
+    //             <div className="tab-content tab-content-page">
+    //               <div className="inner-wrap">
+    //                 <div className="inner-box deposit-wallet">
+    //                   <div className="player-deposit-wrap">
+    //                     <div className="player-deposit-step1">
+    //                       <div className="option-group select-bar">
+    //                         <label>
     //                           <span
     //                             className="item-icon"
     //                             style={{
-    //                               maskImage:
-    //                                 'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
+    //                               backgroundImage:
+    //                                 "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-selectpromotion.svg?v=1745315543147)",
     //                             }}
     //                           ></span>
+    //                           <div>Select Promotion</div>
     //                         </label>
-    //                       </li>
-    //                     </ul>
-    //                   </div>
-    //                 </div>
-    //                 <div className="menu-box">
-    //                   <div className="title">
-    //                     <h2>
-    //                       <span>Deposit Channel</span>
-    //                     </h2>
-    //                   </div>
-    //                   <div className="check-group">
-    //                     <div className="check-group">
-    //                       <ul className="col2">
-    //                         {/* {PaymentMood.map((Mathod, index) => (
+    //                         <div className="option-wrap">
+    //                           <select
+    //                             value={selectedPromotion}
+    //                             onChange={(e) =>
+    //                               setSelectedPromotion(e.target.value)
+    //                             }
+    //                           >
+    //                             {promotions.map((promo, index) => (
+    //                               <option key={promo.id} value={index}>
+    //                                 {promo.name}
+    //                               </option>
+    //                             ))}
+    //                           </select>
+    //                         </div>
+    //                       </div>
+
+    //                       {!isVerified && (
+    //                         <div className="tips-info verify-tips tips-info-toggle">
+    //                           <div className="title-box">
+    //                             <h5>
+    //                               <i
+    //                                 className="tips-icon"
+    //                                 style={{
+    //                                   maskImage:
+    //                                     "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-tips-type02.svg?v=1745315543147)",
+    //                                 }}
+    //                               ></i>
+    //                               <span>
+    //                                 Below info are required to proceed deposit
+    //                                 request.
+    //                               </span>
+    //                             </h5>
+    //                           </div>
+    //                           <ol className="tips-info-block active">
+    //                             <li className="contact-info">
+    //                               <a onClick={() => openModal("modal2")}>
+    //                                 <label>Contact Info</label>
+    //                                 <ul>
+    //                                   <li>Phone Number</li>
+    //                                 </ul>
+    //                               </a>
+    //                             </li>
+    //                           </ol>
+    //                         </div>
+    //                       )}
+
+    //                       <div className="menu-box">
+    //                         {!isVerified && (
+    //                           <div className="kyc-verify-mask">
+    //                             <div className="kyc-verify-mask-icon"></div>
+    //                             <div className="kyc-verify-mask-message">
+    //                               Please complete the verification.
+    //                             </div>
+    //                             <div className="kyc-verify-mask-blur"></div>
+    //                           </div>
+    //                         )}
+
+    //                         <div className="title">
+    //                           <h2>
+    //                             <span>Payment Method</span>
+    //                           </h2>
+    //                         </div>
+
+    //                         <div className="select-group checkbox-style">
+    //                           <ul className="col3">
+    //                             {paymentMethods.map((method) => (
     //                               <li
-    //                                 class=""
-    //                                 onClick={() => setMood(Mathod, index)}
+    //                                 key={method.id}
+    //                                 className="payment-method"
     //                               >
     //                                 <input
     //                                   type="radio"
-    //                                   name="paymentType"
-    //                                   id="paymentType_0"
+    //                                   name="paymentMethod"
+    //                                   id={`paymentMethod_${method.id}`}
+    //                                   checked={paymentMethod === method.id}
+    //                                   onChange={() =>
+    //                                     setPaymentMethod(method.id)
+    //                                   }
     //                                 />
-    //                                 <label>
-    //                                   <span>{Mathod.value}</span>
+    //                                 <label
+    //                                   htmlFor={`paymentMethod_${method.id}`}
+    //                                 >
+    //                                   <div className="bank">
+    //                                     <img
+    //                                       alt={method.name}
+    //                                       src={`https://img.s628b.com/sb/h5/assets/images/payment/${method.icon}?v=1745315543147`}
+    //                                       loading="lazy"
+    //                                     />
+    //                                   </div>
+    //                                   <span>{method.name}</span>
+    //                                   {method.bonus > 0 && (
+    //                                     <div className="tag-rebate-money">
+    //                                       <p>
+    //                                         <span>+</span>
+    //                                         {method.bonus}
+    //                                         <span>%</span>
+    //                                       </p>
+    //                                     </div>
+    //                                   )}
+    //                                   <span
+    //                                     className="item-icon"
+    //                                     style={{
+    //                                       maskImage:
+    //                                         "url(https://img.s628b.com/sb/h5/assets/images/player/select-check.svg?v=1745315543147)",
+    //                                     }}
+    //                                   ></span>
     //                                 </label>
     //                               </li>
-    //                             ))} */}
-    //                         <li
-    //                           class=""
-    //                           // onClick={() => setMood(Mathod, index)}
-    //                         >
-    //                           <input
-    //                             type="radio"
-    //                             name="paymentType"
-    //                             id="paymentType_0"
-    //                           />
-    //                           <label>
-    //                             <span>
-    //                               {Payment === null
-    //                                 ? paymentMethods[0]?.payment_type
-    //                                 : Payment?.payment_type}
-    //                             </span>
-    //                           </label>
-    //                         </li>
-    //                       </ul>
-    //                     </div>
-    //                   </div>
-    //                 </div>
-    //                 <div className="menu-box">
-    //                   <div className="title">
-    //                     <h2>
-    //                       <span>Deposit Amount</span>
-    //                     </h2>
-    //                   </div>
+    //                             ))}
+    //                           </ul>
+    //                         </div>
 
-    //                   <div className="check-group">
-    //                     <div className="check-group">
-    //                       <ul className="col4">
-    //                         {Amount.map((Mathod, index) => (
-    //                           <li
-    //                             class=""
-    //                             onClick={() => handelAmount(Mathod.value)}
-    //                           >
-    //                             <input
-    //                               type="radio"
-    //                               name="paymentType"
-    //                               id="paymentType_0"
-    //                             />
-    //                             <label>
-    //                               <span>+ {Mathod.value}</span>
-    //                             </label>
-    //                           </li>
-    //                         ))}
-    //                       </ul>
-    //                     </div>
-    //                   </div>
+    //                           <div className="select-group">
+    //                             <ul className="col2">
+    //                               {paymentTypes.map((type) => (
+    //                                 <li key={type.id} className="payment-type">
+    //                                   <input
+    //                                     type="radio"
+    //                                     name="paymentType"
+    //                                     id={`paymentType_${type.id}`}
+    //                                     checked={paymentType === type.id}
+    //                                     onChange={() => setPaymentType(type.id)}
+    //                                   />
+    //                                   <label htmlFor={`paymentType_${type.id}`}>
+    //                                     <span>{type.name}</span>
+    //                                     <span
+    //                                       className="item-icon"
+    //                                       style={{
+    //                                         maskImage:
+    //                                           "url(https://img.s628b.com/sb/h5/assets/images/player/select-check.svg?v=1745315543147)",
+    //                                       }}
+    //                                     ></span>
+    //                                   </label>
+    //                                 </li>
+    //                               ))}
+    //                             </ul>
+    //                           </div>
 
-    //                   <div className="check-group money">
-    //                     <label htmlFor="amount">৳</label>
-    //                     <input
-    //                       type="text"
-    //                       id="userId"
-    //                       name="userId"
-    //                       placeholder="4-15 char, allow numbers, no space"
-    //                       className="input"
-    //                       value={amount}
-    //                       onChange={handleChangeamount}
-    //                     />
-    //                     {amount && (
-    //                       <Link
-    //                         type="button"
-    //                         className={`clear ${amount ? "active" : ""}`}
-    //                         onClick={handleClearsetAmount}
-    //                       ></Link>
-    //                     )}
-    //                   </div>
-    //                 </div>
-    //                 <div className="menu-box">
-    //                   <div className="title">
-    //                     <h2>
-    //                       <span>Deposit Amount</span>
-    //                     </h2>
-    //                   </div>
+    //                       </div>
 
-    //                   <div className="check-group">
-    //                     <div className="check-group">
-    //                       <p style={{ color: "#000" }}>
-    //                         1/Personal Information” before cashing out Add up to
-    //                         3 mobile numbers and verify do
-    //                         <br />
-    //                         2/ To speed up your deposit process Correct cash out
-    //                         number, amount and transaction Submit with ID.
-    //                         <br />
-    //                         3/ Before making any deposit Always check the number
-    //                         on our deposit page.
-    //                         <br />
-    //                         4/ You can try for 2 deposits while the deposit is
-    //                         pending. You can take livechat support if you face
-    //                         any problem.
-    //                         <br />
-    //                         5/ Bet on ODDs below 1.30, withdraw turnover will
-    //                         not count toward the requirement.
-    //                       </p>
+    //                         <div className="deposit-normal">
+    //                           <div className="menu-box">
+    //                             <div className="title">
+    //                               <h2>
+    //                                 <span>Deposit Channel</span>
+    //                               </h2>
+    //                             </div>
+    //                             <div className="select-group checkbox-style checkbox-height-set">
+    //                               <ul className="col2">
+    //                                 {depositSettings.map((setting) => (
+    //                                   <li
+    //                                     key={setting.id}
+    //                                     className="deposit-setting"
+    //                                   >
+    //                                     <input
+    //                                       type="radio"
+    //                                       name="depositSetting"
+    //                                       id={`depositSetting_${setting.id}`}
+    //                                       checked={
+    //                                         depositSetting === setting.id
+    //                                       }
+    //                                       onChange={() =>
+    //                                         setDepositSetting(setting.id)
+    //                                       }
+    //                                     />
+    //                                     <label
+    //                                       htmlFor={`depositSetting_${setting.id}`}
+    //                                     >
+    //                                       <span>{setting.name}</span>
+    //                                       <span
+    //                                         className="item-icon"
+    //                                         style={{
+    //                                           maskImage:
+    //                                             "url(https://img.s628b.com/sb/h5/assets/images/player/select-check.svg?v=1745315543147)",
+    //                                         }}
+    //                                       ></span>
+    //                                     </label>
+    //                                   </li>
+    //                                 ))}
+    //                               </ul>
+    //                             </div>
+    //                           </div>
+    //                         </div>
+
+    //                         <div className="menu-box active">
+    //                           <div className="title">
+    //                             <h2>
+    //                               <span>Amount</span>
+    //                               <i>৳ 200.00 - ৳ 30,000.00</i>
+    //                             </h2>
+    //                           </div>
+    //                           <div className="select-group style-add-amount">
+    //                             <ul className="col4">
+    //                               {depositAmounts.map((amount) => (
+    //                                 <li
+    //                                   key={amount.id}
+    //                                   className="deposit-amount"
+    //                                 >
+    //                                   <input
+    //                                     type="radio"
+    //                                     name="depositAmount"
+    //                                     id={`depositAmount_${amount.id}`}
+    //                                     checked={depositAmount === amount.id}
+    //                                     onChange={() => {
+    //                                       setDepositAmount(amount.id);
+    //                                       setCustomAmount("");
+    //                                     }}
+    //                                   />
+    //                                   <label
+    //                                     htmlFor={`depositAmount_${amount.id}`}
+    //                                   >
+    //                                     <span>{amount.amount}</span>
+    //                                   </label>
+    //                                 </li>
+    //                               ))}
+    //                             </ul>
+    //                           </div>
+    //                           <div className="input-group money">
+    //                             <label htmlFor="amount">৳</label>
+    //                             <div className="input-wrap">
+    //                               <input
+    //                                 type="text"
+    //                                 value={customAmount}
+    //                                 onChange={handleAmountChange}
+    //                                 placeholder="0.00"
+    //                                 inputMode="numeric"
+    //                               />
+    //                               {customAmount && (
+    //                                 <a
+    //                                   className="delete-btn"
+    //                                   onClick={() => setCustomAmount("")}
+    //                                   style={{
+    //                                     maskImage:
+    //                                       "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-cross-type09.svg?v=1745315543147)",
+    //                                   }}
+    //                                 ></a>
+    //                               )}
+    //                             </div>
+    //                           </div>
+    //                           <div className="tips-info note">
+    //                             <h5>
+    //                               <i className="tips-icon"></i>
+    //                               <span>
+    //                                 ১/ব্যক্তিগত তথ্য"-এর অধীনে ক্যাশ আউট করার
+    //                                 আগে সর্বোচ্চ ৩টি মোবাইল নম্বর যোগ করুন এবং
+    //                                 ভেরিফাই করুন। ২/আপনার ডিপোজিট প্রক্রিয়ার
+    //                                 দ্রুত সফল করতে সঠিক ক্যাশ আউট নাম্বার ,
+    //                                 এমাউন্ট এবং ট্রানজেকশন আইডি সহ সাবমিট দিন।
+    //                                 ৩/যেকোনো ডিপোজিট করার আগে সবসময় আমাদের
+    //                                 ডিপোজিট পেইজে নাম্বার চেক করুন । ৪/ডিপোজিট
+    //                                 পেন্ডিং অবস্থায় আপনি ২টি ডিপোজিট এর জন্য
+    //                                 ট্রাই করতে পারবেন। আপনি কোনো সমস্যার
+    //                                 সম্মুখীন হলে লাইভচ্যাট সহায়তা নিতে পারেন। ৫
+    //                                 ১.৩০-এর নিচের ODDs বাজি, উইথড্র টার্নওভারের
+    //                                 প্রয়োজনীয়তার জন্য গণনা করা হবে না।
+    //                               </span>
+    //                             </h5>
+    //                           </div>
+    //                         </div>
+
+    //                       <div className="member-content">
+    //                         <div className="button">
+    //                           <a onClick={handleSubmit}>Submit</a>
+    //                         </div>
+    //                       </div>
     //                     </div>
-    //                   </div>
-    //                 </div>
-    //                 <div className="deposit-content">
-    //                   <div className="button btn-primary">
-    //                     <Link onClick={() => handlePaymentSubmit()}>
-    //                       submit
-    //                     </Link>
     //                   </div>
     //                 </div>
     //               </div>
     //             </div>
-    //           </div>
+    //           )}
+
+    //           {activeTab === "withdrawal" && (
+    //             <div className="tab-content tab-content-page">
+    //               {/* Withdrawal content would go here */}
+    //               <div className="inner-wrap">
+    //                 <div className="inner-box">
+    //                   <p>Withdrawal content would be implemented similarly</p>
+    //                 </div>
+    //               </div>
+    //             </div>
+    //           )}
     //         </div>
     //       </div>
-    //       {/* )} */}
     //     </div>
     //   </div>
     // </div>

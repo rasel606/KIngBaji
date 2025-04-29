@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useModal } from "./ModelContext";
+import { Link } from "react-router-dom";
 
 export default () => {
     // const { activeModal, openModal, closeModal } = useModal();
@@ -9,8 +10,17 @@ export default () => {
     const [showSecondMenu, setShowSecondMenu] = useState(true);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log(data)
 
+    const [active, setActive] = useState(data[0]?.category.uniqueProviders);
+    const [activeIndex, setActiveIndex] = useState(
+      data[0]?.category.uniqueProviders
+    );
+  console.log(data)
+  const handleItemClick = (index, item) => {
+    setActiveIndex(index);
+    setActive(item );
+    // console.log(item);
+  };
     const categories = [
       { id: 'sport', name: 'স্পোর্ট', icon: 'sport.png' },
       { id: 'casino', name: 'ক্যাসিনো', icon: 'casino.png' },
@@ -43,8 +53,17 @@ export default () => {
 
     const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen);
+      // Reset menu states when closing
+      if (!isMenuOpen) {
+        setActiveCategory("");
+        setShowSecondMenu(true);
+      }
     };
-
+  
+    const handleCategoryClick = (categoryId) => {
+      setActiveCategory(categoryId);
+      setShowSecondMenu(true);
+    };
 
 
     
@@ -66,6 +85,12 @@ export default () => {
             console.log("data",data);
           });
       }, []);
+
+      
+console.log("activeCat",active)
+
+
+
   return (
     <header
       id="header"
@@ -99,118 +124,135 @@ export default () => {
         }}
       ></div>
 
-      {/* <div className="header-right-btn-group">
-        <a className="app-download" href="/bd/en/app-download">
-          <span
-            className="item-icon"
-            style={{
-              maskImage:
-                "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/header-appdownload-icon.svg?v=1738748531996)",
-            }}
-          ></span>
-          <p>App</p>
-        </a>
-
-        <a className="service-btn" name="liveChatBtn">
-          <span
-            className="item-icon"
-            style={{
-              maskImage:
-                "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/header-service-icon.svg?v=1738748531996)",
-            }}
-          ></span>
-          <p>LiveChat</p>
-        </a>
-
-        <div
-          className="editor-btn"
-          style={{
-            display: "none",
-            maskImage:
-              "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-editor.svg?v=1738748531996)",
-          }}
-        ></div>
-      </div> */}
-      {isMenuOpen && (
+     
+       {isMenuOpen && (
         <div className="cdk-overlay-container">
-        <div className="cdk-overlay-backdrop dialog-backdrop cdk-overlay-backdrop-showing" >
-        <div className="cdk-global-overlay-wrapper" dir="ltr" style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <div id="cdk-overlay-2" className="cdk-overlay-pane dialog-panel" style={{ position: 'static' }}>
-          <div className="popup" id="dialog-2">
-            <div className="popup__header"></div>
-            <div className="popup__content">
-              <div className="menu active">
-                <div className="menu-first">
-                  <ul className="home">
-                    <li data-category="home">
-                      <span className="item-icon" style={{ backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-home.png?v=1725363175075)' }}></span>
-                      <a className="" href="/bd/bn">হোম</a>
-                    </li>
-                  </ul>
-                  
-                  <ul className="vendor">
-                    {data.filter(cat => cat.id !== 'home').map(category => (
-                      <li 
-                        key={category.id}
-                        className={activeCategory === category.id ? 'active' : ''}
-                        data-category={category.id}
-                        onClick={() => setActiveCategory(category.id) && setShowSecondMenu(true)}
-                      >
-                        <span 
-                          className="item-icon" 
-                          style={{ backgroundImage: `url(${category.image})` }}
-                        ></span>
-                        <a>{category.name}</a>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <ul className="promotion-block">
-                    <li data-category="promotion">
-                      <span className="item-icon" style={{ backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-promotion.png?v=1725363175075)' }}></span>
-                      <a href="/bd/bn/promotion">প্রমোশন</a>
-                    </li>
-                  </ul>
-                  
-                  <div className="support-block">
-                    <div className="service" data-service="affiliate">
-                      <span className="item-icon" style={{ backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-affiliate.png?v=1725363175075)' }}></span>
-                      <p>এফিলিয়েট</p>
-                    </div>
-                    
-                    <div className="service" data-service="talk" name="liveChatBtn">
-                      <span className="item-icon" style={{ backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-talk.png?v=1725363175075)' }}></span>
-                      <p name="liveChatBtn">24/7 LiveChat <span>24/7 গুণমানের পরিষেবা সরবরাহ করে</span></p>
-                    </div>
+          <div className="cdk-overlay-backdrop dialog-backdrop cdk-overlay-backdrop-showing">
+            <div 
+              className="cdk-global-overlay-wrapper" 
+              dir="ltr" 
+              style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+              <div 
+                id="cdk-overlay-2" 
+                className="cdk-overlay-pane dialog-panel" 
+                style={{ position: 'static' }}
+              >
+                <div className="popup" id="dialog-2">
+                  <div className="popup__header"></div>
+                  <div className="popup__content">
+                    {loading ? (
+                      <div className="loading-spinner">Loading...</div>
+                    ) : (
+                      <div className="menu active">
+                        <div className="menu-first">
+                          <ul className="home">
+                            <li data-category="home">
+                              <span 
+                                className="item-icon" 
+                                style={{ 
+                                  backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-home.png?v=1725363175075)' 
+                                }}
+                              ></span>
+                              <a className="" href="/bd/bn">হোম</a>
+                            </li>
+                          </ul>
+                          
+                          <ul className="vendor">
+                            {data?.map((category, index) => (
+                              <li 
+                                key={category.id}
+                                className={activeCategory._id === category.id ? 'active' : ''}
+                                data-category={category.id}
+                                onClick={() => handleItemClick(index, category?.category)}
+                              >
+                                {console.log("category",category.category?.image)}
+                                <span 
+                                  className="item-icon" 
+                                  style={{ backgroundImage: `url(${category.category?.image})`,display:'block' }}
+                                ></span>
+                                <a>{category.name || category.category?.name}</a>
+                              </li>
+                            ))}
+                          </ul>
+                          
+                          <ul className="promotion-block">
+                            <li data-category="promotion">
+                              <span 
+                                className="item-icon" 
+                                style={{ 
+                                  backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-promotion.png?v=1725363175075)' 
+                                }}
+                              ></span>
+                              <a href="/bd/bn/promotion">প্রমোশন</a>
+                            </li>
+                          </ul>
+                          
+                          <div className="support-block">
+                            <div className="service" data-service="affiliate">
+                              <span 
+                                className="item-icon" 
+                                style={{ 
+                                  backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-affiliate.png?v=1725363175075)' 
+                                }}
+                              ></span>
+                              <p>এফিলিয়েট</p>
+                            </div>
+                            
+                            <div className="service" data-service="talk" name="liveChatBtn">
+                              <span 
+                                className="item-icon" 
+                                style={{ 
+                                  backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-talk.png?v=1725363175075)' 
+                                }}
+                              ></span>
+                              <p name="liveChatBtn">24/7 LiveChat <span>24/7 গুণমানের পরিষেবা সরবরাহ করে</span></p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {showSecondMenu && active && (
+                          <div className="menu-second">
+                            <div className="menu-second-header">
+                              <button 
+                                className="back-button" 
+                                onClick={() => setShowSecondMenu(false)}
+                              >
+                                Back
+                              </button>
+                              <h3>
+                                {categories.find(cat => cat.id === active)?.name || 
+                                 categories.find(cat => cat.id === active)?.category?.name}
+                              </h3>
+                            </div>
+                            <ul className="menu-second-ul active">
+                              {active?.uniqueProviders.map(provider => (
+                                <li key={provider.id}>
+                                  <Link onClick={toggleMenu}
+                                                                    to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
+                                                                      active.name
+                                                                    )}/${encodeURIComponent(provider.providercode)}`}
+                                                                  >
+                                    {console.log("provider",provider)}
+                                    <img 
+                                      alt={`provider-${provider.id}`} 
+                                      src={provider.url} 
+                                      loading="lazy"
+                                    />
+                                    <p>{provider.company}</p>
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
-                
-                {showSecondMenu && (
-                  <div className="menu-second">
-                    <ul className={`menu-second-ul ${activeCategory === `${activeCategory}` ? 'active' : ''}`}>
-                      {providers.map(provider => (
-                        <li key={provider.id}>
-                          <a tabIndex="-1">
-                            <img 
-                              alt={`provider-${provider.id}`} 
-                              src={`https://img.r24b.xyz/hb/h5/assets/images/brand/white/${provider.icon}?v=1725363175075`} 
-                              loading="lazy"
-                            />
-                            <p>{provider.name}</p>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
-              
-              <div className="menu-mask" style={{ display: 'block' }}></div>
             </div>
           </div>
-        </div>
-        </div>
-        </div>
         </div>
       )}
     

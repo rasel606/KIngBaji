@@ -35,9 +35,9 @@ export default ({
     }
   };
   return (
-    <div className="modal-overlay" onClick={closeModal}>
+    <div className="mcd-popup-page popup-page-wrapper active" onClick={closeModal}>
       <div onClick={(e) => e.stopPropagation()}>
-        <div className="popup-page__main popup-page-main popup-page-main--show">
+        <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
           <div className="popup-page-main__header">
             <div className="popup-page-main__title">My wallet</div>
             <div className="popup-page-main__close" onClick={closeModal}></div>

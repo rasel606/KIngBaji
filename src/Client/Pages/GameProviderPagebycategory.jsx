@@ -4,22 +4,96 @@ import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
 import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
 
+const GameBox = ({ game, onPlay }) => (
+  <div className="games-box">
+    <div className="pic" onClick={() => onPlay(game)}>
+      <p>
+        <img src={game?.imgFileName} alt={game.name} loading="lazy" />
+      </p>
+    </div>
+    <div className="text">
+      <h3>{game.gameName?.gameName_enus || game.name}</h3>
+    </div>
+  </div>
+);
+
+const SearchTab = ({ providers, selectedProvider, onProviderChange }) => (
+  <div className="tab search-tab ng-star-inserted">
+    <ul className="item-ani">
+      <li 
+        className={`condition-groups ng-star-inserted ${!selectedProvider ? 'active' : ''}`}
+        onClick={() => onProviderChange(null)}
+      >
+        <div 
+          className="icon-all" 
+          style={{ backgroundImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-filter-all.svg?v=1745315543147")' }} 
+        />
+        <p>ALL</p>
+      </li>
+      {providers.map(provider => (
+        <li 
+          key={provider.providercode} 
+          className={`condition-groups ${selectedProvider === provider.providercode ? 'active' : ''} ng-star-inserted`}
+          onClick={() => onProviderChange(provider.providercode)}
+        >
+          <div className="provider-label">
+            {provider.providercode}
+          </div>
+        </li>
+      ))}
+    </ul>
+    <div className="btn search-btn ng-star-inserted">
+      <span 
+        className="item-icon ng-star-inserted" 
+        style={{ maskImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-search-type02.svg?v=1745315543147")' }} 
+      />
+    </div>
+  </div>
+);
+
+const SortBar = () => (
+  <div className="sort-bar ng-star-inserted">
+  <div className="sort-bar__title">
+    <span>Slots</span>
+  </div>
+  <div className="sort-bar__box">
+    <div className="sort-bar__btn">
+      <span className="ng-star-inserted">Filter</span>
+      <span className="arrow" style={{ maskImage: 'url("")' }} />
+    </div>
+    <ul className="sort-bar__select">
+      <li className="sort-bar__select__item ng-star-inserted" id="sort_recommend">
+        <span id="sort_recommend">Recommend</span>
+      </li>
+      <li className="sort-bar__select__item ng-star-inserted" id="sort_latest">
+        <span id="sort_latest">Latest</span>
+      </li>
+      <li className="sort-bar__select__item ng-star-inserted" id="sort_favorite">
+        <span id="sort_favorite">Favorite</span>
+      </li>
+      <li className="sort-bar__select__item ng-star-inserted" id="sort_aZ">
+        <span id="sort_aZ">A-Z</span>
+      </li>
+    </ul>
+  </div>
+</div>
+);
+
+
 export default () => {
   const [data, setData] = useState([]);
-  const [GameData, setGameData] = useState([]);
-  const [playGameData, setPlayGameData] = useState();
+  const [gameData, setGameData] = useState([]);
+  const [filteredGames, setFilteredGames] = useState([]);
+  const [playGameData, setPlayGameData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { category_name, providercode } = useParams();
+  const { category_name } = useParams();
   const [showPopup, setShowPopup] = useState(false);
   const { userDeatils, userId } = useAuth();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [active, setActive] = useState([providercode]);
+  const [selectedProvider, setSelectedProvider] = useState(null);
   const [categories, setCategories] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [balance, setBalance] = useState(userDeatils.balance || 0);
-  const [userData, setUserData] = useState(userId);
+  const [balance, setBalance] = useState(userDeatils?.balance || 0);
   const [gameWindow, setGameWindow] = useState(null);
-  console.log("User ID:", userId);
 
   /** 🚀 Fetch Category Data */
   useEffect(() => {
@@ -35,8 +109,8 @@ export default () => {
 
         const data = await response.json();
         setLoading(false);
-        setData(data[0].uniqueProviders, data[0].categories);
-        setCategories(data[0].categories[0].p_type);
+        setData(data[0]?.uniqueProviders || []);
+        setCategories(data[0]?.categories?.[0]?.p_type || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -50,7 +124,7 @@ export default () => {
     const fetchGames = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${active}&p_type=${categories}`,
+          `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ''}&p_type=${categories}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -60,16 +134,17 @@ export default () => {
         const data = await response.json();
         setLoading(false);
         setGameData(data);
+        setFilteredGames(data);
       } catch (error) {
         console.error("Error fetching games:", error);
       }
     };
 
     fetchGames();
-  }, [active, categories]);
+  }, [selectedProvider, categories, category_name]);
 
   /** 🚀 Handle Game Click */
-  const handlePlay = async (userId, game_id, p_type, p_code) => {
+  const handlePlay = async (game) => {
     if (isPlaying) return;
 
     setIsPlaying(true);
@@ -80,63 +155,24 @@ export default () => {
         "http://localhost:5000/api/v1/launch_gamePlayer",
         {
           method: "POST",
-          // credentials: 'include', // Important for cookies
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify({ userId, game_id, p_type, p_code }),
+          body: JSON.stringify({ 
+            userId, 
+            game_id: game.g_code, 
+            p_type: game.p_type, 
+            p_code: game.p_code 
+          }),
         }
       );
-      console.log(response);
+      
       const data = await response.json();
       setPlayGameData(data);
-      console.log(data);
-      if (data?.gameUrl) {
-        const gameUrl = data.gameUrl;
 
-        const certMatch = gameUrl.match(/cert=([^&]+)/);
-        const keyMatch = gameUrl.match(/key=([^&]+)/);
-
-        if (certMatch && keyMatch && data.gameUrl.includes("fwick7ets.xyz")) {
-          const cert = certMatch[1];
-          const key = keyMatch[1];
-
-          console.log("Extracted cert:", cert);
-          console.log("Extracted key:", key);
-
-          // if (data.cookies) {
-          //   data.cookies.forEach(cookie => {
-          //     document.cookie = `${cookie.name}=${cookie.value}; ` +
-          //       `domain=${cookie.domain}; ` +
-          //       `path=${cookie.path}; ` +
-          //       `${cookie.secure ? 'secure; ' : ''}` +
-          //       `${cookie.httpOnly ? 'HttpOnly; ' : ''}` +
-          //       `sameSite=None`;
-          //   });
-          // }
-
-          // Navigate to a new page with cert and key as query params
-          const features = `
-  width=${window.screen.availWidth},
-  height=${window.screen.availHeight},
-  top=0,
-  left=0,
-  fullscreen=yes,
-  scrollbars=yes,
-  resizable=yes,
-  toolbar=no,
-  location=no,
-  status=no,
-  menubar=no
-`;
-
-          const newWindow = window.open(data.gameUrl, "_blank", features);
-          setGameWindow(newWindow);
-          // window.location.href = data.gameUrl;
-        } else if (data?.gameUrl) {
-          setShowPopup(true);
-        }
+      if (data.status === "success") {
+        setShowPopup(true);
       }
     } catch (error) {
       console.error("Error launching game:", error);
@@ -172,7 +208,6 @@ export default () => {
   const handelUserDetails = async (userId) => {
     const result = await UserAllDetails(userId);
     setBalance(result.data.user.balance);
-    setUserData(result.data.user.userId);
   };
 
   /** 🚀 Handle Popup Close */
@@ -185,62 +220,37 @@ export default () => {
     if (!showPopup) {
       handleRefresh(userId);
     }
-  }, [showPopup, userData, userId, active, category_name]);
+  }, [showPopup, userId]);
 
   return (
-    <div className="wrap">
-      <div className="content">
-        <div className="main-content">
+    <div className="content mcd-style">
+      <div className="ng-trigger ng-trigger-routeLayoutPageAni">
+        <div className="content-main ng-star-inserted">
           <div className="content-box">
             <div className="games">
-              <div
-                className="nav nav-category nav-auto"
-                style={{ height: "35px", marginTop: "2px" }}
-              >
-                {data.map((item, index) => (
-                  <div
-                    className={`btn ${index === activeIndex ? "selected" : ""}`}
-                    key={index}
-                    onClick={() => {
-                      setActiveIndex(index);
-                      setActive(item.providercode);
-                    }}
-                  >
-                    <div className="icon">
-                      <p>{item.providercode}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
+              <SearchTab 
+                providers={data} 
+                selectedProvider={selectedProvider}
+                onProviderChange={setSelectedProvider}
+              />
+              
+              <SortBar />
+              
               <div className="games-main">
-                {GameData?.map((game, index) => (
-                  <div className="games-box" key={index}>
-                    <div
-                      className="pic"
-                      onClick={() =>
-                        handlePlay(
-                          userId,
-                          game.g_code,
-                          game.p_type,
-                          game.p_code
-                        )
-                      }
-                    >
-                      <p>
-                        <img
-                          src={game?.imgFileName}
-                          alt={game.name}
-                          loading="lazy"
-                        />
-                      </p>
-                    </div>
-                    <div className="text">
-                      <h3>{game.gameName.gameName_enus}</h3>
-                    </div>
-                  </div>
-                ))}
+                {loading ? (
+                  <div>Loading games...</div>
+                ) : (
+                  filteredGames?.map((game, index) => (
+                    <GameBox 
+                      key={index} 
+                      game={game} 
+                      onPlay={handlePlay}
+                    />
+                  ))
+                )}
               </div>
+              
+              <div style={{ height: '10px', visibility: 'hidden' }}>anchor</div>
             </div>
           </div>
         </div>

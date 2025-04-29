@@ -11,7 +11,10 @@ import Carousel from "./Carousel";
 import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
 import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
-
+import FeaturedGames from "./FeaturedGames";
+import Favourites from "./Favourites";
+import Marquee from "./Marquee";
+import MyProfilemodal from "./MyProfilemodal";
 
 export default (props) => {
   const { modalShow, setModalShow } = props;
@@ -26,24 +29,7 @@ export default (props) => {
     "https://i.ibb.co.com/gdQVX9d/image-5.jpg",
   ];
 
-  const scrollimages = [
-    {
-      src: "https://i.ibb.co.com/DChN5S5/img-1.jpg",
-      alt: "Image 1",
-      link: "#",
-    },
-    {
-      src: "https://i.ibb.co.com/VqtD7Tq/img-2.jpg",
-      alt: "Image 2",
-      link: "#",
-    },
-    {
-      src: "https://i.ibb.co.com/7Kkr63k/img-3.jpg",
-      alt: "Image 3",
-      link: "#",
-    },
-    // Add more images as needed
-  ];
+ 
   const games = [
     {
       name: "Super Ace",
@@ -200,31 +186,10 @@ export default (props) => {
       <div>
         <div className="ontent mcd-style">
           <Carousel images={images}></Carousel>
-          <div className="announcement-row">
-            {/* <span
-            className="item-icon"
-            style={{
-              maskImage:
-                "url('https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/index-announcement-icon.svg?v=1736849889723')",
-            }}
-          ></span> */}
-            <div className="announcement-row">
-              <div className="marquee">
-                <ul>
-                  <li
-                    dangerouslySetInnerHTML={{
-                      __html: `<p><span style="font-size:14px;">
-                    <strong>🏏You are on Asia's trusted cricket trading... 🏏You are on Asia's trusted cricket trading...</strong>
-                  </span></p>`,
-                    }}
-                  />
-                </ul>
-              </div>
-            </div>
-          </div>
+          <Marquee></Marquee>
 
-          {isAuthenticated ? (
-            <div className="nav-category nav-balance ">
+          {/* {isAuthenticated ? ( */}
+            {/* <div className="nav-category nav-balance ">
               <div className="balance-box ">
                 <div className="username">
                   {userDeatils ? userId : loading ? "...." : "User"}
@@ -243,18 +208,16 @@ export default (props) => {
               </div>
               <ul className="nav-group">
                 <li className="nav-item" tabindex="0">
-                  {/* <img src={promotionImg} /> */}
+    
                   <span>প্রমোশন</span>
                 </li>
                 <li className="nav-item" tabindex="0">
-                  {/* <img src={depositImg} /> */}
+ 
                   <span>ডিপোজিট</span>
                 </li>
               </ul>
-            </div>
-          ) : (
-            ""
-          )}
+            </div> */}
+          
           <div className="game-nav-container">
             <div
               className={`${
@@ -319,48 +282,8 @@ export default (props) => {
               </div>
             </div>
           </div>
-          <div className="recommend scroll-banner">
-            <div className="recommend-title">
-              <h2>Favourites</h2>
-            </div>
-            <div className="recommend-bg">
-              <div className="recommend-main">
-                {scrollimages.map((image, index) => (
-                  <div key={index} className="recommend-card">
-                    <a href={image.link || "#"}>
-                      <img
-                        src={image.src}
-                        alt={image.alt}
-                        loading="lazy"
-                        className="recommend-image"
-                      />
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="recommend feature-games">
-            <div className="recommend-title">
-              <h2>Featured Games</h2>
-            </div>
-            <div className="recommend-bg games">
-              <div className="recommend-main games-main">
-                {games.map((game, index) => (
-                  <div className="games-box" key={index}>
-                    <div className="pic">
-                      <a href="#">
-                        <img src={game.imgSrc} alt={game.name} loading="lazy" />
-                      </a>
-                    </div>
-                    <div className="text">
-                      <h3>{game.name}</h3>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <Favourites></Favourites>
+          <FeaturedGames></FeaturedGames>
         </div>
         <div>
           <div className="my-2">
@@ -368,6 +291,9 @@ export default (props) => {
           </div>
         </div>
       </div>
+      {/* ========================================= */}
+              <MyProfilemodal modalName="modal2"></MyProfilemodal>
+              {/* ========================================= */}
     </div>
   );
 };
