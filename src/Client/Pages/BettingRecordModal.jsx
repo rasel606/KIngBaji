@@ -1,47 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useModal } from "../Component/ModelContext";
-import { searchTransactionsbyUserId } from "../Component/Axios-API-Service/AxiosAPIService";
+import { GetBettingHistoryByMember, searchTransactionsbyUserId } from "../Component/Axios-API-Service/AxiosAPIService";
 import { useAuth } from "../Component/AuthContext";
 
 export default ({ modalName }) => {
   const { activeModal, closeModal } = useModal();
   const { userId } = useAuth();
 
-  // const fetchTransactions = async () => {
-  //   try {
-  //     const response = await searchTransactionsbyUserId({
-  //       userId,
-  //       filters
-  //     });
-  //     setTransactions(response.data.transactionExists || []);
-  //   } catch (error) {
-  //     console.error("Error fetching transactions:", error);
-  //     setTransactions([]);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (activeModal === modalName) {
-  //     fetchTransactions();
-  //   }
-  // }, [activeModal, filters, userId]);
-
-  if (activeModal !== modalName) return null;
+ 
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
     gameTypes: [],
     platforms: [],
-    date: "আজ",
+    date: "today",
   });
   const [transactions, setTransactions] = useState([]);
 
-  const statusOptions = ["Processing", "Rejected", "Approved"];
-  const paymentTypeOptions = ["Deposit", "Withdrawal", "Adjustment"];
-  const dateOptions = ["আজ", "আগামীকাল", "এই সপ্তাহ"];
+  // const statusOptions = ["Processing", "Rejected", "Approved"];
+  // const paymentTypeOptions = ["Deposit", "Withdrawal", "Adjustment"];
+  const dateOptions = ["today", "yesterday", "last7Days"];
 
   const [activeDayTab, setActiveDayTab] = useState("Today");
-  const tabs = ["Today", "Yesterday", "This Week"];
+  const tabs = ["today", "yesterday", "last7Days"];
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => ({
@@ -56,108 +37,47 @@ export default ({ modalName }) => {
   const [selectedDate, setSelectedDate] = useState("last7days");
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedGameTypes, setSelectedGameTypes] = useState([]);
+  const [records, setRecords] = useState([]);
   const [showRecordDetails, setShowRecordDetails] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const fetchTransactions = async () => {
+    try {
+      const response = await GetBettingHistoryByMember({
+        params: {
+          range: filters.date,
+          member: userId,
+          product: selectedPlatforms[0] || ""
+        }
+      });
+      console.log(response);
+      setRecords(response.data.data|| []);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      setRecords([]);
+    }
+  };
 
+  useEffect(() => {
+    if (activeModal === modalName) {
+      fetchTransactions();
+    }
+  }, [activeModal, filters, userId]);
+
+
+
+  const platforms = ["Evolution", "Pragmatic", "Ezugi", "SexyBaccarat"];
+const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
+
+
+  useEffect(() => {
+    if (activeModal === modalName) {
+      fetchTransactions();
+    }
+  }, [activeModal, filters, userId]);
+
+  if (activeModal !== modalName) return null;
   // Sample data
-  const records = [
-    {
-      id: 1,
-      date: "2025-04-26",
-      platform: "JILI",
-      gameType: "Slot",
-      game: "Fengshen",
-      turnover: 1320.0,
-      profitLoss: -94.4,
-      transactions: [
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -2.0 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -2.0 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: 0.72 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -2.0 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: 1.48 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -2.0 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -0.56 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -2.0 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -1.8 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: 0.88 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -2.0 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -0.72 },
-        { time: "04/26 12:47", bet: 2.0, profitLoss: -0.08 },
-      ],
-    },
-    {
-      id: 2,
-      date: "2025-04-25",
-      platform: "PG Soft",
-      gameType: "Slot",
-      game: "Treasures of Aztec",
-      turnover: 2376.0,
-      profitLoss: -415.8,
-      transactions: [
-        { time: "04/25 11:30", bet: 5.0, profitLoss: -5.0 },
-        { time: "04/25 11:32", bet: 5.0, profitLoss: 3.5 },
-        { time: "04/25 11:35", bet: 10.0, profitLoss: -10.0 },
-      ],
-    },
-  ];
 
-  const platforms = [
-    "Microgaming",
-    "Dream Gaming",
-    "E1Sports",
-    "Fa Chai",
-    "FastSpin",
-    "Horsebook",
-    "HotRoad",
-    "JILI",
-    "KingMaker",
-    "LadyLuck",
-    "Ludo",
-    "Pragmatic Play",
-    "Play8",
-    "Sexy",
-    "Spadegaming",
-    "YL",
-    "Yellow Bat",
-    "Iloveu",
-    "Viacasino",
-    "Saba",
-    "JDB",
-    "CQ9",
-    "PG Soft",
-    "Evolution",
-    "BTi",
-    "Joker",
-    "Exchange",
-    "Red Tiger",
-    "Playtech",
-    "Netent",
-    "Play'n GO",
-    "Rich88",
-    "WorldMatch",
-    "Spribe",
-    "PokerWin",
-    "CMD Sports",
-    "NextSpin",
-    "Lucky365",
-  ];
-
-  const gameTypes = [
-    "Slots",
-    "Live Casino",
-    "Sports",
-    "Fishing",
-    "Card",
-    "E-sports",
-    "Lottery",
-    "P2P",
-    "Table",
-    "Arcade",
-    "Cock Fighting",
-    "Rain",
-    "Crash",
-    "Others",
-  ];
 
   const togglePlatform = (platform) => {
     if (selectedPlatforms.includes(platform)) {
@@ -308,29 +228,30 @@ export default ({ modalName }) => {
                           <div className="time-zone">GMT+6</div>
                         </div>
                         <div className="list-content">
+                          
                           <div
                             className="record-item"
                             onClick={() => viewRecordDetails(record)}
                           >
                             <div className="item platform">
-                              {record.platform}
+                              {record.site}
                             </div>
-                            <div className="item type">{record.gameType}</div>
+                            <div className="item type">{record.product}</div>
                             <div className="item bet">
-                              <i>{record.turnover.toLocaleString("en-US")}</i>
+                              <i>{record.totalTurnover}</i>
                             </div>
                             <div
                               className={`item profit ${
-                                record.profitLoss < 0 ? "negative" : "positive"
+                                record.totalayout < 0 ? "negative" : "positive"
                               }`}
                             >
                               <i
                                 style={{
                                   color:
-                                    record.profitLoss < 0 ? "red" : "inherit",
+                                    record.totalayout < 0 ? "red" : "inherit",
                                 }}
                               >
-                                ({Math.abs(record.profitLoss).toFixed(2)})
+                                ({record.totalBet.toFixed(2)})
                               </i>
                             </div>
                             <div className="list-arrow"></div>
@@ -419,25 +340,32 @@ export default ({ modalName }) => {
 
                     <div className="list-content">
                       <ul>
-                        {selectedRecord.transactions.map((txn, index) => (
+                        {console.log(selectedRecord.records)}
+                        {selectedRecord?.records?.map((betTxnRecord, index) => (
                           <li
                             key={index}
                             className="betting-record-list record-item settled"
                           >
-                            <div className="item time">{txn.time}</div>
+                            <div className="item time">{betTxnRecord.end_time}</div>
                             <div className="item game">
-                              {selectedRecord.game}
+                            {console.log(betTxnRecord.gameName_enus)}
+                              {betTxnRecord.gameName.gameName_enus}
                             </div>
                             <div className="item bet">
-                              <i>{txn.bet.toFixed(2)}</i>
+                              <i>{betTxnRecord.turnover.toFixed(2)}</i>
                             </div>
-                            <div className="item profit">
+                            <div
+                              className={`item profit ${
+                                betTxnRecord.bet < betTxnRecord.payout ? "negative" : "positive"
+                              }`}
+                            >
                               <i
                                 style={{
-                                  color: txn.profitLoss < 0 ? "red" : "inherit",
+                                  color:
+                                  betTxnRecord.payout < betTxnRecord.bet ? "red" : "inherit",
                                 }}
                               >
-                                {txn.profitLoss.toFixed(2)}
+                                ({betTxnRecord.bet.toFixed(2)})
                               </i>
                             </div>
                             <div className="item-status">

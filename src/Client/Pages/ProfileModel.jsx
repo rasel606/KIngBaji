@@ -28,6 +28,12 @@ export default ({ modalName }) => {
   const [balance, setBalance] = useState(userId?.balance);
   const [userData, setUserData] = useState(userId);
   const [refreshing, setRefreshing] = useState(false);
+  const [showBalance, setShowBalance] = useState(true);
+  // const [activeWallet, setActiveWallet] = useState('main');
+
+  const toggleBalanceVisibility = () => {
+    setShowBalance(!showBalance);
+  };
 
   const handleRefresh = async () => {
     if (refreshing) return;
@@ -101,11 +107,54 @@ export default ({ modalName }) => {
   //      }
   //    }, [setRefreshing, userId, balance]);
 
+
+
+
+
+
+  const menuSections = [
+    {
+      title: 'Funds',
+      items: [
+        { name: 'Deposit', icon: 'icon-deposit.png', modalName: 'DepositModel' },
+        { name: 'Withdrawal', icon: 'icon-withdrawal.png',modalName: 'WithdrawModel' },
+        // { name: 'My Promotion', icon: 'icon-bonuses.png',modalName: 'DepositModel' }
+      ]
+    },
+    {
+      title: 'History',
+      items: [
+        { name: 'Betting Records', icon: 'icon-bet-records.png',modalName: 'BettingRecordModal' },
+        { name: 'Turnover', icon: 'icon-turnover.png',modalName: 'TurnOverModal' },
+        { name: 'Transaction Records', icon: 'icon-records.png',modalName: 'TransactionRecordModal' }
+      ]
+    },
+    {
+      title: 'Profile',
+      items: [
+        { name: 'Personal Info', icon: 'icon-profile.png',modalName: 'modal2' },
+        { name: 'Reset Password', icon: 'icon-resetpasswords.png',modalName: 'ResetmypasswordModal' },
+        { name: 'Inbox', icon: 'icon-inbox.png',modalName: 'InboxModel' },
+        { name: 'Refer Bonus', icon: 'icon-referral.png',modalName: 'RefferBonusModel' }
+      ]
+    },
+    {
+      title: 'Contact Us',
+      items: [
+        { name: 'CS Link', icon: 'icon-customer.png' },
+        { name: 'Telegram', icon: 'icon-telegram.png' },
+        { name: 'Support Email', icon: 'icon-email.png' },
+        { name: 'Facebook', icon: 'icon-facebook-messenger.png' }
+      ]
+    }
+  ];
+
   return (
+    <div className="member-menu-inner">
     <div className="member-menu active">
       <div className="close" onClick={closeModal}></div>
       <div
-        className="member-header"
+        className="member-header bonuswallet"
         style={{
           backgroundImage:
             "url(	https://img.c88rx.com/cx/h5/assets/images/member-header-bg.png?v=1736240945415)",
@@ -120,13 +169,13 @@ export default ({ modalName }) => {
             }}
           ></div>
           <div className="infor">
-            {/* <div className="account">{userData.userId}</div> */}
+            <div className="account"></div>
             <div
               className="vip-points active"
               onClick={() => openModal("GiftPointsModel")}
             >
               Gift Point
-              <span>0</span>
+              <span className="">0</span>
               <Link className="myvip-text">
                 My Gift Point
                 {/* <img
@@ -134,7 +183,7 @@ export default ({ modalName }) => {
                           src="https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg"
                           alt=""
                         /> */}
-                <span className="item-icon">
+                <span className="item-icon arrow-icon">
                   <img
                     style={{ background: "#ffffff" }}
                     src="https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg"
@@ -147,7 +196,7 @@ export default ({ modalName }) => {
         </div>
       </div>
 
-      <div className="member-menu-content">
+      <div className="member-menu-content bonuswallet">
         <div className="member-menu-box balance-box">
           <div className="balance balance-row">
             <div className="text">
@@ -156,300 +205,38 @@ export default ({ modalName }) => {
                 className={`icon refresh ${refreshing ? "active" : ""}`}
                 onClick={handleRefresh}
               ></div>
-              <div className="icon eyes"></div>
+              <div className="icon eyes" onClick={(e) => { e.stopPropagation(); toggleBalanceVisibility() }}></div>
             </div>
             <span className="amount totalBalanceWallet">
               <i className="balance-value">
                 <i id="" style={{ display: "initial", color: "#fff" }}>
-                  ৳ {balance}
+                  
+                  {showBalance ? `৳ ${userDeatils.balance}` : '•••••'}
                 </i>
               </i>
             </span>
           </div>
         </div>
-        <div className="member-menu-box member-list">
-          <div className="title">
-            <h2>
-              <span>Funds</span>
-            </h2>
-          </div>
-          <ul className="align-center">
-            <li className="deposit" onClick={() => openModal("DepositModel")}>
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-deposit.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Deposit</p>
-              </Link>
-            </li>
-            <li className="deposit" onClick={() => openModal("DepositModel")}>
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="	https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-withdrawal.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Withdrawal</p>
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="member-menu-box member-list">
-          <div className="title">
-            <h2>
-              <span>History</span>
-            </h2>
-          </div>
-          <ul className="align-center">
-            <li
-              className="deposit"
-              onClick={() => openModal("BettingRecordModal")}
-            >
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-bet-records.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Betting Records</p>
-              </Link>
-            </li>
-            <li className="deposit" onClick={() => openModal("TurnOverModal")}>
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-turnover.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>TurnOver</p>
-              </Link>
-            </li>
-            <li
-              className="deposit"
-              onClick={() => openModal("TransactionRecordModal")}
-            >
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-turnover.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Transaction Records</p>
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="member-menu-box member-list">
-          <div className="title">
-            <h2>
-              <span>Profile Info</span>
-            </h2>
-          </div>
-          <ul className="align-center">
-            <li className="profile" onClick={() => openModal("modal2")}>
-              <Link to="">
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-profile.png?v=1737454371567"
-                    alt=""
-                  />
-                </span>
-                <p>Personal Info</p>
-              </Link>
-            </li>
-            <li
-              className="profile"
-              onClick={() => openModal("ResetmypasswordModal")}
-            >
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-resetpasswords.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Reset Password</p>
-              </Link>
-            </li>
-            <li className="profile">
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-inbox.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Inbox</p>
-              </Link>
-            </li>
-            <li
-              className="profile"
-              onClick={() => openModal("RefferBonusModel")}
-            >
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-referral.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Refer Bonus</p>
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="member-menu-box member-list">
-          <div className="title">
-            <h2>
-              <span>Contact Us</span>
-            </h2>
-          </div>
-          <ul className="align-center">
-            <li className="deposit">
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Live Chat 24/7</p>
-              </Link>
-            </li>
-            <li className="deposit">
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-telegram.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Telegram Support</p>
-              </Link>
-            </li>
-            <li className="deposit">
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-telegram.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Telegram Channel</p>
-              </Link>
-            </li>
-
-            <li className="deposit">
-              <Link>
-                <span
-                // className="item-icon"
-                // style={{
-                //   backgroundImage:
-                //     "url(https://img.c88rx.com/cx/h5/assets/images/icon-set…on/member-center/icon-deposit.png?v=1736240945415)",
-                // }}
-                >
-                  <img
-                    className="item-icon"
-                    src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-email.png?v=1738748531996"
-                    alt=""
-                  />
-                </span>
-                <p>Support Email</p>
-              </Link>
-            </li>
-          </ul>
-        </div>
+        {menuSections.map((section, index) => (
+            <div className="member-menu-box member-list" key={index}>
+              <div className="title">
+                <h2><span>{section.title}</span></h2>
+              </div>
+              <ul className={section.title === 'Funds' || section.title === 'History' ? 'align-center' : ''}>
+                {section.items.map((item, itemIndex) => (
+                  <li className={item.name.toLowerCase().replace(/\s+/g, '')} key={itemIndex} onClick={()=>openModal(`${item?.modalName}`)}>
+                    <a>
+                      <span 
+                        className="item-icon" 
+                        style={{ backgroundImage: `url(https://img.s628b.com/sb/h5/assets/images/icon-set/theme-icon/${item.icon})` }}
+                      ></span>
+                      <p>{item.name}</p>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
         <div
           className="member-menu-logout"
@@ -472,6 +259,7 @@ export default ({ modalName }) => {
           </Link>
         </div>
       </div>
+    </div>
     </div>
   );
 };

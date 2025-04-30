@@ -32,4 +32,6 @@ export const UserHistory = (data) => API.post("/user-history", data);
 export const verifyEmail = (formData) => API.post("/verify-email", formData);
 export const Emailsend = (formData) => API.post("/send-otp", formData);
 export const GatWaySystem = (data) => API.post("/subadmingetwaylistfor_user", data);
+export const GetBettingHistoryByMember = ({range, member, product}) => API.get("/bettingHistory-member-summary", {range, member, product});
+export const GetBettingHistoryByMemberDetails = ({params}) =>  API.get("/get-betting-history-detailed", {params});
 export const GetPaymentMethodsUser = (paydata) => API.post("/deposit_with_bonus", paydata);

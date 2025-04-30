@@ -196,7 +196,7 @@ export default ({ modalName }) => {
         <div className="popup-page-main__container">
           <div className="content mcd-style member-content third-party-login">
             <div className="register-entry">
-              <div className="logo-box" style={{ backgroundImage: 'url(https://img.s628b.com/sb/h5/assets/images/member-logo.png?v=1744705246740)' }}></div>
+              <div className="logo-box" style={{ backgroundImage: 'url("https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png")' }}></div>
               
               <div className="banner banner-v1">
                 <div className="carousel-wrap style-init siblings">

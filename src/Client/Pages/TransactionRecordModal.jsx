@@ -10,13 +10,13 @@ const TransactionRecordsModal = ({ modalName }) => {
   const [filters, setFilters] = useState({
     status: [],
     paymentType: [],
-    date: "আজ",
+    date: "today",
   });
   const [transactions, setTransactions] = useState([]);
 
   const statusOptions = ["Processing", "Rejected", "Approved"];
   const paymentTypeOptions = ["Deposit", "Withdrawal", "Adjustment"];
-  const dateOptions = ["আজ", "আগামীকাল", "এই সপ্তাহ"];
+  const dateOptions = ["today", "yesterday", "last7Days"];
 
   const [activeTab, setActiveTab] = useState("Today");
   const tabs = ["Today", "Yesterday", "This Week"];

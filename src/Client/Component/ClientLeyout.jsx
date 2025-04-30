@@ -65,6 +65,8 @@ import CurrencyLanguageSelector from "./CurrencyLanguageSelector";
 import GiftPointsModel from "../Pages/GiftPointsModel";
 import VipGiftPointsPopupModel from "../Pages/VipGiftPointsPopupModel";
 import SideNavPopUp from "../Pages/SideNavPopUp";
+import InboxModal from "../Pages/InboxModal";
+
 
 import HeaderGroup from "./HeaderGroup";
 import BkashModal from "../Pages/BkashModal";
@@ -291,10 +293,8 @@ export default () => {
         <AddNameModel modalName="AddNameModel"></AddNameModel>
         {/* ========================================= */}
 
-        {/* <MyProfilemodal
-          isOpen={isModalOpen}
-          closeModal={closeModal}
-        ></MyProfilemodal> */}
+        <InboxModal modalName="InboxModel"></InboxModal>
+        {/* ========================================= */}
         
         <SendEmailOtp modalName="SendEmailOtp"></SendEmailOtp>
         {/* ========================================= */}
@@ -306,10 +306,7 @@ export default () => {
 
         <WidthrawModel modalName="WidthrawModel"></WidthrawModel>
         {/* ========================================= */}
-        {/* <DepositModel
-          isOpen={isModalOpen}
-          closeModal={closeModal}
-        ></DepositModel> */}
+        
         {/* ========================================= */}
           <GiftPointsModel modalName="GiftPointsModel"></GiftPointsModel>
         {/* ========================================= */}  

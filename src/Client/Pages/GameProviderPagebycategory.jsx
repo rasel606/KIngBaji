@@ -169,9 +169,11 @@ export default () => {
       );
       
       const data = await response.json();
-      setPlayGameData(data);
-
-      if (data.status === "success") {
+      
+console.log(data);
+      if (data.errMsg === "SUCCESS") {
+        console.log(data);
+        setPlayGameData(data);
         setShowPopup(true);
       }
     } catch (error) {
@@ -275,7 +277,7 @@ export default () => {
                   src={playGameData.gameUrl}
                   title="Game"
                   width="100%"
-                  height="500px"
+                  height="100%"
                   allowFullScreen
                 ></iframe>
               </div>

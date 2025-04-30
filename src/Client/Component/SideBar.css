@@ -7971,7 +7971,7 @@ html.is-desktop .announcement-row .item-icon {
 .member-menu-box ul li {
     position: relative;
     width: 25%;
-    padding: 1.8666666667vw 0
+    /* padding: 1.8666666667vw 0 */
 }
 
 .member-menu-box ul li a {
@@ -8641,6 +8641,85 @@ html.is-desktop .announcement-row .item-icon {
     background: #274563;
     z-index: 2
 }
+
+  
+  .tag-rebate-money {
+    position: absolute;
+    z-index: 3;
+    top: 1.3333333333vw;
+    right: -1.0666666667vw;
+    padding: 0 .8vw;
+
+    border-radius: 0 .8vw .8vw 0;
+    opacity: 0;
+    background: #d15454;
+    box-shadow: 0 0 2px #0000004d;
+    color: #fff;
+    line-height: 0;
+    pointer-events: none;
+
+
+    
+    background-color: #d15454;
+
+    font-size: 12px;
+    /* margin-left: 10px; */
+    animation: slideIn 1s .3s forwards;
+  }
+  
+  .tag-rebate-money p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .tag-rebate-money:before,
+  .tag-rebate-money:after {
+    content: "";
+    position: absolute;
+    left: -6px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    background: transparent;
+  }
+  
+  .tag-rebate-money:before {
+    top: 0;
+    border-width: 0 6px 11px 0;
+    border-color: transparent #d15454 transparent transparent;
+  }
+  
+  .tag-rebate-money:after {
+    bottom: 0;
+    border-width: 0 0 11px 6px;
+    border-color: transparent transparent #d15454;
+  }
+  
+  .item-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
+    background-color: currentColor;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      right: -16px;
+      opacity: 0;
+    }
+    60% {
+      opacity: 0;
+    }
+    100% {
+      right: -4px;
+      opacity: 1;
+    }
+  }
 
 .radius.member-box:after {
     height: 0
@@ -19693,6 +19772,7 @@ header.empty .header-right-btn-group {
     height: 4vw;
     margin-right: 1.3333333333vw;
     background: #b1c7e0;
+    mask-image: url("https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-calendar-type02.svg");
     mask-repeat: no-repeat;
     mask-position: center left;
     mask-size: 100%;
@@ -19853,7 +19933,7 @@ header.empty .header-right-btn-group {
 }
 
 .list .list-content {
-    margin-bottom: 1.3333333333vw
+    margin-bottom: 0.2333333333vw
 }
 
 .list-bar {
