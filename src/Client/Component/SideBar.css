@@ -2742,20 +2742,20 @@ div,pattern {
 }
 
 p {
-    margin: 2.1333333333vw 0
+    /* margin: 2.1333333333vw 0 */
 }
 
-span {
+/* span {
     color: var(--referral-partner-txt, rgba(255, 255, 255, .4))
-}
+} */
 
 i,a,strong {
     color: var(--referral-partner-txt-strong, #4574a8)
 }
 
-strong {
+/* strong {
     font-weight: 700
-}
+} */
 
 a {
     display: block;
@@ -6588,7 +6588,7 @@ a {
 
 .timeline-block .point {
     position: absolute;
-    top: 4vw;
+    top: 5vw;
     left: 3.9333333333vw;
     width: 2.6666666667vw;
     height: 2.6666666667vw;
@@ -6622,7 +6622,7 @@ a {
 }
 
 .timeline-block .content .text+.time {
-    margin-top: 2.1333333333vw
+    margin-top: 1.1333333333vw
 }
 
 .timeline-block .content .time {
@@ -7365,6 +7365,7 @@ a {
     background: #fff;
     background-repeat: no-repeat;
     background-position: center;
+    mask-image: url("https://img.c88rx.com/cx/h5/assets/images/icon-set/index-theme-icon/index-announcement-icon.svg?v=1736849889723");
     mask-repeat: no-repeat;
     mask-position: 50% 50%;
     mask-size: 80% auto;
@@ -8702,7 +8703,7 @@ html.is-desktop .announcement-row .item-icon {
     width: 16px;
     height: 16px;
     /* margin-left: 10px; */
-    background-color: currentColor;
+    /* background-color: currentColor; */
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
@@ -16108,12 +16109,12 @@ header.empty .header-right-btn-group {
 }
 
 .tips-info h5 {
-    display: flex;
+    display: block;
     flex: 1;
     flex-flow: row nowrap;
     align-items: center;
     justify-content: flex-start;
-    width: 92%;
+    width: auto;
     margin-bottom: 2.6666666667vw
 }
 

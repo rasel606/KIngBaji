@@ -16,6 +16,7 @@ export default ({ modalName }) => {
     birthday: "",
   });
   const [message, setMessage] = useState("");
+  const [ShowSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,15 +49,19 @@ export default ({ modalName }) => {
       const response = await UpdateBirthDate(formData);
       console.log(response);
       setMessage(response.data.message);
+      setTimeout(() => {
+        setShowSuccess(false);
+        openModal('MyProfilemodal');
+      }, 1000)
     } catch (error) {
       setMessage(error.response?.data?.message || "An error occurred.");
     }
   };
 
   return (
-    <div className="modal-overlay" onClick={closeModal}>
+    <div className="mcd-popup-page popup-page-wrapper active" onClick={closeModal}>
       <div onClick={(e) => e.stopPropagation()}>
-        <div className="popup-page__main popup-page-main popup-page-main--show">
+        <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
           <div className="popup-page-main__header">
             <div className="popup-page-main__title">Add Birthday</div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
@@ -68,7 +73,10 @@ export default ({ modalName }) => {
                   <div className="menu-box">
                     <div className="input-group">
                       <label>জন্মদিন</label>
-                      <div className="popup-page-wrapper" style={{ position: "block" }}>
+                      <div
+                        className="popup-page-wrapper"
+                        style={{ position: "block" }}
+                      >
                         <input
                           type="date"
                           className="mat-datepicker-input mat-mdc-input-element ng-untouched ng-pristine ng-invalid cdk-text-field-autofill-monitored"
@@ -88,7 +96,7 @@ export default ({ modalName }) => {
                     </div>
                   </div>
                 </form>
-                <div className="button-name " onClick={() => handleSubmit()}>
+                <div className={`button ${formData.birthday ? "" : "btn-disabled"}`} onClick={() => handleSubmit()}>
                   <a>Submit</a>
                 </div>
                 <p className="button-tips player">
@@ -96,23 +104,25 @@ export default ({ modalName }) => {
                   না। আপনার যদি সাহায্যের প্রয়োজন হয়, তাহলে অনুগ্রহ করে{" "}
                   <i>গ্রাহক পরিষেবাতে</i> যোগাযোগ করুন।
                 </p>
-                <div className="pop-wrap pop-success">
-                  <div className="register-success-wrap">
-                    <div className="register-success-cont">
-                      <div className="register-success-txt top-inner">
-                        <div className="success-checkmark">
-                          <div className="check-icon">
-                            <span className="icon-line line-tip"></span>
-                            <span className="icon-line line-long"></span>
-                            <div className="icon-circle"></div>
-                            <div className="icon-fix"></div>
+                {ShowSuccess && (
+                  <div className="pop-wrap pop-success">
+                    <div className="register-success-wrap">
+                      <div className="register-success-cont">
+                        <div className="register-success-txt top-inner">
+                          <div className="success-checkmark">
+                            <div className="check-icon">
+                              <span className="icon-line line-tip"></span>
+                              <span className="icon-line line-long"></span>
+                              <div className="icon-circle"></div>
+                              <div className="icon-fix"></div>
+                            </div>
                           </div>
+                          <h4>Success</h4>
                         </div>
-                        <h4>Success</h4>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

@@ -32,14 +32,14 @@ export default ({ modalName }) => {
     setShowPopup(false);
   };
   return (
-    <div className="mcd-popup-page popup-page-wrapper active">
-    <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
-      <div className="popup-page__backdrop" onClick={handleClose}></div>
+    <div className="mcd-popup-page popup-page-wrapper active" onClick={closeModal}>
+    <div className="popup-page show-toolbar popup-page--active popup-page--align-top" onClick={(e) => e.stopPropagation()}>
+      <div className="popup-page__backdrop" onClick={closeModal}></div>
       
       <div className="popup-page__main popup-page-main popup-page-main--show">
         <div className="popup-page-main__header">
           <div className="popup-page-main__title">Turnover</div>
-          <div className="popup-page-main__close" onClick={handleClose}></div>
+          <div className="popup-page-main__close" onClick={closeModal}></div>
         </div>
 
         <div className="popup-page-main__container">

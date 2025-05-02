@@ -13,34 +13,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import {
-  AiOutlineBank,
-  AiOutlineUnorderedList,
-  AiOutlineLogout,
-  AiOutlineMenu,
-  AiOutlineUser,
-} from "react-icons/ai";
-import {
-  BsBagPlus,
-  BsBagX,
-  BsBox,
-  BsCartPlus,
-  BsCircle,
-  BsGraphUp,
-  BsPeople,
-} from "react-icons/bs";
-import { CiChat2 } from "react-icons/ci";
-import { FaTelegram, FaUsers } from "react-icons/fa6";
-import { MdEmail, MdLeaderboard } from "react-icons/md";
-import { MdAccountBalance } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
-import { PiHandDeposit, PiHandWithdraw } from "react-icons/pi";
-import { RiDashboardLine } from "react-icons/ri";
-import { TbCashBanknoteFilled, TbTruckDelivery } from "react-icons/tb";
 
-import PromossionsModel from "./PromossionsModel";
-
-// import SliderdModel from "../Pages/LoginModel";
 import Carousel from "../Pages/Carousel";
 import LoginModel from "../Pages/LoginModel";
 import SingUpModal from "../Pages/SingUpModal";
@@ -96,7 +69,9 @@ export default () => {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const {isAuthenticated, loginUser, logoutUser, verifyUser } = useAuth();
-
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [activeCategory, setActiveCategory] = useState("");
+    const [showSecondMenu, setShowSecondMenu] = useState(true);
 
   useEffect(() => {
     verifyUser();
@@ -125,6 +100,16 @@ export default () => {
   const onLogout = () => {
     // removeSessions();
   };
+
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    // Reset menu states when closing
+    if (!isMenuOpen) {
+      setActiveCategory("");
+      setShowSecondMenu(true);
+    }
+  };
   return (
     <>
 
@@ -137,7 +122,7 @@ export default () => {
          
          
          <div className="toolbar">
-         <HeaderGroup></HeaderGroup>
+         <HeaderGroup toggleMenu={toggleMenu} isMenuOpen={isMenuOpen}  ></HeaderGroup>
          <ProfileModel modalName="ProfileModel"></ProfileModel>
           {isAuthenticated ? (
             <>
@@ -260,8 +245,8 @@ export default () => {
       </div> */}
 
       
-
-      <div style={{ marginTop: "50px" }}>
+      
+      <div style={{ marginTop: "40px" }}>
         <Outlet />
         
       </div>

@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useModal } from './ModelContext';
 import { CreateUser, LoginUser, verify } from './Axios-API-Service/AxiosAPIService';
+import NotificationPopup from './NotificationPopup';
 
 
 const AuthContext = createContext();
@@ -18,9 +19,15 @@ const AuthContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
 const [email, setEmail] = useState(null||"");
+const [showPopup, setShowPopup] = useState(false);
 
+const openPopup = () => {
+  setShowPopup(true);
+};
 
-
+const closePopup = () => {
+  setShowPopup(false);
+};
 
 
 
@@ -87,7 +94,7 @@ const verifyUserToken = async (token) => {
       const newToken = response.data.token;
       // localStorage.setItem('authToken', newToken);
   
-      console.log(response,response.data.token)
+      console.log(response,response.data)
       
       localStorage.setItem('authToken', response.data.token);
       setIsAuthenticated(true);
@@ -132,8 +139,9 @@ const verifyUserToken = async (token) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout ,verifyUser,userRegistar,token, userId, userDeatils , loading,setLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout ,verifyUser,userRegistar,token, userId, userDeatils , loading,setLoading,openPopup, closePopup, showPopup }}>
       {children}
+      {showPopup && <NotificationPopup onClose={closePopup} />}
     </AuthContext.Provider>
   );
 }

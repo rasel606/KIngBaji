@@ -157,16 +157,16 @@ export default ({ modalName }) => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  let referredbyCode = "";
-  const referralCode = localStorage.getItem("referralCode");
-  referredbyCode += referralCode;
-  console.log(referralCode);
+  let referredBy = "";
+  // const referredBy = localStorage.getItem("referralCode");
+  // referredBy += referralCode;
+  // console.log(referralCode);
   const handleSubmit = async () => {
     const referralCode = localStorage.getItem("referralCode");
     console.log(referralCode);
     // if (!userId || !password || !phoneNumber) {
       // const referralCode = localStorage.setItem("referralCode", referralCode)
-      console.log(referredbyCode);
+      console.log(referredBy);
       console.log(referralCode);
       console.log(userId, password, selectedCountry, phoneNumber);
       const data = {
@@ -174,7 +174,7 @@ export default ({ modalName }) => {
         password,
         countryCode: selectedCountry,
         phone: phoneNumber,
-        referredbyCode: referralCode,
+        referredBy: referralCode,
       };
 
       console.log(data);

@@ -4,6 +4,7 @@ import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
 import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
 import Footer from "./Footer";
+import ProtectedRoute from "../Component/ProtectedRoute";
 
 const GameBox = ({ game, onPlay }) => (
   <div className="games-box">
@@ -201,7 +202,8 @@ export default () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
+      if(userId)
+        {const response = await fetch(
         "http://localhost:5000/api/v1/launch_gamePlayer",
         {
           method: "POST",
@@ -221,11 +223,11 @@ export default () => {
       const data = await response.json();
 
       console.log(data);
-      if (data.errMsg === "SUCCESS") {
+      if (data.errMsg === "SUCCESS" && userId) {
         console.log(data);
         setPlayGameData(data);
         setShowPopup(true);
-      }
+      }}
     } catch (error) {
       console.error("Error launching game:", error);
     } finally {
@@ -246,11 +248,15 @@ export default () => {
   const handleRefresh = async (userId) => {
     try {
       await handelUserDetails(userId);
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/user_balance",
-        { userId }
-      );
-      console.log("Balance Data:", response.data);
+      // if(userId){
+        const response = await axios.post(
+          "http://localhost:5000/api/v1/user_balance",
+          { userId }
+        );
+        setBalance(response.data.balance);
+        console.log("Balance Data:", response.data);
+      // }
+      
     } catch (error) {
       console.error("Error fetching balance:", error);
     }
@@ -269,7 +275,7 @@ export default () => {
   };
 
   useEffect(() => {
-    if (!showPopup) {
+    if (!showPopup && userId) {
       handleRefresh(userId);
     }
   }, [showPopup, userId]);
@@ -289,9 +295,7 @@ export default () => {
               <SortBar />
 
               <div className="games-main">
-                {loading ? (
-                  <div>Loading games...</div>
-                ) : (
+                {
                   gameData?.map((game, index) => (
                     <div className="games-box">
                       {/* {console.log(game)} */}
@@ -309,10 +313,11 @@ export default () => {
                       </div>
                     </div>
                   ))
-                )}
+                }
               </div>
               <div ref={loader} className="loading">
-                {loading && <p>Loading...</p>}
+              {hasMore && <div className="list-loading"></div>}
+                {!hasMore && <div className="prompt">－end of page－</div>}
               </div>
               {/* <div style={{ height: '10px', visibility: 'hidden' }}>anchor</div> */}
             </div>
@@ -321,6 +326,7 @@ export default () => {
       </div>
 <Footer></Footer>
       {showPopup && playGameData?.gameUrl && (
+        <ProtectedRoute>
         <div className="popup-page-wrapper active" onClick={handleClosePopup}>
           <div
             className="popup-page show-toolbar popup-page--active popup-page--align-top"
@@ -346,6 +352,7 @@ export default () => {
             </div>
           </div>
         </div>
+        </ProtectedRoute>
       )}
     </div>
   );

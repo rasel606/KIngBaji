@@ -145,9 +145,9 @@ export default (props) => {
     setLoading(true);
     // handelUserDetails(userId);
     try {
-      handelUserDetails(userId);
+      // handelUserDetails(userId);
 
-      const response = await axios.post(
+      if(userId){const response = await axios.post(
         "http://localhost:5000/api/v1/user_balance",
         { userId }
       );
@@ -157,7 +157,7 @@ export default (props) => {
       if (response.data.hasOwnProperty("balance")) {
         verifyUser(token); // Ensure token is available in scope
       }
-      setLoading(false);
+      setLoading(false);}
     } catch (error) {
       // console.error("Error fetching balance:", error);
     } finally {
@@ -177,7 +177,10 @@ export default (props) => {
 
   useEffect(() => {
     if (userId) {
-      handleRefresh(); // Call the function whenever userId changes
+      setLoading(false);// Call the function whenever userId changes
+    }else{
+      handleRefresh();
+      
     }
   }, [setRefreshing, userId, balance, loading, token]);
 
@@ -188,35 +191,7 @@ export default (props) => {
           <Carousel images={images}></Carousel>
           <Marquee></Marquee>
 
-          {/* {isAuthenticated ? ( */}
-            {/* <div className="nav-category nav-balance ">
-              <div className="balance-box ">
-                <div className="username">
-                  {userDeatils ? userId : loading ? "...." : "User"}
-                </div>
-                <div className="balance">
-                  <i className="balance-value">
-                    <i id="" style={{ display: "initial", color: "white" }}>
-                      ৳ {userDeatils ? balance : loading ? "...." : "0"}
-                    </i>
-                  </i>
-                  <div
-                    className={`icon refresh ${refreshing ? "active" : ""}`}
-                    onClick={handleRefresh}
-                  ></div>
-                </div>
-              </div>
-              <ul className="nav-group">
-                <li className="nav-item" tabindex="0">
-    
-                  <span>প্রমোশন</span>
-                </li>
-                <li className="nav-item" tabindex="0">
- 
-                  <span>ডিপোজিট</span>
-                </li>
-              </ul>
-            </div> */}
+
           
           <div className="game-nav-container">
             <div

@@ -53,58 +53,14 @@ export default ({ modalName }) => {
   const [activeTab, setActiveTab] = useState("timeline");
   const [showDetails, setShowDetails] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  // const [filters, setFilters] = useState({
-  //   status: [],
-  //   paymentType: ["Withdrawal", "Deposit"],
-  //   date: "Last 7 days",
-  // });
   const [showFilter, setShowFilter] = useState(false);
-
-  // Sample transaction data
-  // const transactions = [
-  //   {
-  //     id: "D780446321",
-  //     type: "Deposit",
-  //     base_amount: "2,000.00",
-  //     currency: "৳",
-  //     status: "Fail",
-  //     date: "2025/04/26",
-  //     time: "18:14:16",
-  //     gateway_name: "bKash",
-  //     transactionID: "421114545",
-  //     timeline: [
-  //       { event: "Your Deposit Has Failed.", time: "18:30:00" },
-  //       { event: "Deposit Information Received.", time: "18:14:16" },
-  //       { event: "Deposit Initiated.", time: "18:13:57" },
-  //     ],
-  //   },
-  //   {
-  //     id: "D780293473",
-  //     type: "Deposit",
-  //     base_amount: "500.00",
-  //     currency: "৳",
-  //     status: "Success",
-  //     date: "2025/04/26",
-  //     time: "12:11:16",
-  //     gateway_name: "bKash",
-  //     transactionID: "421114546",
-  //     timeline: [
-  //       { event: "Deposit Completed.", time: "12:15:00" },
-  //       { event: "Deposit Information Received.", time: "12:11:16" },
-  //       { event: "Deposit Initiated.", time: "12:10:45" },
-  //     ],
-  //   },
-  // ];
-
   const handleTransactionClick = (transaction) => {
     setSelectedTransaction(transaction);
     setShowDetails(true);
   };
-
   const toggleFilter = () => {
     setShowFilter(!showFilter);
   };
-
   const handleStatusChange = (status) => {
     setFilters((prev) => ({
       ...prev,
@@ -223,46 +179,59 @@ export default ({ modalName }) => {
 
               {/* Transaction List */}
               {transactions.map((tnxDate) => (
-              <div className="list list-betting-record">
-                <div className="date-title">
-                  <div className="date">
-                    <span className="item-icon calendar-icon"></span> {tnxDate.date}
-                  </div>
-                  <div className="time-zone">GMT+6</div>
-                </div>
-
-                <div className="list-content">
-                  {tnxDate.transactions.map((tx) => (
-                    <div
-                      key={tx.id}
-                      className="record-item transaction-record-list no-detail-info"
-                      onClick={() => handleTransactionClick(tx)}
-                    >
-                      {console.log(tx)}
-                      <div className="item type">{tx.type === 0 ? "Deposit" : "Withdrawal"}</div>
-                      <div className="item amount">
-                        <i>{tx.base_amount}</i>
-                      </div>
-                      <div
-                        className={`item status ${
-                          tx.status === 0 ? "pending" :tx.type === 1
-                          ? "positive":tx.type === 2
-                          ? "negative": "revert"
-                        }`}
-                      >
-                        {console.log(tx.type)}
-                        <div className="tags">{tx.type === 0
-    ? "Deposit"
-    : tx.type === 1
-    ? "Withdrawal"
-    : "transfer"}</div>
-                      </div>
-                      <div className="item time">{new Date(tx.datetime).toLocaleDateString("en-GB").replace(/\//g, " : ")}</div>
-                      <div className="list-arrow"></div>
+                <div className="list list-betting-record">
+                  <div className="date-title">
+                    <div className="date">
+                      <span className="item-icon calendar-icon"></span>{" "}
+                      {tnxDate.date}
                     </div>
-                  ))}
+                    <div className="time-zone">GMT+6</div>
+                  </div>
+
+                  <div className="list-content">
+                    {tnxDate.transactions.map((tx) => (
+                      <div
+                        key={tx.id}
+                        className="record-item transaction-record-list no-detail-info"
+                        onClick={() => handleTransactionClick(tx)}
+                      >
+                        {console.log(tx)}
+                        <div className="item type">
+                          {tx.type === 0 ? "Deposit" : "Withdrawal"}
+                        </div>
+                        <div className="item amount">
+                          <i>{tx.base_amount}</i>
+                        </div>
+                        <div
+                          className={`item status ${
+                            tx.status === 0
+                              ? "pending"
+                              : tx.type === 1
+                              ? "positive"
+                              : tx.type === 2
+                              ? "negative"
+                              : "revert"
+                          }`}
+                        >
+                          {console.log(tx.type)}
+                          <div className="tags">
+                            {tx.type === 0
+                              ? "Deposit"
+                              : tx.type === 1
+                              ? "Withdrawal"
+                              : "transfer"}
+                          </div>
+                        </div>
+                        <div className="item time">
+                          {new Date(tx.datetime)
+                            .toLocaleDateString("en-GB")
+                            .replace(/\//g, " : ")}
+                        </div>
+                        <div className="list-arrow"></div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
               ))}
 
               {/* Transaction Details Popup */}
@@ -357,52 +326,111 @@ export default ({ modalName }) => {
                                 <h3>Transaction Progress</h3>
                                 <div className="tags">
                                   {selectedTransaction.status === 0
-    ? "Pending"
-    : selectedTransaction.status === 1
-    ? "Accept"
-    : selectedTransaction.status === 2
-    ? "Reject"
-    : "Unknown"}
+                                    ? "Pending"
+                                    : selectedTransaction.status === 1
+                                    ? "Accept"
+                                    : selectedTransaction.status === 2
+                                    ? "Reject"
+                                    : "Unknown"}
                                 </div>
                               </div>
 
                               <div className="timeline-box">
                                 {/* {selectedTransaction.timeline.map(
                                   (event, index) => ( */}
-                                    <React.Fragment >
-                                      
-                                        <div className="date">
-                                          {selectedTransaction.date}
-                                        </div>
-                                      
+                                <React.Fragment>
+                                  <div className="date">
+                                    {selectedTransaction.date}
+                                  </div>
 
-                                      <div
-                                        className={`timeline-block`}
-                                      >
-                                        <div
-                                          className={`point `}
-                                        >
-                                          <span className="item-icon cross-icon"></span>
-                                        </div>
+                                  <div className={`timeline-block`}>
+                                    <div className={`point `}>
+                                      <span
+                                        className="item-icon"
+                                        style={{
+                                          maskImage: `url(${
+                                            selectedTransaction.status === 0
+                                              ? "https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-pending-type05.svg"
+                                              : selectedTransaction.status === 1
+                                              ? "https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-check-type06.svg"
+                                              : "https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-cross-type07.svg"
+                                          })`,
+                                          display: "block",
+                                          opacity: "1",
+                                        }}
+                                      ></span>
+                                    </div>
 
-                                        <div
-                                          className="content"
-                                          style={{
-                                            animation: `1s ease ${
-                                              0.2 * 0.1
-                                            }s 1 normal none running slide`,
-                                          }}
-                                        >
-                                          <div className="text">
-                                            {/* {selectedTransaction.event} */}
-                                          </div>
-                                          <div className="time">
-                                            {selectedTransaction.updatetime}
-                                          </div>
-                                        </div>
+                                    <div
+                                      className="content"
+                                      style={{
+                                        animation: `1s ease ${
+                                          0.2 * 0.1
+                                        }s 1 normal none running slide`,
+                                      }}
+                                    >
+                                      <div className="text">
+                                        Your Deposit Has been{" "}
+                                        {selectedTransaction.status === 0
+                                          ? "Pending"
+                                          : selectedTransaction.status === 1
+                                          ? "Accept"
+                                          : selectedTransaction.status === 2
+                                          ? "Reject"
+                                          : "Unknown"}
                                       </div>
-                                    </React.Fragment>
-                                  {/* ) */}
+                                      <div className="time">
+                                        {new Date(
+                                          selectedTransaction.updatetime
+                                        ).toLocaleTimeString("en-GB")}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className={`timeline-block`}>
+                                    <div className={`point `}>
+                                      <span
+                                        className="item-icon"
+                                        style={{
+                                          maskImage: `url(${
+                                            selectedTransaction.status === 0
+                                              ? "https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-pending-type05.svg"
+                                              : selectedTransaction.status === 1
+                                              ? "https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-check-type06.svg"
+                                              : "https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-cross-type07.svg"
+                                          })`,
+                                          display: "block",
+                                          opacity: "1",
+                                        }}
+                                      ></span>
+                                    </div>
+
+                                    <div
+                                      className="content"
+                                      style={{
+                                        animation: `1s ease ${
+                                          0.2 * 0.1
+                                        }s 1 normal none running slide`,
+                                      }}
+                                    >
+                                      <div className="text">
+                                        Your Deposit Seen{" "}
+                                        {selectedTransaction.status === 0
+                                          ? "Pending"
+                                          : selectedTransaction.status === 1
+                                          ? "Accept"
+                                          : selectedTransaction.status === 2
+                                          ? "Reject"
+                                          : "Unknown"}
+                                      </div>
+                                      <div className="time">
+                                        {new Date(
+                                          selectedTransaction.updatetime
+                                        ).toLocaleTimeString("en-GB")}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </React.Fragment>
+                                {/* ) */}
                                 {/* )} */}
                               </div>
                             </div>
@@ -420,12 +448,12 @@ export default ({ modalName }) => {
                                 <h3>Transaction Record Details</h3>
                                 <div className="tags">
                                   {selectedTransaction.status === 0
-    ? "Pending"
-    : selectedTransaction.status === 1
-    ? "Accept"
-    : selectedTransaction.status === 2
-    ? "Reject"
-    : "Unknown"}
+                                    ? "Pending"
+                                    : selectedTransaction.status === 1
+                                    ? "Accept"
+                                    : selectedTransaction.status === 2
+                                    ? "Reject"
+                                    : "Unknown"}
                                 </div>
                               </div>
 
@@ -441,10 +469,10 @@ export default ({ modalName }) => {
                                   <div className="name">Type</div>
                                   <div className="value">
                                     {selectedTransaction.type === 0
-    ? "Deposit"
-    : selectedTransaction.type === 1
-    ? "Withdrawal"
-    : "transfer"}
+                                      ? "Deposit"
+                                      : selectedTransaction.type === 1
+                                      ? "Withdrawal"
+                                      : "transfer"}
                                   </div>
                                 </div>
 
@@ -458,9 +486,13 @@ export default ({ modalName }) => {
                                 <div className="info">
                                   <div className="name">Payment Type</div>
                                   <div className="value">
-                                    {selectedTransaction.type === 0 ? "sendMoney" :selectedTransaction.type === 1
-                          ? "cashout":selectedTransaction.type === 2
-                          ? "payment": "transfer"}
+                                    {selectedTransaction.type === 0
+                                      ? "sendMoney"
+                                      : selectedTransaction.type === 1
+                                      ? "cashout"
+                                      : selectedTransaction.type === 2
+                                      ? "payment"
+                                      : "transfer"}
                                   </div>
                                 </div>
 
@@ -505,92 +537,6 @@ export default ({ modalName }) => {
 
               <div className="prompt">－end of page－</div>
             </div>
-            {/* <div className={`searchpage ${isFilterOpen ? "active" : ""}`}>
-              <div className="search-top-info">
-                <div className="back" onClick={() => setIsFilterOpen(false)}>
-                  <span className="item-icon"></span>
-                  পিছনে
-                </div>
-                <input type="text" placeholder="লেনদেন ফিল্টার" disabled />
-              </div>
-
-              <div className="searchpage-main">
-                <FilterGroup
-                  title="স্ট্যাটাস"
-                  type="checkbox"
-                  options={statusOptions}
-                  selected={filters.status}
-                  onChange={(val) => handleFilterChange("status", val)}
-                />
-
-                <FilterGroup
-                  title="লেনদেন প্রকার"
-                  type="checkbox"
-                  options={paymentTypeOptions}
-                  selected={filters.paymentType}
-                  onChange={(val) => handleFilterChange("paymentType", val)}
-                />
-
-                <FilterGroup
-                  title="তারিখ"
-                  type="radio"
-                  options={dateOptions}
-                  selected={filters.date}
-                  onChange={(val) => handleFilterChange("date", val)}
-                />
-              </div>
-
-              <div className="searchpage-bar">
-                <button
-                  className="button"
-                  onClick={() => setIsFilterOpen(false)}
-                >
-                  প্রয়োগ করুন
-                </button>
-              </div>
-            </div>
-
-            <div className="transaction-container">
-              <div
-                className="filter-header"
-                onClick={() => setIsFilterOpen(true)}
-              >
-                <div className="tab filter-tab">
-                  <ul className="item-ani">
-                    {tabs.map((tab) => (
-                      <li
-                        key={tab}
-                        className={activeTab === tab ? "active" : ""}
-                        onClick={() => setActiveTab(tab)}
-                      >
-                        {tab}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="btn search-btn">
-                    <span className="item-icon"></span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="record-item item-title">
-                <div className="item type">প্রকার</div>
-                <div className="item base_amount">পরিমাণ</div>
-                <div className="item status">স্ট্যাটাস</div>
-                <div className="item time">তারিখ</div>
-              </div>
-
-              {transactions.length === 0 ? (
-                <NoData />
-              ) : (
-                transactions.map((transaction) => (
-                  <TransactionItem
-                    key={transaction._id}
-                    transaction={transaction}
-                  />
-                ))
-              )}
-            </div> */}
           </div>
         </div>
       </div>
@@ -618,6 +564,3 @@ const FilterGroup = ({ title, type, options, selected, onChange }) => (
     </ul>
   </div>
 );
-
-
-

@@ -479,11 +479,11 @@ export default ({ modalName }) => {
                             )}
                           </div>
                         </div>
-                      </div>
-                      <div className="tips-info note">
+                        
                         <h5>
+                        <div className="tips-info note">
                           <i className="tips-icon"></i>
-                          <span>
+                          <span style={{ whiteSpace: "pre-wrap",color:"white" }}>
                             ১/ব্যক্তিগত তথ্য"-এর অধীনে ক্যাশ আউট করার আগে
                             সর্বোচ্চ ৩টি মোবাইল নম্বর যোগ করুন এবং ভেরিফাই করুন।
                             ২/আপনার ডিপোজিট প্রক্রিয়ার দ্রুত সফল করতে সঠিক
@@ -495,8 +495,11 @@ export default ({ modalName }) => {
                             পারেন। ৫ ১.৩০-এর নিচের ODDs বাজি, উইথড্র টার্নওভারের
                             প্রয়োজনীয়তার জন্য গণনা করা হবে না।
                           </span>
+                          </div>
                         </h5>
+                      
                       </div>
+                      
                       <div className="member-content">
                         <div className="button submit">
                           <a>Submit</a>

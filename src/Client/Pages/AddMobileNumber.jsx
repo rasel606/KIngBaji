@@ -11,7 +11,7 @@ export default ({
 
   const [phone, setPhone] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const [ShowSuccess, setShowSuccess] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (phone.trim()) {
@@ -53,6 +53,7 @@ export default ({
                     যাবে না। আপনার যদি সাহায্যের প্রয়োজন হয়, তাহলে অনুগ্রহ করে{" "}
                     <i>গ্রাহক পরিষেবাতে</i> যোগাযোগ করুন।
                   </p>
+                  {ShowSuccess && (
                   <div className="pop-wrap pop-success">
                     <div className="register-success-wrap">
                       <div className="register-success-cont">
@@ -70,6 +71,7 @@ export default ({
                       </div>
                     </div>
                   </div>
+                )}
                 </div>
               </div>
             </div>

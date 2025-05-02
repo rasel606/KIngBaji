@@ -12,7 +12,7 @@ export default ({
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
-
+  const [ShowSuccess, setShowSuccess] = useState(false);
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -35,17 +35,17 @@ export default ({
     openModal("VerifyOtpPageemail");
   };
   return (
-    <div className="modal-overlay" onClick={closeModal}>
+    <div className="mcd-popup-page popup-page-wrapper active" onClick={closeModal}>
       <div onClick={(e) => e.stopPropagation()}>
-        <div className="popup-page__main popup-page-main popup-page-main--show">
+        <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
           <div className="popup-page-main__header">
             <div className="popup-page-main__title">Add Email</div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">
-            <div className="model-content member-content new-login third-party-login">
-              <div className="Namecontent player-content">
-                <div className="Namecontent player-content">
+            <div className="content member-content new-login third-party-login">
+              <div className="content player-content">
+                <div className="content player-content">
                   <form className="">
                     <div className="menu-box">
                       <div className="input-group">
@@ -59,7 +59,7 @@ export default ({
                       </div>
                     </div>
                   </form>
-                  <div className="button-email " onClick={()=>openModal("VerifyOtpPageemail")} >
+                  <div className={`button ${email ? "" : "btn-disabled"}`} onClick={()=>openModal("VerifyOtpPageemail")} >
                     <a>সাবমিট</a>
                   </div>
                   <p className="button-tips player">
@@ -67,6 +67,7 @@ export default ({
                     যাবে না। আপনার যদি সাহায্যের প্রয়োজন হয়, তাহলে অনুগ্রহ করে{" "}
                     <i>গ্রাহক পরিষেবাতে</i> যোগাযোগ করুন।
                   </p>
+                  {ShowSuccess && (
                   <div className="pop-wrap pop-success">
                     <div className="register-success-wrap">
                       <div className="register-success-cont">
@@ -84,6 +85,7 @@ export default ({
                       </div>
                     </div>
                   </div>
+                )}
                 </div>
               </div>
             </div>

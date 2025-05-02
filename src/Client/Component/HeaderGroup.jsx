@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useModal } from "./ModelContext";
 import { Link } from "react-router-dom";
 
-export default () => {
+export default (props) => {
     // const { activeModal, openModal, closeModal } = useModal();
     // if (activeModal !== modalName) return null;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -98,15 +98,15 @@ console.log("activeCat",active)
      
        >
       <div className="header-left-btn-group" onClick={toggleMenu}>
-        <div
+        {/* <div
           className="back-btn"
           style={{
             backgroundImage:
-              "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-arrow-type09.svg?v=1738748531996)",
+              "url(https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-arrow-type09.svg?v=1738748531996)",display:"Block",opacity:"1"
           }}
-        ></div>
+        ></div> */}
          <div className="menu-btn" >
-        <ul>
+        <ul style={{display:"Block",opacity:"1",color:"white"}}>
           <li></li>
           <li></li>
           <li></li>
@@ -154,7 +154,7 @@ console.log("activeCat",active)
                                   backgroundImage: 'url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-home.png?v=1725363175075)' 
                                 }}
                               ></span>
-                              <a className="" href="/bd/bn">হোম</a>
+                              <Link to="/" className="" >হোম</Link>
                             </li>
                           </ul>
                           

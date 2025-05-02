@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
 import { UpdateName } from "../Component/Axios-API-Service/AxiosAPIService";
@@ -15,52 +15,73 @@ export default ({ modalName }) => {
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [code, setCode] = useState(["", "", "", ""]);
 
-  const handleInputChange = (index, value) => {
-    if (value.length > 1) value = value.slice(0, 1);
 
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
-
-    if (value && index < code.length - 1) {
-      document.getElementById(`code-${index + 1}`).focus();
-    }
-  };
-  // Timer countdown logic
-  useEffect(() => {
-    let countdown;
-    if (timer > 0 && isResendDisabled) {
-      countdown = setInterval(() => setTimer((prev) => prev - 1), 1000);
-    } else if (timer === 0) {
-      setIsResendDisabled(false);
-    }
-    return () => clearInterval(countdown);
-  }, [timer, isResendDisabled]);
-
-  const handleCodeChange = (index, value) => {
-    if (value.match(/^[0-9]*$/)) {
-      const newCode = [...code];
-      newCode[index] = value;
-      setCode(newCode);
-      // Focus on the next input
-      if (value !== "" && index < 3) {
-        document.getElementById(`code-input-${index + 1}`).focus();
-      }
-    }
-  };
-
-  const handleResendCode = () => {
-    setTimer(60);
-    setIsResendDisabled(true);
-    setCode(Array(4).fill(""));
-    console.log("Code resent");
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-  };
+      const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+      const [isVerified, setIsVerified] = useState(false);
+      const inputsRef = useRef([]);
+    
+      useEffect(() => {
+        if (!timeLeft || isVerified) return;
+        const timer = setInterval(() => setTimeLeft(timeLeft - 1), 1000);
+        return () => clearInterval(timer);
+      }, [timeLeft, isVerified]);
+    
+      const handleChange = (index: number, value: string) => {
+        if (/^\d$/.test(value) || value === '') {
+          const newCode = [...code];
+          newCode[index] = value;
+          setCode(newCode);
+    
+          if (value && index < 3) {
+            inputsRef.current[index + 1]?.focus();
+          }
+    
+          // Auto-submit when all fields are filled
+          if (newCode.every(c => c) && index === 3) {
+            handleVerify();
+          }
+        }
+      };
+    
+      const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+        if (e.key === 'Backspace' && !code[index] && index > 0) {
+          inputsRef.current[index - 1]?.focus();
+        }
+      };
+    
+      const handleVerify = () => {
+        // Add your verification logic here
+        setIsVerified(true);
+      };
+    
+      const handleResend = () => {
+        if (timeLeft === 0) {
+          setTimeLeft(300);
+          // Add resend logic here
+        }
+      };
+    
+      const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      };
+    
+      const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text/plain').slice(0, 4);
+        const newCode = [...code];
+        
+        pastedData.split('').forEach((char, index) => {
+          if (index < 4 && /^\d$/.test(char)) {
+            newCode[index] = char;
+          }
+        });
+        
+        setCode(newCode);
+        inputsRef.current[Math.min(3, pastedData.length - 1)]?.focus();
+      };
+    
   return (
     <div className="modal-overlay" onClick={closeModal}>
       <div onClick={(e) => e.stopPropagation()}>
@@ -70,7 +91,7 @@ export default ({ modalName }) => {
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">
-            <div className="model-content member-content  third-party-login">
+            <div className="content member-content  third-party-login">
             <div className="content mcd-style third-party-login verify-code">
       <div className="verification-wrap">
         <div className="verification-txt">
@@ -85,23 +106,31 @@ export default ({ modalName }) => {
             className="verification-code ng-untouched ng-pristine ng-valid"
           >
             <fieldset>
-              {[0, 1, 2, 3].map((_, index) => (
+            {[0, 1, 2, 3].map((index) => (
+              <label key={index} htmlFor={`code-${index}`} className="label">
+                Number {index + 1}
+              </label>
+            ))}
+
+            <div className="verification-input">
+              {code.map((digit, index) => (
                 <input
                   key={index}
+                  ref={(el) => (inputsRef.current[index] = el)}
                   type="number"
                   pattern="[0-9]*"
-                  min="0"
-                  max="9"
-                  maxLength="1"
-                  value={code[index]}
                   inputMode="numeric"
-                  autoComplete="one-time-code"
-                  onInput={(e) => handleInputChange(index, e.target.value)}
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onPaste={index === 0 ? handlePaste : undefined}
                   id={`code-${index}`}
-                  className="ng-star-inserted"
+                  disabled={isVerified}
                 />
               ))}
-            </fieldset>
+            </div>
+          </fieldset>
           </form>
         </div>
         <div className="verification-tips">

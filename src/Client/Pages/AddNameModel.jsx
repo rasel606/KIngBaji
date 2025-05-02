@@ -13,7 +13,7 @@ export default ({
   const { isAuthenticated, loginUser, logoutUser, verifyUser,userId } = useAuth();
   const [name, setName] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const [ShowSuccess, setShowSuccess] = useState(false);
   const handleSubmit = async(e) => {
     
     try {
@@ -22,7 +22,10 @@ export default ({
         
         if(response.data.status === 200){
           alert(response.data.message);
-          openModal("MyProfilemodal")
+          setTimeout(() => {
+            setShowSuccess(false);
+            openModal('MyProfilemodal');
+          }, 1000)
         }else{
           alert(response.data.message)
         }
@@ -39,13 +42,13 @@ export default ({
       <div onClick={(e) => e.stopPropagation()}>
         <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
           <div className="popup-page-main__header">
-            <div className="popup-page-main__title">My wallet</div>
+            <div className="popup-page-main__title">Add Full Name</div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">
-            <div className="model-content member-content new-login third-party-login">
-              <div className="Namecontent player-content">
-                <div className="Namecontent player-content">
+            <div className="content member-content new-login third-party-login">
+              <div className="content player-content">
+                <div className="content player-content">
                   <form className="">
                     <div className="menu-box">
                       <div className="input-group">
@@ -60,7 +63,7 @@ export default ({
                       </div>
                     </div>
                   </form>
-                  <div className="button-name " onClick={()=>handleSubmit()}>
+                  <div className={`button ${name ? "" : "btn-disabled"}`} onClick={()=>handleSubmit()}>
                     <a>Submit</a>
                   </div>
                   <p className="button-tips player">
@@ -68,6 +71,7 @@ export default ({
                     যাবে না। আপনার যদি সাহায্যের প্রয়োজন হয়, তাহলে অনুগ্রহ করে{" "}
                     <i>গ্রাহক পরিষেবাতে</i> যোগাযোগ করুন।
                   </p>
+                  {ShowSuccess && (
                   <div className="pop-wrap pop-success">
                     <div className="register-success-wrap">
                       <div className="register-success-cont">
@@ -85,6 +89,7 @@ export default ({
                       </div>
                     </div>
                   </div>
+                )}
                 </div>
               </div>
             </div>
