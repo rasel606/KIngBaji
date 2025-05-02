@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const [expanded, setExpanded] = useState(false);
@@ -29,82 +30,65 @@ const Footer = () => {
           <h2>কমিউনিটি ওয়েবসাইট</h2>
           <ul>
             <li>
-              <a
-                href="https://t.me/superbaji_vip"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 <img
                   src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/telegram-channel.png?v=1745315543147&source=mcdsrc"
                   alt="telegram-channel"
                   loading="lazy"
                 />
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://www.facebook.com/superbajibangladesh/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 <img
                   src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/facebook.png?v=1745315543147&source=mcdsrc"
                   alt="facebook"
                   loading="lazy"
                 />
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://www.instagram.com/superbajiofficial"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                
               >
                 <img
                   src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/instagram.png?v=1745315543147&source=mcdsrc"
                   alt="instagram"
                   loading="lazy"
                 />
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://x.com/superbajisb"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                
               >
                 <img
                   src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/twitter.png?v=1745315543147&source=mcdsrc"
                   alt="twitter"
                   loading="lazy"
                 />
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://in.pinterest.com/superbajisb/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
               >
                 <img
                   src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/pinterest.png?v=1745315543147&source=mcdsrc"
                   alt="pinterest"
                   loading="lazy"
                 />
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://whatsapp.com/channel/0029VayyxX98vd1OsgX7F70w"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                
               >
                 <img
                   src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/whatsapp-channel.png?v=1745315543147&source=mcdsrc"
                   alt="whatsapp-channel"
                   loading="lazy"
                 />
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -114,17 +98,13 @@ const Footer = () => {
             <h2>অফিসিয়াল পার্টনার</h2>
             <ul>
               <li>
-                <a
-                  href="https://www.heyvip.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link>
                   <img
                     src="https://img.s628b.com/sb/h5/assets/images/footer/color-black/official-partner-heyvip.png?v=1745315543147&source=mcdsrc"
                     alt="heyvip"
                     loading="lazy"
                   />
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -135,76 +115,44 @@ const Footer = () => {
         <div className="link-wrap">
           <ul>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/about-usbd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 আমাদের সম্পর্কে
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/contact-usbd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 যোগাযোগ করুন
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/privacy-policybd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 গোপনীয়তা নীতি
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/terms-and-conditionsbd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 শর্তাবলী
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/rules-and-regulationsbd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 বিধি ও প্রবিধান
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/guide-bookbd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 দায়িত্বশীল গেম্বলিং
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/affiliate-partnerbd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 সচরাচর জিজ্ঞাস্য
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://sbajisuper.link/bd-bn/affiliate-partnerbd"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link>
                 এফিলিয়েট
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

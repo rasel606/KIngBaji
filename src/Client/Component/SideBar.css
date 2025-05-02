@@ -6344,6 +6344,7 @@ a {
     width: 13.3333333333vw;
     height: 13.3333333333vw;
     background: #fff;
+    mask-image: url("https://img.j189eb.com/jb/h5/assets/images/icon-set/icon-cross-type01.svg");
     mask-repeat: no-repeat;
     mask-position: center;
     mask-size: 27%;
@@ -8700,7 +8701,7 @@ html.is-desktop .announcement-row .item-icon {
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     background-color: currentColor;
     mask-size: contain;
     mask-repeat: no-repeat;
@@ -9614,8 +9615,8 @@ html.is-desktop .announcement-row .item-icon {
 .games .games-box {
     position: relative;
     width: 46vw;
-    height: auto;
-    margin: 0 1.3333333333vw 2.6666666667vw;
+    height: auto;  /* margin: 0 1.3333333333vw 2.6666666667vw;
+   */
     overflow: hidden;
     border-radius: .8vw
 }
@@ -16057,7 +16058,7 @@ header.empty .header-right-btn-group {
 }
 
 .withdraw-wallet .verify-tips,.withdraw-wallet .close-tips {
-    display: none
+    display: block
 }
 
 .withdraw-wallet .button {

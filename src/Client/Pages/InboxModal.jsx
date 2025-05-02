@@ -5,71 +5,83 @@ import { useModal } from '../Component/ModelContext';
 const InboxPopup = ({modalName}) => {
 
     const { activeModal, openModal, closeModal } = useModal();
-    
-  const [activeTab, setActiveTab] = useState('inbox');
-  const [editMode, setEditMode] = useState(false);
-  const [selectedMessages, setSelectedMessages] = useState([]);
-  const [messages, setMessages] = useState([
-    {
-      id: '1852549145',
-      date: '2025/04/30',
-      time: '19:23:37',
-      read: true,
-      title: '🏏 SuperBaji সাথে আপনার IPL জয়কে আরও বাড়িয়ে তুলুন! 🏆',
-      content: `<p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;"><span style="color:#3498db;"><strong>🏆IPL অ্যাকশনে স্বাগতম! যুদ্ধ এখনই শুরু! 🏆</strong></span></span></span></p>
-      <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;"><strong><span style="color:#e74c3c;">🏆Chennai Super Kings 🆚 Punjab Kings</span><br>
-      📅 রাত ৮:০০ PM টায় (BST) লাইভ অ্যাকশন দেখুন</strong></span></span></p>
-      <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">💥<a href="https://superbaji.vip/bd/bn">৩০০% বোনাস পান এবং ৳৬,০০০ পর্যন্ত দাবি করুন!</a>💸<br>
-      💥<a href="https://history.jlfafafa3.com/bn-IN/event/20250325_HEYVIP">JILI খেলুন, iPhones এবং iPads-এর জন্য স্পিন করুন এবং বড় জয়লাভ করুন! </a>📱<br>
-      💥<a href="https://superbaji.vip/bd/bn">IPL লিডারবোর্ডে শীর্ষে থাকুন এবং আশ্চর্যজনক পুরষ্কার দাবি করুন! </a>🏆 </span></span></p>
-      <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">🔥 আজ থেকে শুরু হচ্ছে যুদ্ধ— &nbsp;<em><strong><span style="color:#e74c3c;">Chennai Super Kings 🆚 Punjab Kings🎉</span></strong></em></span></span></p>
-      <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">🎯 বাজি ধরুন, জিতুন এবং আপনার জয়ের তাড়া অনুভব করুন! 🥳</span></span></p>`,
-      icon: 'https://img.s628b.com/sb/h5/assets/images/icon-set/icon-speaker.svg?v=1745912667270'
-    },
-    {
-      id: '1852549147',
-      date: '2025/04/30',
-      time: '11:19:04',
-      read: false,
-      title: '🎉 ৫৭০% সাপ্তাহিক রিলোড বোনাস আপনার জন্য অপেক্ষা করছে! ',
-      content: `<p><span style="font-size:14px;"><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><strong><span style="color:#2980b9;">সমস্ত ক্যাসিনো প্রেমীদের কল!</span></strong></span></span></p>
-      <p><span style="font-size:14px;"><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><strong><span style="color:#2980b9;">&nbsp;</span></strong></span></span><span style="font-size:14px;"><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><em><span style="color:#e74c3c;">৫৭০% সাপ্তাহিক রিলোড বোনাস </span></em>সহ আপনার গেমিংকে উন্নত করুন এবং ১১,৪০০ পুরষ্কার পান!&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br>
-      💎 ৳২০০ বা তার বেশি জমা করুন এবং তাৎক্ষণিকভাবে আপনার খেলাকে উন্নত করতে ৫৭০% বুস্ট পান।&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br>
-      &nbsp;🔥 এই সুযোগটি মিস করবেন না—এখনই রিলোড করুন এবং পরবর্তী স্তরের গেমিংয়ের রোমাঞ্চের অভিজ্ঞতা নিন!&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br>
-      &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;</span></span></p>`,
-      icon: 'https://img.s628b.com/sb/h5/assets/images/icon-set/icon-speaker.svg?v=1745912667270'
-    },
-    // Add more messages as needed
-  ]);
-  if (activeModal !== modalName) return null;
-  const groupedMessages = messages.reduce((acc, message) => {
-    if (!acc[message.date]) {
-      acc[message.date] = [];
-    }
-    acc[message.date].push(message);
-    return acc;
-  }, {});
-
-  const toggleSelectMessage = (id) => {
-    if (selectedMessages.includes(id)) {
-      setSelectedMessages(selectedMessages.filter(msgId => msgId !== id));
-    } else {
-      setSelectedMessages([...selectedMessages, id]);
-    }
-  };
-
-  const markAsRead = () => {
-    setMessages(messages.map(msg => 
-      selectedMessages.includes(msg.id) ? {...msg, read: true} : msg
-    ));
-    setEditMode(false);
-  };
-
-  const deleteMessages = () => {
-    setMessages(messages.filter(msg => !selectedMessages.includes(msg.id)));
-    setSelectedMessages([]);
-    setEditMode(false);
-  };
+    const [isEditorOpen, setIsEditorOpen] = useState(false);
+    const [selectedMessages, setSelectedMessages] = useState([]);
+    if (activeModal !== modalName) return null;
+    // Sample message data
+    const messages = [
+      {
+        date: '2025/04/30',
+        timeZone: 'GMT+6',
+        items: [
+          {
+            id: '1852549145',
+            read: true,
+            time: '19:23:37',
+            title: '🏏 SuperBaji সাথে আপনার IPL জয়কে আরও বাড়িয়ে তুলুন! 🏆',
+            content: `<p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;"><span style="color:#3498db;"><strong>🏆IPL অ্যাকশনে স্বাগতম! যুদ্ধ এখনই শুরু! 🏆</strong></span></span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;"><strong><span style="color:#e74c3c;">🏆Chennai Super Kings 🆚 Punjab Kings</span><br>
+              📅 রাত ৮:০০ PM টায় (BST) লাইভ অ্যাকশন দেখুন</strong></span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">💥<a href="https://superbaji.vip/bd/bn">৩০০% বোনাস পান এবং ৳৬,০০০ পর্যন্ত দাবি করুন!</a>💸<br>
+              💥<a href="https://history.jlfafafa3.com/bn-IN/event/20250325_HEYVIP">JILI খেলুন, iPhones এবং iPads-এর জন্য স্পিন করুন এবং বড় জয়লাভ করুন! </a>📱<br>
+              💥<a href="https://superbaji.vip/bd/bn">IPL লিডারবোর্ডে শীর্ষে থাকুন এবং আশ্চর্যজনক পুরষ্কার দাবি করুন! </a>🏆 </span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">🔥 আজ থেকে শুরু হচ্ছে যুদ্ধ— &nbsp;<em><strong><span style="color:#e74c3c;">Chennai Super Kings 🆚 Punjab Kings🎉</span></strong></em></span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">🎯 বাজি ধরুন, জিতুন এবং আপনার জয়ের তাড়া অনুভব করুন! 🥳</span></span></p>`
+          },
+          {
+            id: '1852549147',
+            read: false,
+            time: '11:19:04',
+            title: '🎉 ৫৭০% সাপ্তাহিক রিলোড বোনাস আপনার জন্য অপেক্ষা করছে!',
+            content: `<p><span style="font-size:14px;"><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><strong><span style="color:#2980b9;">সমস্ত ক্যাসিনো প্রেমীদের কল!</span></strong></span></span></p>
+              <p><span style="font-size:14px;"><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><strong><span style="color:#2980b9;">&nbsp;</span></strong></span></span><span style="font-size:14px;"><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><em><span style="color:#e74c3c;">৫৭০% সাপ্তাহিক রিলোড বোনাস </span></em>সহ আপনার গেমিংকে উন্নত করুন এবং ১১,৪০০ পুরষ্কার পান!&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br>
+              💎 ৳২০০ বা তার বেশি জমা করুন এবং তাৎক্ষণিকভাবে আপনার খেলাকে উন্নত করতে ৫৭০% বুস্ট পান।&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br>
+              &nbsp;🔥 এই সুযোগটি মিস করবেন না—এখনই রিলোড করুন এবং পরবর্তী স্তরের গেমিংয়ের রোমাঞ্চের অভিজ্ঞতা নিন!&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br>
+              &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;</span></span></p>`
+          }
+        ]
+      },
+      {
+        date: '2025/04/29',
+        timeZone: 'GMT+6',
+        items: [
+          {
+            id: '1852549151',
+            read: false,
+            time: '10:46:29',
+            title: '🎉 অতিরিক্ত ৪% ডিপোজিট বোনাস + বিনামূল্যে জিলি স্পিন পান! 🎉',
+            content: `<p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;"><strong><span style="color:#3498db;"><em>আপনার জমাকে আরও উত্তেজনাপূর্ণ করে তুলুন! সীমিত সময়ের জন্য, উপভোগ করুন:</em></span></strong></span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">💰 প্রতিটি জমাতে </span><span style="font-size:18px;"><em><strong><span style="color:#e74c3c;">৪%</span></strong></em></span><span style="font-size:14px;"> অতিরিক্ত<br>
+              💳 কোনও সীমা নেই—যে কোনও পরিমাণ জমা করুন, যেকোনো সময়!</span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">🎰 আপনার ভাগ্য বাড়াতে বিনামূল্যে জিলি স্পিন!</span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">⏳<em><span style="color:#c0392b;"> অপেক্ষা করবেন না—এখনইa জমা করুন এবং আপনার সীমাহীন বোনাস দাবি করুন! </span></em>🚀</span></span></p>`
+          }
+        ]
+      }
+    ];
+  
+    const toggleEditor = () => {
+      setIsEditorOpen(!isEditorOpen);
+    };
+  
+    const toggleMessageSelection = (id) => {
+      setSelectedMessages(prev => 
+        prev.includes(id) 
+          ? prev.filter(msgId => msgId !== id) 
+          : [...prev, id]
+      );
+    };
+  
+    const markAllAsRead = () => {
+      // In a real app, you would update the messages state to mark all as read
+      setIsEditorOpen(false);
+    };
+  
+    const deleteSelected = () => {
+      // In a real app, you would update the messages state to remove selected messages
+      setSelectedMessages([]);
+      setIsEditorOpen(false);
+    };
 
   return (
     <div className="mcd-popup-page popup-page-wrapper active">
@@ -77,20 +89,17 @@ const InboxPopup = ({modalName}) => {
         <div className="popup-page__backdrop"onClick={closeModal}></div>
         <div className="popup-page__main popup-page-main popup-page-main--show">
           <div className="popup-page-main__header">
-            <div className="popup-page-main__title"onClick={closeModal}>Inbox</div>
+            <div className="popup-page-main__title">Inbox</div>
             <div className="popup-page-main__close"></div>
           </div>
           <div className="popup-page-main__container">
             <div className="content mcd-style player-content">
-              <div className="tab-btn-section">
-                <div className="tab-button-nav"></div>
-              </div>
               <div className="tab-content tab-content-page">
                 <div className="inner-box">
                   <div className="inbox-list__editor editor">
                     <div 
                       className="editor__btn" 
-                      onClick={() => setEditMode(!editMode)}
+                      onClick={toggleEditor}
                       style={{ 
                         display: 'block', 
                         maskImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-editor.svg?v=1745912667270")' 
@@ -98,23 +107,9 @@ const InboxPopup = ({modalName}) => {
                     ></div>
                   </div>
                   
-                  {editMode && (
-                    <div className="pop-wrap pop-editor">
-                      <ul className="editor-menu">
-                        <li>Edit</li>
-                        <li onClick={markAsRead}>Read All</li>
-                        <li onClick={() => setEditMode(false)}>Cancel</li>
-                      </ul>
-                      <ul className="editor-check">
-                        <li>Mark</li>
-                        <li onClick={deleteMessages}>Delete</li>
-                      </ul>
-                    </div>
-                  )}
-                  
                   <div className="list-container">
-                    {Object.entries(groupedMessages).map(([date, dateMessages]) => (
-                      <div key={date} className="list list-message">
+                    {messages.map((group, groupIndex) => (
+                      <div className="list list-message" key={groupIndex}>
                         <div className="date-title">
                           <div className="date">
                             <span 
@@ -123,28 +118,25 @@ const InboxPopup = ({modalName}) => {
                                 maskImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-calendar-type02.svg?v=1745912667270")' 
                               }}
                             ></span>
-                            {date}
+                            {group.date}
                           </div>
-                          <div className="time-zone">GMT+6</div>
+                          <div className="time-zone">{group.timeZone}</div>
                         </div>
                         <div className="list-content">
-                          {dateMessages.map(message => (
-                            <ul key={message.id} className="message-list" style={{ display: 'block',marginBottom: '1px' }}>
+                          {group.items.map((message, msgIndex) => (
+                            <ul key={msgIndex}>
                               <li className={`message-item ${message.read ? 'read' : ''}`}>
-                                {editMode && (
-                                  <div 
-                                    className="chose-btn" 
-                                    onClick={() => toggleSelectMessage(message.id)}
-                                    style={{ 
-                                      maskImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-check-type04.svg?v=1745912667270")',
-                                      backgroundColor: selectedMessages.includes(message.id) ? '#3498db' : '#ccc'
-                                    }}
-                                  ></div>
-                                )}
+                                <div 
+                                  className={`chose-btn ${selectedMessages.includes(message.id) ? 'selected' : ''}`}
+                                  onClick={() => toggleMessageSelection(message.id)}
+                                  style={{ 
+                                    maskImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-check-type04.svg?v=1745912667270")' 
+                                  }}
+                                ></div>
                                 <div className="icon">
                                   <img 
                                     alt="icon-speaker" 
-                                    src={message.icon} 
+                                    src="https://img.s628b.com/sb/h5/assets/images/icon-set/icon-speaker.svg?v=1745912667270&source=mcdsrc" 
                                     loading="lazy" 
                                   />
                                 </div>
@@ -164,8 +156,26 @@ const InboxPopup = ({modalName}) => {
                         </div>
                       </div>
                     ))}
+                    
                     <div className="prompt">－end of page－</div>
                   </div>
+                  
+                  {isEditorOpen && (
+                    <>
+                      <div className="pop-bg" onClick={() => setIsEditorOpen(false)}></div>
+                      <div className="pop-wrap pop-editor">
+                        <ul className="editor-menu show">
+                          <li>Edit</li>
+                          <li onClick={markAllAsRead}>Read All</li>
+                          <li onClick={() => setIsEditorOpen(false)}>Cancel</li>
+                        </ul>
+                        <ul className="editor-check">
+                          <li onClick={() => {}}>Mark</li>
+                          <li onClick={deleteSelected}>Delete</li>
+                        </ul>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

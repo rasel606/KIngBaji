@@ -7,8 +7,8 @@ import { usePayNow } from "../PaymentContext/PaymenyContext";
 import axios from "axios";
 
 export default ({ modalName }) => {
- const { activeModal, openModal, closeModal } = useModal();
-  if (activeModal !== modalName) return null;
+  const { activeModal, openModal, closeModal } = useModal();
+
   const Depositdata = [
     {
       id: 1,
@@ -95,22 +95,34 @@ export default ({ modalName }) => {
   } = usePayNow();
 
   const [paymentMethods, setpaymentMethods] = useState([]);
-  const [Payment, setPayment] = useState(null);
+
   // const [activeTab, setActiveTab] = useState("DepositModel");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
 
   let [payAbleAmount, setPayAbleAmount] = useState(0);
-
+  let [selectedPaymentAmount, setSelectedPaymentAmount] = useState();
+  let [updatedAmount, setUpdatedAmount] = useState();
+  const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
+  const [PaymentAct, setPaymentAct] = useState("");
+  const [selectedPhone, setSelectedPhone] = useState("");
+  const [Mood, setMood] = useState(); //paymentMethods[0]
+  const [isVerified, setIsVerified] = useState(false);
+  // let selectedPaymentAmount =0
   const handelAmount = (blance) => {
-    const newAmount = parseInt(payAbleAmount) + parseInt(blance);
-    setPayAbleAmount(
-      parseInt(userDeatils.balance) >= parseInt(newAmount)
-        ? parseInt(newAmount)
-        : parseInt(userDeatils.balance)
-    );
+    setUpdatedAmount(parseInt(blance));
+    const updatedAmount =
+      parseInt(selectedPaymentAmount || 0) + parseInt(blance);
+    setSelectedPaymentAmount(parseInt(updatedAmount));
+    console.log(updatedAmount);
   };
+  console.log(paymentMethods);
+  useEffect(() => {
+    if (paymentMethods.length > 0) {
+      setPayment(paymentMethods[0]);
+    }
+  }, [paymentMethods]);
 
   useEffect(() => {
     const fetchGateways = async () => {
@@ -130,20 +142,36 @@ export default ({ modalName }) => {
     };
     fetchGateways();
   }, [userDeatils.userId, token]);
-
-  const handleClearsetAmount = () => setPayAbleAmount(0);
-  const handleChangeamount = (e) => {
-    payAbleAmount = e.target.value;
-    setPayAbleAmount(payAbleAmount);
-  };
-  setAmountPay(payAbleAmount);
-  const navigate = useNavigate();
-
   const [selectedOption, setSelectedOption] = useState(options[0]);
+
+  // const inputRef = useRef(null);
+
+  const handleChangeAmount = (e) => {
+    selectedPaymentAmount = e.target.value;
+    setSelectedPaymentAmount(selectedPaymentAmount);
+  };
+
+  // userId: userId,
+  setAmountPay(selectedPaymentAmount);
+  setGateway_name(
+    Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
+  );
+  setGateway_Number(
+    Payment === null
+      ? paymentMethods[0]?.gateway_Number
+      : Payment?.gateway_Number
+  );
+  setPayment_type(
+    Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
+  );
+
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
   const handlePayment = async (e) => {
     e.preventDefault();
-    if (payAbleAmount <= 0) {
+    if (selectedPaymentAmount <= 0) {
       return;
     }
     try {
@@ -158,7 +186,7 @@ export default ({ modalName }) => {
           referredbyCode: userDeatils.referredbyCode,
           mobile: userDeatils.phone,
           type: parseInt(1),
-          amount:payAbleAmount,
+          amount: selectedPaymentAmount,
         },
         {
           headers: {
@@ -178,9 +206,9 @@ export default ({ modalName }) => {
       console.error("Error making payment:", error);
     }
   };
- const TAB_NAMES = {
+  const TAB_NAMES = {
     DepositModel: "Deposit",
-    WidthdrawModel: "Withdrawal"
+    WidthdrawModel: "Withdrawal",
   };
 
   const [activeTab, setActiveTab] = useState(TAB_NAMES[modalName] || "Deposit");
@@ -190,13 +218,16 @@ export default ({ modalName }) => {
     setActiveTab(TAB_NAMES[modalName] || "Deposit");
   }, [modalName]);
   const handleTabChange = (tabName) => {
-    if  (tabName === "DepositModel") {
+    if (tabName === "DepositModel") {
       openModal("DepositModel");
-    }else{
+    } else {
       openModal("WidthdrawModel");
     }
     setActiveTab(tabName);
   };
+
+  if (activeModal !== modalName) return null;
+
   return (
     <div className="mcd-popup-page popup-page-wrapper active">
       <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
@@ -208,7 +239,7 @@ export default ({ modalName }) => {
           </div>
           <div className="popup-page-main__container">
             <div className="content mcd-style fixed-tab player-content">
-            <div className="tab-btn-section tab-btn-wrap">
+              <div className="tab-btn-section tab-btn-wrap">
                 <div className="tab-btn tab-btn-bar">
                   <div
                     className="line"
@@ -216,8 +247,9 @@ export default ({ modalName }) => {
                   ></div>
 
                   <div className="btn">
-                    <div className="text"
-                    onClick={() => openModal("DepositModel")}
+                    <div
+                      className="text"
+                      onClick={() => openModal("DepositModel")}
                     >
                       Deposit
                       <div className="badge"></div>
@@ -225,17 +257,14 @@ export default ({ modalName }) => {
                   </div>
 
                   <div className="btn">
-                    <div
-                      className="text"
-                      
-                    >
+                    <div className="text">
                       Withdrawal
                       <div className="badge"></div>
                     </div>
                   </div>
                 </div>
               </div>
-            
+
               <div className="tab-content">
                 <div className="inner-wrap">
                   <div className="inner-box withdraw-wallet">
@@ -250,9 +279,57 @@ export default ({ modalName }) => {
                       </div>
                       <span className="item-bg"></span>
                     </div>
-
+                    {!isVerified && (
+                        <div className="tips-info verify-tips tips-info-toggle">
+                          <div className="title-box">
+                            <h5>
+                              <i
+                                className="tips-icon"
+                                style={{
+                                  maskImage:
+                                    "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-tips-type02.svg?v=1745315543147)",
+                                }}
+                              ></i>
+                              <span>
+                                Below info are required to proceed deposit
+                                request.
+                              </span>
+                            </h5>
+                          </div>
+                          <ol className="tips-info-block active">
+                            <li className="contact-info">
+                              <a onClick={() => openModal("modal2")}>
+                                <label>Contact Info</label>
+                                <ul>
+                                  <li>FULL NAME</li>
+                                </ul>
+                              </a>
+                            </li>
+                          </ol>
+                          
+                          <ol className="tips-info-block active">
+                            <li className="contact-info">
+                              <a onClick={() => openModal("modal2")}>
+                                <label>Contact Info</label>
+                                <ul>
+                                  <li>Phone Number</li>
+                                </ul>
+                              </a>
+                            </li>
+                          </ol>
+                        </div>
+                      )}
                     {/* Payment Method Section */}
                     <div className="menu-box">
+                      {!isVerified && (
+                        <div className="kyc-verify-mask">
+                          <div className="kyc-verify-mask-icon"></div>
+                          <div className="kyc-verify-mask-message">
+                            Please complete the verification.
+                          </div>
+                          <div className="kyc-verify-mask-blur"></div>
+                        </div>
+                      )}
                       <div className="title">
                         <h2>
                           <span>Payment Method</span>
@@ -266,10 +343,12 @@ export default ({ modalName }) => {
                                 type="radio"
                                 name="paymentMethod"
                                 id={`paymentMethod_${paymentMethod._id}`}
-                                checked={Payment === paymentMethod._id}
+                                checked={Payment === paymentMethod}
                                 onChange={() => setPayment(paymentMethod)}
                               />
-                              <label htmlFor={`paymentMethod_${paymentMethod._id}`}>
+                              <label
+                                htmlFor={`paymentMethod_${paymentMethod._id}`}
+                              >
                                 <div className="bank">
                                   <img
                                     alt={paymentMethod.gateway_name}
@@ -278,7 +357,7 @@ export default ({ modalName }) => {
                                   />
                                 </div>
                                 <span>{paymentMethod.gateway_name}</span>
-                                <span className="item-icon"></span>
+                                {/* <span className="item-icon"></span> */}
                               </label>
                             </li>
                           ))}
@@ -287,7 +366,7 @@ export default ({ modalName }) => {
                     </div>
 
                     {/* Amount Section */}
-                    <div className="menu-box">
+                    {isVerified  &&(<div className="menu-box">
                       <div className="title">
                         <h2>
                           <span>Amount</span>
@@ -296,51 +375,62 @@ export default ({ modalName }) => {
                       </div>
                       <div className="select-group style-add-amount">
                         <ul className="col4">
-                          {Amounts.map((amount, index) => (
-                            <li key={index}>
-                              <input
-                                type="radio"
-                                name="withdrawAmount"
-                                id={`withdrawAmount_${index}`}
-                                checked={payAbleAmount === amount.value}
-                                onChange={() => {
-                                  handelAmount(amount.value);
-                                  // setCustomAmount("");
-                                }}
-                              />
-                              <label htmlFor={`withdrawAmount_${index}`}>
-                                <span>{amount?.value.toLocaleString()}</span>
-                              </label>
-                            </li>
-                          ))}
+                          {Amounts &&
+                            Amounts.map((amount, index) => (
+                              <li key={index}>
+                                <input
+                                  type="radio"
+                                  name="depositAmount"
+                                  checked={updatedAmount == amount.value}
+                                  id={`depositAmount_${amount.id}`}
+                                  // placeholder = {amount?.value}
+                                  onClick={() => handelAmount(amount.value)}
+                                />
+                                {console.log(
+                                  "selectedPaymentAmount",
+                                  selectedPaymentAmount
+                                )}
+                                {console.log("amount.value", amount.value)}
+                                <label
+                                  htmlFor={`depositAmount_${
+                                    index ? index : ""
+                                  }`}
+                                >
+                                  <span>{amount.value.toLocaleString()}</span>
+                                </label>
+                              </li>
+                            ))}
                         </ul>
                       </div>
-                      
+
                       <div className="input-group money">
+                        <label htmlFor="amount">৳</label>
                         <div className="input-wrap">
                           <input
-                            type="number"
+                            type="text"
                             placeholder="0.00"
-                            value={payAbleAmount}
-                            onChange={handleChangeamount}
+                            onChange={handleChangeAmount}
+                            inputMode="numeric"
+                            value={selectedPaymentAmount}
                           />
-                          {payAbleAmount && (
+                          {selectedPaymentAmount && (
                             <Link
-                              type="button"
-                              className={`clear ${payAbleAmount ? "active" : ""}`}
-                              onClick={handleClearsetAmount}
+                              className={`delete-btn ${
+                                selectedPaymentAmount ? "" : "active"
+                              }`}
+                              onClick={() => setSelectedPaymentAmount("")}
+                              // style={{
+                              //   maskImage:
+                              //     "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-cross-type09.svg?v=1745315543147)",
+                              // }}
                             ></Link>
                           )}
-                          {/* <a
-                            className="delete-btn"
-                            onClick={() => setCustomAmount("")}
-                          ></a> */}
                         </div>
                       </div>
-                    </div>
+                    </div>)}
 
                     {/* Phone Number Section */}
-                    <div className="menu-box withdraw-menu-phone">
+                    {isVerified  &&( <div className="menu-box withdraw-menu-phone">
                       <div className="title">
                         <h2>
                           <span>Please select phone number</span>
@@ -348,7 +438,7 @@ export default ({ modalName }) => {
                       </div>
                       <div className="select-group style-bank">
                         <ul>
-                          {/* {phoneNumbers.map((phone, index) => (
+                          {/* {userDeatils.phone.map((phone, index) => (
                             <li key={index}>
                               <input
                                 type="radio"
@@ -368,9 +458,35 @@ export default ({ modalName }) => {
                               </label>
                             </li>
                           ))} */}
+
+                          <li>
+                            <input
+                              type="radio"
+                              name="accountPhone"
+                              // id={`accountPhone_${index}`}
+                              // checked={selectedPhone === phone}
+                              // onChange={() => setSelectedPhone(phone)}
+                            />
+                            <label htmlFor={`accountPhone_`}>
+                              <div className="item-bg"></div>
+                              <div className="select-card">
+                                <div className="select-card-inner">
+                                  <div className="card-number">
+                                    {userDeatils.phone}
+                                  </div>
+                                </div>
+                              </div>
+                              <span
+                                className="item-icon"
+                                style={{
+                                  backgroundImage: `url("https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-check-type01.svg")`,
+                                }}
+                              ></span>
+                            </label>
+                          </li>
                         </ul>
                       </div>
-                    </div>
+                    </div>)}
 
                     {/* Submit Button */}
                     <div className="member-content">

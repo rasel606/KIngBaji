@@ -14442,8 +14442,9 @@ header.empty .header-right-btn-group {
     text-align: text-bottom
 }
 
-.withdraw-wallet .verify-tips,.withdraw-wallet .close-tips {
-    display: none
+.withdraw-wallet .verify-tips,
+.withdraw-wallet .close-tips {
+    display: block
 }
 
 .withdraw-wallet .button {

@@ -117,7 +117,7 @@ export default ({ modalName }) => {
       title: 'Funds',
       items: [
         { name: 'Deposit', icon: 'icon-deposit.png', modalName: 'DepositModel' },
-        { name: 'Withdrawal', icon: 'icon-withdrawal.png',modalName: 'WithdrawModel' },
+        { name: 'Withdrawal', icon: 'icon-withdrawal.png',modalName: 'WidthrawModel' },
         // { name: 'My Promotion', icon: 'icon-bonuses.png',modalName: 'DepositModel' }
       ]
     },

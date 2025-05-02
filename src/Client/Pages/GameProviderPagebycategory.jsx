@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
 import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
+import Footer from "./Footer";
 
 const GameBox = ({ game, onPlay }) => (
   <div className="games-box">
+    {console.log(game)}
     <div className="pic" onClick={() => onPlay(game)}>
       <p>
         <img src={game?.imgFileName} alt={game.name} loading="lazy" />
@@ -20,32 +22,40 @@ const GameBox = ({ game, onPlay }) => (
 const SearchTab = ({ providers, selectedProvider, onProviderChange }) => (
   <div className="tab search-tab ng-star-inserted">
     <ul className="item-ani">
-      <li 
-        className={`condition-groups ng-star-inserted ${!selectedProvider ? 'active' : ''}`}
+      <li
+        className={`condition-groups ng-star-inserted ${
+          !selectedProvider ? "active" : ""
+        }`}
         onClick={() => onProviderChange(null)}
       >
-        <div 
-          className="icon-all" 
-          style={{ backgroundImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-filter-all.svg?v=1745315543147")' }} 
+        <div
+          className="icon-all"
+          style={{
+            backgroundImage:
+              'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-filter-all.svg?v=1745315543147")',
+          }}
         />
         <p>ALL</p>
       </li>
-      {providers.map(provider => (
-        <li 
-          key={provider.providercode} 
-          className={`condition-groups ${selectedProvider === provider.providercode ? 'active' : ''} ng-star-inserted`}
+      {providers.map((provider) => (
+        <li
+          key={provider._id}
+          className={`condition-groups ${
+            selectedProvider === provider.providercode ? "active" : ""
+          } ng-star-inserted`}
           onClick={() => onProviderChange(provider.providercode)}
         >
-          <div className="provider-label">
-            {provider.providercode}
-          </div>
+          <div className="provider-label">{provider.providercode}</div>
         </li>
       ))}
     </ul>
     <div className="btn search-btn ng-star-inserted">
-      <span 
-        className="item-icon ng-star-inserted" 
-        style={{ maskImage: 'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-search-type02.svg?v=1745315543147")' }} 
+      <span
+        className="item-icon ng-star-inserted"
+        style={{
+          maskImage:
+            'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-search-type02.svg?v=1745315543147")',
+        }}
       />
     </div>
   </div>
@@ -53,32 +63,40 @@ const SearchTab = ({ providers, selectedProvider, onProviderChange }) => (
 
 const SortBar = () => (
   <div className="sort-bar ng-star-inserted">
-  <div className="sort-bar__title">
-    <span>Slots</span>
-  </div>
-  <div className="sort-bar__box">
-    <div className="sort-bar__btn">
-      <span className="ng-star-inserted">Filter</span>
-      <span className="arrow" style={{ maskImage: 'url("")' }} />
+    <div className="sort-bar__title">
+      <span>Slots</span>
     </div>
-    <ul className="sort-bar__select">
-      <li className="sort-bar__select__item ng-star-inserted" id="sort_recommend">
-        <span id="sort_recommend">Recommend</span>
-      </li>
-      <li className="sort-bar__select__item ng-star-inserted" id="sort_latest">
-        <span id="sort_latest">Latest</span>
-      </li>
-      <li className="sort-bar__select__item ng-star-inserted" id="sort_favorite">
-        <span id="sort_favorite">Favorite</span>
-      </li>
-      <li className="sort-bar__select__item ng-star-inserted" id="sort_aZ">
-        <span id="sort_aZ">A-Z</span>
-      </li>
-    </ul>
+    <div className="sort-bar__box">
+      <div className="sort-bar__btn">
+        <span className="ng-star-inserted">Filter</span>
+        <span className="arrow" style={{ maskImage: 'url("")' }} />
+      </div>
+      <ul className="sort-bar__select">
+        <li
+          className="sort-bar__select__item ng-star-inserted"
+          id="sort_recommend"
+        >
+          <span id="sort_recommend">Recommend</span>
+        </li>
+        <li
+          className="sort-bar__select__item ng-star-inserted"
+          id="sort_latest"
+        >
+          <span id="sort_latest">Latest</span>
+        </li>
+        <li
+          className="sort-bar__select__item ng-star-inserted"
+          id="sort_favorite"
+        >
+          <span id="sort_favorite">Favorite</span>
+        </li>
+        <li className="sort-bar__select__item ng-star-inserted" id="sort_aZ">
+          <span id="sort_aZ">A-Z</span>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
 );
-
 
 export default () => {
   const [data, setData] = useState([]);
@@ -86,7 +104,7 @@ export default () => {
   const [filteredGames, setFilteredGames] = useState([]);
   const [playGameData, setPlayGameData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { category_name } = useParams();
+  const { category_name, providercode } = useParams();
   const [showPopup, setShowPopup] = useState(false);
   const { userDeatils, userId } = useAuth();
   const [selectedProvider, setSelectedProvider] = useState(null);
@@ -94,6 +112,9 @@ export default () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [balance, setBalance] = useState(userDeatils?.balance || 0);
   const [gameWindow, setGameWindow] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const loader = useRef();
 
   /** 🚀 Fetch Category Data */
   useEffect(() => {
@@ -108,9 +129,12 @@ export default () => {
         );
 
         const data = await response.json();
+        console.log(data);
+        console.log(data[0]?.uniqueProviders);
         setLoading(false);
         setData(data[0]?.uniqueProviders || []);
         setCategories(data[0]?.categories?.[0]?.p_type || []);
+        console.log(data[0]?.categories?.[0]?.p_type || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -120,28 +144,54 @@ export default () => {
   }, [category_name]);
 
   /** 🚀 Fetch Games Based on Category */
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ''}&p_type=${categories}`,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+  // useEffect(() => {
+  //   fetchGames();
+  // }, [selectedProvider, categories, category_name]);
+  console.log(categories);
 
-        const data = await response.json();
-        setLoading(false);
-        setGameData(data);
-        setFilteredGames(data);
-      } catch (error) {
-        console.error("Error fetching games:", error);
+  const fetchGames = async () => {
+    if (!categories) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ""}&p_type=${categories}&page=${page}`
+      );
+      const result = await res.json();
+
+      if (result.success) {
+        if (result.data.length < 24) setHasMore(false);
+        setGameData((prev) => [...prev, ...result.data]);
+        setPage((prev) => prev + 1);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching games:", error);
+    }
+  };
 
-    fetchGames();
-  }, [selectedProvider, categories, category_name]);
+  useEffect(() => {
+    setPage(1);
+    setGameData([]);
+    setHasMore(true);
+  }, [selectedProvider]);
+  useEffect(() => {
+    if (page === 1) fetchGames(); // initial
+  }, [categories, selectedProvider]);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          fetchGames();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (loader.current) {
+      observer.observe(loader.current);
+    }
+
+    return () => observer.disconnect();
+  }, [gameData, hasMore]);
 
   /** 🚀 Handle Game Click */
   const handlePlay = async (game) => {
@@ -159,18 +209,18 @@ export default () => {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify({ 
-            userId, 
-            game_id: game.g_code, 
-            p_type: game.p_type, 
-            p_code: game.p_code 
+          body: JSON.stringify({
+            userId,
+            game_id: game.g_code,
+            p_type: game.p_type,
+            p_code: game.p_code,
           }),
         }
       );
-      
+
       const data = await response.json();
-      
-console.log(data);
+
+      console.log(data);
       if (data.errMsg === "SUCCESS") {
         console.log(data);
         setPlayGameData(data);
@@ -230,34 +280,46 @@ console.log(data);
         <div className="content-main ng-star-inserted">
           <div className="content-box">
             <div className="games">
-              <SearchTab 
-                providers={data} 
+              <SearchTab
+                providers={data}
                 selectedProvider={selectedProvider}
                 onProviderChange={setSelectedProvider}
               />
-              
+
               <SortBar />
-              
+
               <div className="games-main">
                 {loading ? (
                   <div>Loading games...</div>
                 ) : (
-                  filteredGames?.map((game, index) => (
-                    <GameBox 
-                      key={index} 
-                      game={game} 
-                      onPlay={handlePlay}
-                    />
+                  gameData?.map((game, index) => (
+                    <div className="games-box">
+                      {/* {console.log(game)} */}
+                      <div className="pic" onClick={() => handlePlay(game)}>
+                        <p>
+                          <img
+                            src={game?.imgFileName}
+                            alt={game.name}
+                            loading="lazy"
+                          />
+                        </p>
+                      </div>
+                      <div className="text">
+                        <h3>{game.gameName?.gameName_enus || game.name}</h3>
+                      </div>
+                    </div>
                   ))
                 )}
               </div>
-              
-              <div style={{ height: '10px', visibility: 'hidden' }}>anchor</div>
+              <div ref={loader} className="loading">
+                {loading && <p>Loading...</p>}
+              </div>
+              {/* <div style={{ height: '10px', visibility: 'hidden' }}>anchor</div> */}
             </div>
           </div>
         </div>
       </div>
-
+<Footer></Footer>
       {showPopup && playGameData?.gameUrl && (
         <div className="popup-page-wrapper active" onClick={handleClosePopup}>
           <div
