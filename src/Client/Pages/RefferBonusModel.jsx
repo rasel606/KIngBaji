@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
+import { useAuth } from "../Component/AuthContext";
 
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
+    const { userDeatils, token, updateUserDetails } = useAuth()
   const [activeTab, setActiveTab] = useState('invite');
   const [friendsInvited, setFriendsInvited] = useState(0);
   const [friendsCompleted, setFriendsCompleted] = useState(0);
@@ -13,15 +15,15 @@ export default ({ modalName }) => {
   const [canClaimBonus, setCanClaimBonus] = useState(false);
   const [claimableBonus, setClaimableBonus] = useState(0);
 
-  const invitationCode = "ODzJiB";
-  const invitationUrl = "https://example.com/referral/ODzJiB";
+  const invitationCode = `${userDeatils.referralCode}`;
+  const invitationUrl = `https://kingbaji.live/?ref=${userDeatils.referralCode}`;
   const [showBonusDetails, setShowBonusDetails] = useState(false);
 
   const toggleBonusDetails = () => {
     setShowBonusDetails(!showBonusDetails);
   };
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(invitationCode);
+    navigator.clipboard.writeText(invitationUrl);
     alert('Invitation code copied!');
   };
 
@@ -111,7 +113,7 @@ export default ({ modalName }) => {
                           </div>
                           <div className="bonus-title">Invitation Code</div>
                           <div className="code">
-                            <span>{invitationCode}</span>
+                            <span>{userDeatils.referralCode}</span>
                             <div className="btn" onClick={handleCopyCode}>
                               <img 
                                 alt="icon-copy-type02" 

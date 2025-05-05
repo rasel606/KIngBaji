@@ -5,7 +5,7 @@ import { useAuth } from "../Component/AuthContext";
 
 export default ({ modalName }) => {
   const { activeModal, closeModal } = useModal();
-  const { userId } = useAuth();
+  const { userId,userDeatils } = useAuth();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
     status: [],

@@ -74,7 +74,7 @@ export default ({ modalName }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/submitTransaction`,
+        `http://localhost:5000/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
@@ -238,7 +238,7 @@ export default ({ modalName }) => {
                 </div>
               </div>
             </div>
-            {ShowSuccess && (
+            {ShowSuccess === true ?  (
               <div className="pop-wrap pop-success">
                 <div className="register-success-wrap">
                   <div className="register-success-cont">
@@ -256,7 +256,26 @@ export default ({ modalName }) => {
                   </div>
                 </div>
               </div>
-            )}
+            ) :(
+              <div className="pop-wrap pop-success">
+                <div className="register-success-wrap">
+                  <div className="register-success-cont">
+                    <div className="register-success-txt top-inner">
+                      <div className="success-checkmark">
+                        <div className="check-icon">
+                          <span className="icon-line line-tip"></span>
+                          <span className="icon-line line-long"></span>
+                          <div className="icon-circle"></div>
+                          <div className="icon-fix"></div>
+                        </div>
+                      </div>
+                      <h4>Success</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+            }
           </div>
         </div>
       </div>

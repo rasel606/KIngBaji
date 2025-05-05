@@ -18,13 +18,13 @@ const InboxPopup = ({modalName}) => {
             id: '1852549145',
             read: true,
             time: '19:23:37',
-            title: '🏏 SuperBaji সাথে আপনার IPL জয়কে আরও বাড়িয়ে তুলুন! 🏆',
+            title: '🏏 Kingbaji সাথে আপনার IPL জয়কে আরও বাড়িয়ে তুলুন! 🏆',
             content: `<p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;"><span style="color:#3498db;"><strong>🏆IPL অ্যাকশনে স্বাগতম! যুদ্ধ এখনই শুরু! 🏆</strong></span></span></span></p>
               <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;"><strong><span style="color:#e74c3c;">🏆Chennai Super Kings 🆚 Punjab Kings</span><br>
               📅 রাত ৮:০০ PM টায় (BST) লাইভ অ্যাকশন দেখুন</strong></span></span></p>
-              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">💥<a href="https://superbaji.vip/bd/bn">৩০০% বোনাস পান এবং ৳৬,০০০ পর্যন্ত দাবি করুন!</a>💸<br>
-              💥<a href="https://history.jlfafafa3.com/bn-IN/event/20250325_HEYVIP">JILI খেলুন, iPhones এবং iPads-এর জন্য স্পিন করুন এবং বড় জয়লাভ করুন! </a>📱<br>
-              💥<a href="https://superbaji.vip/bd/bn">IPL লিডারবোর্ডে শীর্ষে থাকুন এবং আশ্চর্যজনক পুরষ্কার দাবি করুন! </a>🏆 </span></span></p>
+              <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">💥<a href="https://Kingbaji.vip/bd/bn">৩০০% বোনাস পান এবং ৳৬,০০০ পর্যন্ত দাবি করুন!</a>💸<br>
+              💥<a JILI খেলুন, iPhones এবং iPads-এর জন্য স্পিন করুন এবং বড় জয়লাভ করুন! </a>📱<br>
+              💥<a href="https://Kingbaji.live">IPL লিডারবোর্ডে শীর্ষে থাকুন এবং আশ্চর্যজনক পুরষ্কার দাবি করুন! </a>🏆 </span></span></p>
               <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">🔥 আজ থেকে শুরু হচ্ছে যুদ্ধ— &nbsp;<em><strong><span style="color:#e74c3c;">Chennai Super Kings 🆚 Punjab Kings🎉</span></strong></em></span></span></p>
               <p><span style="font-family:Trebuchet MS,Helvetica,sans-serif;"><span style="font-size:14px;">🎯 বাজি ধরুন, জিতুন এবং আপনার জয়ের তাড়া অনুভব করুন! 🥳</span></span></p>`
           },

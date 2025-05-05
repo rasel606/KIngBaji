@@ -28637,7 +28637,7 @@ header {
     z-index: 7500
 }
 
-html.is-mobile .popup-page.show-toolbar,html.is-mobile .popup-page.show-toolbar .popup-page__backdrop {
+.popup-page.show-toolbar .popup-page.show-toolbar .popup-page__backdrop {
     height: calc(100% - 13.0666666667vw)
 }
 
