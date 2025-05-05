@@ -74,7 +74,7 @@ export default ({ modalName }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/submitTransaction`,
+        `https://api.kingbaji.live/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
@@ -100,9 +100,9 @@ export default ({ modalName }) => {
         console.log(response.data.success);
         setTimeout(() => {
           setShowSuccess(false);
-          // closeModal(); // Optionally close the modal after showing success
+          closeModal(); // Optionally close the modal after showing success
           navigate("/"); // or your success redirect
-          // window.location.reload(); // If you want to reload after redirect
+          window.location.reload(); // If you want to reload after redirect
         }, 2000);
       }
       if (response.data.success === false) {
