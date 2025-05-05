@@ -27,6 +27,8 @@ export const LoginUser =async (userId, password) => await API.post("/login_user"
 export const UserAllDetails =async (userId) => await API.post("/user_details",{userId});
 export const UpdateName = (name, userId) => API.post("/update-name", { name, userId });
 export const UpdateBirthDate = (formData) => API.post("/update-birthday", formData);
+export const UserOptSend = (payload) => API.post("/sendphoneotp", payload);
+export const UserOptVerify = (phone,userId,code) => API.post("/verify_opt", {phone,userId,code});
 export const searchTransactionsbyUserId = (data) => API.post("/searchTransactionsbyUserId", data);
 export const UserHistory = (data) => API.post("/user-history", data);
 export const verifyEmail = (formData) => API.post("/verify-email", formData);

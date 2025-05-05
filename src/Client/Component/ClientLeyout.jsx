@@ -47,6 +47,7 @@ import NagadModal from "../Pages/NagadModal";
 import RocketModal from "../Pages/RocketModal";
 import UpayModal from "../Pages/UpayModal";
 import BettingRecordModal from "../Pages/BettingRecordModal";
+import AddMobileNumberModel from "../Pages/AddMobileNumberModel";
 
 
 
@@ -272,6 +273,7 @@ export default () => {
         <ResetmypasswordModal modalName="ResetmypasswordModal"></ResetmypasswordModal>
         {/* ========================================= */}
         <AddEmailModel modalName="AddEmailModel"></AddEmailModel>
+        <AddMobileNumberModel modalName="AddMobileNumberModel"></AddMobileNumberModel>
         {/* ========================================= */}
         <AddBirthdayModal modalName="AddBirthdayModal"></AddBirthdayModal>
         {/* ========================================= */}

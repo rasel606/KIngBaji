@@ -42,15 +42,15 @@ export default ({ modalName }) => {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const fetchTransactions = async () => {
     try {
-      const response = await GetBettingHistoryByMember({
-        params: {
+      const response = await GetBettingHistoryByMember(
+         {
           range: filters.date,
           member: userId,
-          product: selectedPlatforms[0] || ""
+          product: selectedPlatforms || ""
         }
-      });
-      console.log(response);
-      setRecords(response.data.data|| []);
+      );
+      console.log(response.data.data.summary);
+      setRecords(response.data.data.summary|| []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
       setRecords([]);
@@ -235,6 +235,7 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
                           >
                             <div className="item platform">
                               {record.site}
+                              {console.log(record)}
                             </div>
                             <div className="item type">{record.product}</div>
                             <div className="item bet">
@@ -242,16 +243,16 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
                             </div>
                             <div
                               className={`item profit ${
-                                record.totalayout < 0 ? "negative" : "positive"
+                                record.totaPayout < 0 ? "negative" : "positive"
                               }`}
                             >
                               <i
                                 style={{
                                   color:
-                                    record.totalayout < 0 ? "red" : "inherit",
+                                    record.totaPayout < 0 ? "red" : "inherit",
                                 }}
                               >
-                                ({record.totalBet.toFixed(2)})
+                                ({record.totalBet})
                               </i>
                             </div>
                             <div className="list-arrow"></div>
@@ -306,7 +307,7 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
                               selectedRecord.profitLoss < 0 ? "red" : "inherit",
                           }}
                         >
-                          ({Math.abs(selectedRecord.profitLoss).toFixed(2)})
+                          ({Math.abs(selectedRecord.profitLoss)})
                         </i>
                       </div>
                     </div>
@@ -340,32 +341,33 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
 
                     <div className="list-content">
                       <ul>
-                        {console.log(selectedRecord.records)}
-                        {selectedRecord?.records?.map((betTxnRecord, index) => (
+                        {console.log(selectedRecord)}
+                        {selectedRecord?.bets?.map((betTxnRecord, index) => (
                           <li
                             key={index}
                             className="betting-record-list record-item settled"
                           >
+                            {console.log(betTxnRecord)}
                             <div className="item time">{betTxnRecord.end_time}</div>
                             <div className="item game">
-                            {console.log(betTxnRecord.gameName_enus)}
-                              {betTxnRecord.gameName.gameName_enus}
+                            {console.log(betTxnRecord)}
+                              {betTxnRecord.gameName}
                             </div>
                             <div className="item bet">
-                              <i>{betTxnRecord.turnover.toFixed(2)}</i>
+                              <i>{betTxnRecord.turnover}</i>
                             </div>
                             <div
                               className={`item profit ${
-                                betTxnRecord.bet < betTxnRecord.payout ? "negative" : "positive"
+                                betTxnRecord.bet < 0 ? "negative" : "positive"
                               }`}
                             >
                               <i
                                 style={{
                                   color:
-                                  betTxnRecord.payout < betTxnRecord.bet ? "red" : "inherit",
+                                  betTxnRecord.bet > 0 ? "red" : "inherit",
                                 }}
                               >
-                                ({betTxnRecord.bet.toFixed(2)})
+                                ({ betTxnRecord.bet > 0 ? betTxnRecord.bet.toFixed(2) : "0"})
                               </i>
                             </div>
                             <div className="item-status">

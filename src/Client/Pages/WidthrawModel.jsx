@@ -83,12 +83,14 @@ export default ({ modalName }) => {
   } = useAuth();
 
   const data = {
-    userId: userDeatils.userId,
+    userId: userId,
   };
 
   const {
-    setAmountPay,
     gateway_name,
+    gateway_Number,
+    payment_type,
+    newAmount, setNewAmountPay,
     setGateway_name,
     setGateway_Number,
     setPayment_type,
@@ -108,7 +110,7 @@ export default ({ modalName }) => {
   const [PaymentAct, setPaymentAct] = useState("");
   const [selectedPhone, setSelectedPhone] = useState("");
   const [Mood, setMood] = useState(); //paymentMethods[0]
-  const [isVerified, setIsVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState(true);
   // let selectedPaymentAmount =0
   const handelAmount = (blance) => {
     setUpdatedAmount(parseInt(blance));
@@ -120,7 +122,7 @@ export default ({ modalName }) => {
   console.log(paymentMethods);
   useEffect(() => {
     if (paymentMethods.length > 0) {
-      setPayment(paymentMethods[0]);
+      setPayment(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
     }
   }, [paymentMethods]);
 
@@ -152,15 +154,20 @@ export default ({ modalName }) => {
   };
 
   // userId: userId,
-  setAmountPay(selectedPaymentAmount);
-  setGateway_name(
-    Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
-  );
-  setGateway_Number(
-    Payment === null
-      ? paymentMethods[0]?.gateway_Number
-      : Payment?.gateway_Number
-  );
+ setNewAmountPay(selectedPaymentAmount);
+  // useEffect(() => {
+  //    if (paymentMethods.length > 0) {
+  //     setGateway_name(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name)
+  //    }
+  //  }, [paymentMethods]);
+  // setGateway_name(
+  //   Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
+  // );
+ // setGateway_Number(
+  //   Payment === null
+  //     ? paymentMethods[0]?.gateway_Number
+  //     : Payment?.gateway_Number
+  // );
   setPayment_type(
     Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
   );
@@ -179,12 +186,9 @@ export default ({ modalName }) => {
         `http://localhost:5000/api/v1/widthdraw_with_transaction`,
         {
           userId: userDeatils.userId,
-          gateway_name:
-            Payment === null
-              ? paymentMethods[0]?.gateway_name
-              : Payment?.gateway_name,
-          referredbyCode: userDeatils.referredbyCode,
-          mobile: userDeatils.phone,
+          gateway_name:Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name,
+          referredBy: userDeatils.referredBy,
+          mobile: userDeatils.phone[0].number,
           type: parseInt(1),
           amount: selectedPaymentAmount,
         },
@@ -472,7 +476,7 @@ export default ({ modalName }) => {
                               <div className="select-card">
                                 <div className="select-card-inner">
                                   <div className="card-number">
-                                    {userDeatils.phone}
+                                    {userDeatils.phone[0].number}
                                   </div>
                                 </div>
                               </div>

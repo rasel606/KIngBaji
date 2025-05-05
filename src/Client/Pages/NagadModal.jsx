@@ -58,7 +58,7 @@ const {gateway_name,
    //   userId,
    //   gateway_name,
    //   amount,
-   //   referredbyCode,
+   //   referredBy,
    //   payment_type,
    //   gateway_number,
    //   type,
@@ -78,7 +78,7 @@ const {gateway_name,
      userId,
      gateway_name,
      amount,
-     referredbyCode:userDeatils.referredbyCode,
+     referredBy:userDeatils.referredBy,
      payment_type,
      gateway_Number,
      transactionID,
@@ -95,7 +95,7 @@ const {gateway_name,
             userId:userDeatils.userId,
             gateway_name:gateway_name,
             amount:amount,
-            referredbyCode:userDeatils.referredbyCode,
+            referredBy:userDeatils.referredBy,
             payment_type:payment_type,
             gateway_Number:gateway_Number,
             transactionID,
@@ -135,176 +135,110 @@ const {gateway_name,
    };
 
   return (
-    <div className="modal-overlay" onClick={closeModal}>
+    <div
+      className="mcd-popup-page popup-page-wrapper active"
+      onClick={closeModal}
+    >
       <div onClick={(e) => e.stopPropagation()}>
-        <div className="popup-page__main popup-page-main popup-page-main--show">
-          <div className="popup-page-main__header new-login-tab">
-            <div className="popup-page-main__title"> Nagad </div>
-            <div className="popup-page-main__close" onClick={closeModal}></div>
-          </div>
-          <div className="popup-page-main__container">
-            <div className="content member-content new-login third-party-login">
-               <div
-                    className="full-screen-background"
-                    style={{
-                      background: "#380582",
-                      opacity: "1",
-                    }}
-                  >
-                    <div className="row no-gutters h-100">
-                      <div className="col-md-6 half-width left-section">
-                        <div className="center-content">
-                          <div className="text-center text-white">
-                            <div className="content lg-Image-right">
-                              <div
-                                className="my-2 timer-sm BKash"
-                                style={{
-                                  padding: "5px",
-                                  borderRadius: "15px",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-              
-                                  background:
-                                    "linear-gradient( #f6931a, #eb1e23)",
-                                  opacity: "1",
-                                }}
-                              >
-                                <h1 className="clockSection cw pt-1 mb-0">
-                                  {formatTime(timeRemaining)}
-                                </h1>
-                                <span className="clockSectionSpan">Time Remaining</span>
-                              </div>
-                              <div
-                                className="bpb-login-flex-wrapper text mb-3"
-                                style={{
-                                  padding: "20px",
-                                  borderRadius: "20px",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-              
-                                  background: "#fff",
-                                  opacity: "1",
-                                }}
-                              >
-                                <div className="right-block">
-                                  <div className="mb-1">
-                                    <div className="logo logo-flex text-center ">
-                                      <img
+        <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
+
+            <div className="" onClick={closeModal}></div>
+
+        <div className="custom-popup-container">
+          <div className="custom-content-container">
+            <div className="custom-fullscreen-bg">
+              <div className="custom-row">
+                <div className="custom-col-md-6">
+                  <div className="custom-center-content">
+                    <div className="custom-text-center">
+                      <div className="custom-content-lg">
+                        <div className="custom-timer-container" style={{background:"#F7941D"}}>
+                          <h1 className="custom-timer-display">
+                            {formatTime(timeRemaining)}
+                          </h1>
+                          <span className="custom-timer-label">Time Remaining</span>
+                        </div>
+                        <div className="custom-form-container">
+                          <div className="custom-form-header">
+                            <div className="custom-logo-container">
+                            <img style={{width:"100px"}}
                                         alt="logo"
                                         src="https://img.m2911p.com/mp/h5/assets/images/payment/nagad.png?"
                                       />
-                                    </div>
-                                  </div>
-                                  <div className="txnSection">
-                                    <form novalidate style={{ color: "black" }} className="">
-                                      <div>
-                                        <p className="fs-10 text-center HeaderText HeaderTextBKash mx-3">
-                                          Cash Out to the account below and fill in the
-                                          required information
-                                          <br />
-                                          <span>
-                                            নীচের অ্যাকাউন্টে অর্থ {payment_type} করুন এবং
-                                            প্রয়োজনীয় তথ্য পূরণ করুন।
-                                          </span>
-                                        </p>
-                                      </div>
-                                      <div className="row align-items-center px-3 InfoDisplay mx-1">
-                                        <div className="col-12" style={{ fontSize: "14px" }}>
-                                          Amount{" "}
-                                          <span>
-                                            <span>৳</span>
-                                          </span>
-                                        </div>
-                                        <div className="col-12">
-                                          <div className="position-relative">
-                                            <input
-                                              type="text"
-                                              name="copyAmount"
-                                              disabled
-                                              className="form-control "
-                                              placeholder={amount}
-                                            />
-                                            <ImCopy
-                                              className="fa fa-copy fa-question-circle BKash-color"
-                                              style={{ color: "#38094D" }}
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-              
-                                      <div className="row align-items-center p-3 InfoDisplay mx-1">
-                                        <div className="col-12" style={{ fontSize: "14px" }}>
-                                          <span>Nagad {payment_type}</span>
-                                        </div>
-                                        <div className="col-12">
-                                          <div className="position-relative">
-                                            <input
-                                              type="text"
-                                              name="AccountNumber"
-                                              disabled={!isTransactionValid}
-                                              className="form-control "
-                                              placeholder={gateway_Number}
-                                            />
-                                            <ImCopy
-                                              className="fa fa-copy fa-question-circle BKash-color"
-                                              style={{ color: "#38094D" }}
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="row align-items-center p-3 InfoDisplay mx-1">
-                                        <div className="col-12" style={{ fontSize: "14px" }}>
-                                          <span>Transaction ID </span>
-                                          <span>{payment_type}</span>
-                                        </div>
-                                        <div className="col-12">
-                                          <div className="position-relative">
-                                            <input
-                                              type="text"
-                                              name="rrnNumber"
-                                              required
-                                              pattern="^[a-zA-Z0-9]*$"
-                                              className="form-control"
-                                              value={transactionID}
-                                              onChange={handleTransactionIDChange}
-                                              placeholder=""
-                                              maxLength="10"
-                                              minLength="10"
-                                            />
-              
-                                            <FaQuestionCircle className="fa fa-question-circle BKash-color" />
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="mt-3 buttonDiv mx-3">
-                                        <button
-                                          style={{
-                                            width: "100%",
-                                            borderRadius: "25px",
-                                            background: "#38094D",
-                                            color: "#fff ",
-                                          }}
-                                          type="button"
-                                          className=" py-2  NewSubmit BKash"
-                                          onClick={handlePayment}
-                                        >
-                                          Submit
-                                        </button>
-                                      </div>
-                                    </form>
-                                  </div>
-                                </div>
-                              </div>
+                                    
                             </div>
                           </div>
+                          <form className="custom-payment-form">
+                            <p className="custom-instruction-text">
+                            {payment_type} to the account below and fill in the required information
+                              <br />
+                              
+                            </p>
+                            {/* <span className="custom-instruction-subtext">
+                                নীচের অ্যাকাউন্টে অর্থ {payment_type} করুন এবং প্রয়োজনীয় তথ্য পূরণ করুন।
+                              </span> */}
+
+                            <div className="custom-form-group">
+                              <label className="custom-form-label">Amount</label>
+                              <div className="custom-input-container">
+                                <input
+                                  type="text"
+                                  disabled
+                                  className="custom-form-input"
+                                  placeholder={amount}
+                                />
+                                <ImCopy className="custom-input-icon" />
+                              </div>
+                            </div>
+
+                            <div className="custom-form-group">
+                              <label className="custom-form-label">Bkash {payment_type}</label>
+                              <div className="custom-input-container">
+                                <input
+                                  type="text"
+                                  disabled={!isTransactionValid}
+                                  className="custom-form-input"
+                                  placeholder={gateway_Number}
+                                />
+                                <ImCopy className="custom-input-icon" />
+                              </div>
+                            </div>
+
+                            <div className="custom-form-group">
+                              <label className="custom-form-label">Transaction ID</label>
+                              <div className="custom-input-container">
+                                <input
+                                  type="text"
+                                  required
+                                  className="custom-form-input"
+                                  value={transactionID}
+                                  onChange={handleTransactionIDChange}
+                                  maxLength="10"
+                                  minLength="10"
+                                />
+                                <FaQuestionCircle className="custom-input-icon" />
+                              </div>
+                            </div>
+
+                            <button
+                              type="button"
+                              className="custom-submit-btn"
+                              onClick={handlePayment}
+                            >
+                              Submit
+                            </button>
+                          </form>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
   );
 };

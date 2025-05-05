@@ -59,7 +59,7 @@ export default ({
                       </div>
                     </div>
                   </form>
-                  <div className={`button ${email ? "" : "btn-disabled"}`} onClick={()=>openModal("VerifyOtpPageemail")} >
+                  <div className={`button ${email ? "" : "btn-disabled"}`} onClick={()=>openModal("VerifyOtpPage")} >
                     <a>সাবমিট</a>
                   </div>
                   <p className="button-tips player">

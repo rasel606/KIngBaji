@@ -71,6 +71,12 @@ export default (props) => {
     data[0]?.category.uniqueProviders
   );
 
+  useEffect(() => {
+    if (data.length > 0) {
+      setActive(data[0]?.category);
+      setActiveIndex(0); // Reset index when data changes
+    }
+  }, [data]);
   console.log(data[0]?.category.uniqueProviders);
   console.log("active", active);
   const handleItemClick = (index, item) => {

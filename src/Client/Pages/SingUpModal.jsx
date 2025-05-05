@@ -27,18 +27,7 @@ export default ({ modalName }) => {
       code: "+880",
       flag: "BD",
     },
-    {
-      Id: "Option 2",
-      Currency: "INR",
-      code: "+091",
-      flag: "IN",
-    },
-    {
-      Id: "Option 3",
-      Currency: "PKR",
-      code: "+092",
-      flag: "PK",
-    },
+   
   ];
 
   // const handleOptionClick = (option) => {
@@ -49,7 +38,7 @@ export default ({ modalName }) => {
 
   const [selectedOption, setSelectedOption] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
-  const [selectedCountry, setSelectedCountry] = useState(selectedCurrency.code);
+  const [selectedCountry, setSelectedCountry] = useState(selectedCurrency?.code);
   const [phoneNumber, setPhoneNumber] = useState();
   // const [referredbyCode, setreferredbyCode] = useState(referralCode);
 
@@ -172,7 +161,7 @@ export default ({ modalName }) => {
       const data = {
         userId,
         password,
-        countryCode: selectedCountry,
+        countryCode: "+088",
         phone: phoneNumber,
         referredBy: referralCode,
       };
@@ -265,7 +254,7 @@ export default ({ modalName }) => {
                       <div className="phone-area-code">
                         <div className="lang-select">
                           <button className="btn-select only">
-                            <li>
+                            {/* <li>
                               <img 
                                 value="BD" 
                                 alt="BD" 
@@ -273,7 +262,22 @@ export default ({ modalName }) => {
                                 loading="lazy" 
                               />
                               <span>+880</span>
-                            </li>
+                            </li> */}
+                            {currencies.map((currency, index) => (
+                                    <li
+                                      key={index}
+                                      onClick={() =>
+                                        setSelectedCurrency(currency.code)
+                                      }
+                                    >
+                                      <img
+                                        alt={currency.code}
+                                        src={`https://img.c88rx.com/cx/h5/assets/images/flag/${currency.flag}.png?v=1737700422219&source=mcdsrc`}
+                                        loading="lazy"
+                                      />
+                                      <span>{currency.code}</span>
+                                    </li>
+                                  ))}
                           </button>
                         </div>
                       </div>
@@ -297,19 +301,19 @@ export default ({ modalName }) => {
                 </div>
               </form>
               
-              <div className="button btn-disabled">
+              <div className={`button ${userId && password && phoneNumber?.length === 10 ? "" : "btn-disabled"} `} type="submit" onClick={() => handleSubmit()}>
                 <a>সাবমিট</a>
               </div>
             </div>
             
             <p className="button-tips">
               <span>ইতোমধ্যে একজন সদস্য ? </span>
-              <a href="/bd/bn/account-login-quick(popup:new-register-entry/account)">প্রবেশ করুন</a>
+              <a >প্রবেশ করুন</a>
             </p>
             
             <p className="footer-tips">
               <span>নিবন্ধন করার অর্থ হল আপনার বয়স 18 বছরের বেশি, আপনি পড়েছেন এবং এতে সম্মত হয়েছেন </span>
-              <a href="/bd/bn/terms/conditions(popup:new-register-entry/account)">শর্তাবলী </a>
+              <a >শর্তাবলী </a>
               <span>.</span>
             </p>
           </div>
