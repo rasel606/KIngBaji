@@ -295,9 +295,10 @@ export default ({ modalName }) => {
                           <div className="info-block">
                             <div>
                               <label className="title">Birthday</label>
-                              <label className="ng-tns-c753367749-27">
-                                {userDeatils.birthday || ""}
-                              </label>
+                              <br/>
+                              {/* <label className="ng-tns-c753367749-27">
+                                {formatDate(userDeatils.birthday)}
+                              </label> */}
                             </div>
                           </div>
                         </div>
@@ -310,7 +311,7 @@ export default ({ modalName }) => {
                               Add
                             </button>
                           ) : (
-                            <div className="status verified-btn">Verified</div>
+                            <div className="status verified-btn">{formatDate(userDeatils.birthday)}</div>
                           )}
                         </div>
                       </div>

@@ -18,21 +18,33 @@ export default ({
     return emailRegex.test(email);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email.trim()) {
-      setError("অনুগ্রহ করে ইমেল ঠিকানা লিখুন।");
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError("অনুগ্রহ করে সঠিক ইমেল ঠিকানা লিখুন।");
-      return;
-    }
-
-    setError("");
-    setIsSubmitted(true);
-    openModal("VerifyOtpPageemail");
+  const handleSubmit = async () => {
+    const payload = {
+         userId: userId,
+         phone: {
+           number: phone,
+         },
+       };
+   
+       const response = await UserOptSend(payload);
+       console.log("API Response:", response.data);
+   
+       if (response.data) {
+         console.log("OTP sent successfully ✅");
+   
+         setIsSubmitted(true);
+         
+   
+         setTimeout(() => {
+           setShowSuccess(false);
+           openModal("VerifyOtpPageemail");
+         }, 1000);
+       } else {
+         console.error("Failed to send OTP:", response.data.message);
+         console.Log("Failed to send OTP:", response.data.message);
+         alert(response.data.message || "OTP পাঠানো ব্যর্থ হয়েছে।");
+       }
+    
   };
   return (
     <div className="mcd-popup-page popup-page-wrapper active" onClick={closeModal}>
@@ -53,13 +65,20 @@ export default ({
                         <input
                           type="text"
                           className="input "
-                          placeholder="Your full email ..."
+                          placeholder="Your phone number ..."
+                          value={phone || userDeatils.phone[0].number}
+                          onChange={(e) => setEmail(e.target.value)}
                         />
-                        <input className="clear" />
+                        {phone && (
+                          <input
+                            className="clear"
+                            onClick={() => setEmail("")}
+                          />
+                        )}
                       </div>
                     </div>
                   </form>
-                  <div className={`button ${email ? "" : "btn-disabled"}`} onClick={()=>openModal("VerifyOtpPage")} >
+                  <div className={`button ${email ? "" : "btn-disabled"}`} onClick={() => handleSubmit()} >
                     <a>সাবমিট</a>
                   </div>
                   <p className="button-tips player">

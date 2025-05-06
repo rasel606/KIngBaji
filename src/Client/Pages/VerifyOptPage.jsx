@@ -52,12 +52,14 @@ export default function VerificationModal({ modalName }) {
 
   
   const handleVerify = async () => {
+    console.log(code.join(""));
     try {
       const response = await UserOptVerify(
-        userId.phone.number,
-        userId,
-        code.join("")
+        {phone:userId.phone[0].number,
+        userId:userId,
+        code:code.join("")}
       );
+      console.log("API Response:", response.data);
   
       if (response.data.success) {
         setSuccess(true);
