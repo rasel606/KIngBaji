@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
+import { useAuth } from "../Component/AuthContext";
+import { UserOptSend } from "../Component/Axios-API-Service/AxiosAPIService";
 
 export default ({
   modalName
@@ -8,7 +10,14 @@ export default ({
 
   const {  activeModal, openModal, closeModal  } = useModal();
   if (activeModal !== modalName) return null;
-
+ const {
+    isAuthenticated,
+    loginUser,
+    logoutUser,
+    verifyUser,
+    userId,
+    userDeatils,
+  } = useAuth();
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -21,9 +30,7 @@ export default ({
   const handleSubmit = async () => {
     const payload = {
          userId: userId,
-         phone: {
-           number: phone,
-         },
+         email: email,
        };
    
        const response = await UserOptSend(payload);
@@ -66,10 +73,10 @@ export default ({
                           type="text"
                           className="input "
                           placeholder="Your phone number ..."
-                          value={phone || userDeatils.phone[0].number}
+                          value={email || userDeatils.email}
                           onChange={(e) => setEmail(e.target.value)}
                         />
-                        {phone && (
+                        {email && (
                           <input
                             className="clear"
                             onClick={() => setEmail("")}
