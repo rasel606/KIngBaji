@@ -233,6 +233,9 @@ export default ({ modalName }) => {
                     selected={filters.date}
                     onChange={(val) => handleFilterChange("date", val)}
                   />
+                  <div class="searchpage-bar active" onClick={()=>setIsFilterOpen(false)}>
+                    <button class="button"> Confirm </button>
+                  </div>
                 </div>
 
                 <div className="searchpage-bar">
