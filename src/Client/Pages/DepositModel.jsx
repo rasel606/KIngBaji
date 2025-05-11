@@ -175,7 +175,7 @@ console.log(Payment)
 
   useEffect(() => {
     if (paymentMethods.length) {
-      setPayment( Payment.length === null ?paymentMethods[0] : Payment);
+      setPayment(paymentMethods[0] || Payment);
     }
   }, [paymentMethods,modalName]);
 
