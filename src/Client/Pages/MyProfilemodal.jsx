@@ -7,7 +7,7 @@ import AddMobileNumberModel from "./AddMobileNumberModel";
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   const { userDeatils, token, updateUserDetails } = useAuth();
-  const [isOpenToggle, setIsOpenToggle] = useState(false);
+  const [isOpenToggle, setIsOpenToggle] = useState(true);
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(userDeatils.phone || "");
   const [isPhoneVerified, setIsPhoneVerified] = useState(
@@ -118,12 +118,12 @@ export default ({ modalName }) => {
                   </div>
                   <div className="membername-wrap">
                     <div className="membername">
-                      {userDeatils.username || "N/A"}
+                      {userDeatils.userId || "N/A"}
                     </div>
                     <div className="level">Copper</div>
                     <br />
                     <div className="register-date">
-                      Date Registered: <i>{formatDate(userDeatils.datetime)}</i>
+                      Date Registered: <i>{formatDate(userDeatils.timestamp)}</i>
                     </div>
                   </div>
                 </div>
@@ -340,7 +340,7 @@ export default ({ modalName }) => {
                               <label className="tips">
                                 {userDeatils.phone.map((phone, index) => (
                                   <div key={index}>
-                                    +{phone.countryCode} {phone.number}
+                                    {phone.countryCode} {phone.number}
                                     {phone.isDefault && " (Default)"}
                                   </div>
                                 ))}

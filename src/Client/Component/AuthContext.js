@@ -57,13 +57,13 @@ const verifyUserToken = async (token) => {
   }
 
   setLoading(true);
-  axios.get('https://api.kingbaji.live/api/v1/verify', {
+  axios.get('http://localhost:5000/api/v1/verify', {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
   })
     .then((response) => {
       setIsAuthenticated(true);
-      setUserId(response.data.userId);
-      setUserDeatils(response.data.user);
+      // setUserId(response.data.userId);
+      // setUserDeatils(response.data.user);
       console.log(response.data.user);
     })
     .catch(() => {
@@ -76,7 +76,7 @@ const verifyUserToken = async (token) => {
 
   useEffect(() => {
     verifyUserToken(token);
-  }, [token]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
+  }, [token,userId>0]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
 
   // Login function
   
@@ -89,10 +89,10 @@ const verifyUserToken = async (token) => {
       const response = await LoginUser(userId, password);
       console.log(response);
   
-      const newToken = response.data.token;
-      // localStorage.setItem('authToken', newToken);
+      const token = response.data.token;
+      localStorage.setItem('token', token);
   
-      console.log(response,response.data)
+      console.log("Token",response,response.data)
       
       localStorage.setItem('authToken', response.data.token);
       setIsAuthenticated(true);

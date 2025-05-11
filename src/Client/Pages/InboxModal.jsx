@@ -9,6 +9,10 @@ const InboxPopup = ({modalName}) => {
     const [selectedMessages, setSelectedMessages] = useState([]);
     if (activeModal !== modalName) return null;
     // Sample message data
+
+
+
+    
     const messages = [
       {
         date: '2025/04/30',
@@ -84,13 +88,13 @@ const InboxPopup = ({modalName}) => {
     };
 
   return (
-    <div className="mcd-popup-page popup-page-wrapper active">
-      <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
-        <div className="popup-page__backdrop"onClick={closeModal}></div>
+    <div className="mcd-popup-page popup-page-wrapper active" onClick={closeModal}>
+      <div className="popup-page show-toolbar popup-page--active popup-page--align-top" onClick={(e) => e.stopPropagation()}>
+        <div className="popup-page__backdrop"></div>
         <div className="popup-page__main popup-page-main popup-page-main--show">
           <div className="popup-page-main__header">
-            <div className="popup-page-main__title">Inbox</div>
-            <div className="popup-page-main__close"></div>
+            <div className="popup-page-main__title">inbox</div>
+            <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">
             <div className="content mcd-style player-content">

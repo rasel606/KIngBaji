@@ -12,7 +12,7 @@ export default function VerificationModal({ modalName }) {
 
 
   const [code, setCode] = useState(["", "", "", ""]);
-  const [timer, setTimer] = useState(271); // 4:31 in seconds
+  const [timer, setTimer] = useState(180); // 4:31 in seconds
   const [success, setSuccess] = useState(false);
   const [resendActive, setResendActive] = useState(false);
   const inputsRef = useRef([]);
@@ -136,8 +136,9 @@ export default function VerificationModal({ modalName }) {
                   onClick={resendActive ? handleResend : undefined}
                 >
                   Resend{" "}
-                  <span className="time active">{formatTime(timer)}</span>
+                  
                 </a>
+                <span className={`time ${resendActive ? "active" : ""}`}>{formatTime(timer)}</span>
               </p>
             </div>
           </div>

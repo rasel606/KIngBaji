@@ -1,83 +1,136 @@
 import React, { useEffect, useState } from "react";
 import { useModal } from "../Component/ModelContext";
-import { GetBettingHistoryByMember, searchTransactionsbyUserId } from "../Component/Axios-API-Service/AxiosAPIService";
+import {
+  GetBettingHistoryByMember,
+  GetGameCategory,
+  GetGameProvider,
+  searchTransactionsbyUserId,
+} from "../Component/Axios-API-Service/AxiosAPIService";
 import { useAuth } from "../Component/AuthContext";
 
 export default ({ modalName }) => {
   const { activeModal, closeModal } = useModal();
   const { userId } = useAuth();
 
- 
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
-    gameTypes: [],
-    platforms: [],
+    product: [],
+    site: [],
     date: "today",
   });
   const [transactions, setTransactions] = useState([]);
 
-  // const statusOptions = ["Processing", "Rejected", "Approved"];
-  // const paymentTypeOptions = ["Deposit", "Withdrawal", "Adjustment"];
-  const dateOptions = ["today", "yesterday", "last7Days"];
+  console.log(filters);
 
+  const dateOptions = [
+    { label: "Today", value: "today" },
+    { label: "Yesterday", value: "yesterday" },
+    { label: "Last 7 Days", value: "last7days" }, // Match backend's 'last7days'
+  ];
+  // const provider = []
   const [activeDayTab, setActiveDayTab] = useState("Today");
   const tabs = ["today", "yesterday", "last7Days"];
 
-  const handleFilterChange = (type, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [type]: prev[type].includes(value)
-        ? prev[type].filter((item) => item !== value)
-        : [...prev[type], value],
-    }));
+  const handleFilterChange = (filterType, value) => {
+    setFilters((prev) => {
+      if (filterType === "date") {
+        return { ...prev, date: value };
+      }
+
+      // Toggle array values for multi-select
+      return {
+        ...prev,
+        [filterType]: prev[filterType].includes(value)
+          ? prev[filterType].filter((v) => v !== value)
+          : [...prev[filterType], value],
+      };
+    });
   };
   const [activeTab, setActiveTab] = useState("settled");
-  // const [showFilter, setShowFilter] = useState(false);
+
   const [selectedDate, setSelectedDate] = useState("last7days");
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedGameTypes, setSelectedGameTypes] = useState([]);
   const [records, setRecords] = useState([]);
   const [showRecordDetails, setShowRecordDetails] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const fetchTransactions = async () => {
+  const GetBettingHistor = async () => {
     try {
-      const response = await GetBettingHistoryByMember(
-         {
-          range: filters.date,
-          member: userId,
-          product: selectedPlatforms || ""
-        }
-      );
-      console.log(response.data.data.summary);
-      setRecords(response.data.data.summary|| []);
+      const response = await GetBettingHistoryByMember({
+        params:{
+        userId,
+        filters,
+        
+      }});
+      console.log(response.data.data);
+      setRecords(response.data.data || []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
       setRecords([]);
     }
   };
+  useEffect(() => {
+    if (activeModal === modalName) {
+      GetBettingHistor();
+    }
+  }, [activeModal, userId, filters]);
 
   useEffect(() => {
     if (activeModal === modalName) {
-      fetchTransactions();
+      const fetchProvider = async () => {
+        try {
+          const response = await GetGameProvider();
+          console.log("fetching provider:", response.data);
+          if (response.data.errCode === 200) {
+            setSelectedPlatforms(response.data.data || []);
+          }
+        } catch (error) {
+          console.error("Error fetching provider:", error);
+          setSelectedPlatforms([]);
+        }
+      };
+
+      fetchProvider();
+    }
+  }, [activeModal, userId]);
+  useEffect(() => {
+    if (activeModal === modalName) {
+      const fetchCategory = async () => {
+        try {
+          const response = await GetGameCategory();
+
+          if (response.data.errCode === 200) {
+            console.log("fetching Category:", response.data);
+            setSelectedGameTypes(response.data.data || []);
+          }
+        } catch (error) {
+          console.error("Error fetching provider:", error);
+          setSelectedGameTypes([]);
+        }
+      };
+
+      fetchCategory();
+    }
+  }, [activeModal, userId]);
+
+  useEffect(() => {
+    if (activeModal === modalName) {
+      GetBettingHistor();
     }
   }, [activeModal, filters, userId]);
 
-
-
-  const platforms = ["Evolution", "Pragmatic", "Ezugi", "SexyBaccarat"];
-const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
-
+  const platforms = selectedPlatforms || [];
+  const gameTypes = selectedGameTypes;
+  // console.log(platforms);
 
   useEffect(() => {
     if (activeModal === modalName) {
-      fetchTransactions();
+      GetBettingHistor();
     }
   }, [activeModal, filters, userId]);
 
   if (activeModal !== modalName) return null;
   // Sample data
-
 
   const togglePlatform = (platform) => {
     if (selectedPlatforms.includes(platform)) {
@@ -152,22 +205,31 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
                 <div className="searchpage-main">
                   <FilterGroup
                     title="Platforms"
-                    type="radio"
-                    options={platforms}
-                    selected={filters.date}
-                    onChange={(val) => handleFilterChange("date", val)}
+                    type="checkbox"
+                    options={selectedPlatforms.map((p) => ({
+                      label: p.company,
+                      value: p.providercode,
+                    }))}
+                    selected={filters.site}
+                    onChange={(val) => handleFilterChange("site", val)}
                   />
                   <FilterGroup
-                    title="GameTypes"
-                    type="radio"
-                    options={gameTypes}
-                    selected={filters.date}
-                    onChange={(val) => handleFilterChange("date", val)}
+                    title="Game Types"
+                    type="checkbox"
+                    options={selectedGameTypes.map((g) => ({
+                      label: g.category_name,
+                      value: g.p_type,
+                    }))}
+                    selected={filters.product}
+                    onChange={(val) => handleFilterChange("product", val)}
                   />
                   <FilterGroup
-                    title="Date"
+                    title="তারিখ"
                     type="radio"
-                    options={dateOptions}
+                    options={dateOptions.map((d) => ({
+                      label: d.label,
+                      value: d.value,
+                    }))}
                     selected={filters.date}
                     onChange={(val) => handleFilterChange("date", val)}
                   />
@@ -228,14 +290,13 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
                           <div className="time-zone">GMT+6</div>
                         </div>
                         <div className="list-content">
-                          
                           <div
                             className="record-item"
                             onClick={() => viewRecordDetails(record)}
                           >
                             <div className="item platform">
                               {record.site}
-                              {console.log(record)}
+                              {/* {console.log(record)} */}
                             </div>
                             <div className="item type">{record.product}</div>
                             <div className="item bet">
@@ -348,9 +409,11 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
                             className="betting-record-list record-item settled"
                           >
                             {console.log(betTxnRecord)}
-                            <div className="item time">{betTxnRecord.end_time}</div>
+                            <div className="item time">
+                              {betTxnRecord.end_time}
+                            </div>
                             <div className="item game">
-                            {console.log(betTxnRecord)}
+                              {console.log(betTxnRecord)}
                               {betTxnRecord.gameName}
                             </div>
                             <div className="item bet">
@@ -364,10 +427,14 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
                               <i
                                 style={{
                                   color:
-                                  betTxnRecord.bet > 0 ? "red" : "inherit",
+                                    betTxnRecord.bet > 0 ? "red" : "inherit",
                                 }}
                               >
-                                ({ betTxnRecord.bet > 0 ? betTxnRecord.bet.toFixed(2) : "0"})
+                                (
+                                {betTxnRecord.bet > 0
+                                  ? betTxnRecord.bet.toFixed(2)
+                                  : "0"}
+                                )
                               </i>
                             </div>
                             <div className="item-status">
@@ -388,63 +455,32 @@ const gameTypes = ["Slot", "Live Casino", "Sportsbook", "Table"];
   );
 };
 
+
+
 const FilterGroup = ({ title, type, options, selected, onChange }) => (
   <div className="search-checkbox-group">
+
     <h2>{title}</h2>
     <ul>
-      {options.map((option) => (
-        <li key={option}>
+    {options.map((option) => (
+        <li key={option.value} onClick={() => onChange(option.label)}>
+        {/* Use value as key */}
           <input
             type={type}
             name={title}
             checked={
-              type === "radio" ? selected === option : selected.includes(option)
+              type === "radio"
+                ? selected === option.label
+                : selected.includes(option.label)
             }
-            onChange={() => onChange(option)}
+
           />
-          <label>{option}</label>
+          <label >
+          {option.label}</label>  {/* Render label property */}
         </li>
       ))}
     </ul>
   </div>
+
 );
 
-// const TransactionItem = ({ transaction }) => {
-//   const getStatus = () => {
-//     switch(transaction.status) {
-//       case 0: return "প্রক্রিয়াধীন";
-//       case 1: return "অনুমোদিত";
-//       case 2: return "প্রত্যাখ্যাত";
-//       default: return "অজানা";
-//     }
-//   };
-
-//   return (
-//     <div className="record-item">
-//       <div className="item type">
-//         {transaction.type === 0 ? "ডিপোজিট" : "উত্তোলন"}
-//       </div>
-//       <div className="item amount">৳{transaction.amount}</div>
-//       <div className="item status">{getStatus()}</div>
-//       <div className="item time">
-//         {new Date(transaction.datetime).toLocaleDateString("bn-BD", {
-//           year: "numeric",
-//           month: "short",
-//           day: "numeric",
-//         })}
-//       </div>
-//     </div>
-//   );
-// };
-
-// const NoData = () => (
-//   <div className="no-result">
-//     <div className="pic">
-//       <img
-//         src="https://img.c88rx.com/cx/h5/assets/images/no-data.png"
-//         alt="no-data"
-//       />
-//     </div>
-//     <div className="text">কোনো ডাটা পাওয়া যায়নি</div>
-//   </div>
-// );

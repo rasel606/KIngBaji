@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
 import { useAuth } from "../Component/AuthContext";
-import { UserOptSend } from "../Component/Axios-API-Service/AxiosAPIService";
+import { UserEmailOptVerify, UserOptSend } from "../Component/Axios-API-Service/AxiosAPIService";
 
 export default ({
   modalName
@@ -33,7 +33,7 @@ export default ({
          email: email,
        };
    
-       const response = await UserOptSend(payload);
+       const response = await UserEmailOptVerify(payload);
        console.log("API Response:", response.data);
    
        if (response.data) {

@@ -4,6 +4,7 @@ import { useModal } from '../Component/ModelContext';
 // import { CreateUser, LoginUser, verify } from './Axios-API-Service/AxiosAPIService';
 import { use } from 'react';
 import { useAuth } from '../Component/AuthContext';
+import { GatWaySystem } from '../Component/Axios-API-Service/AxiosAPIService';
 
 const PaymentContext = createContext();
 
@@ -11,14 +12,55 @@ export const usePayNow = () => useContext(PaymentContext);
 
 const PaymenyContextProvider = ({ children }) => {
   const { openModal, closeModal } = useModal();
+  const [paymentMethods, setpaymentMethods] = useState([]);
+console.log(paymentMethods);
+
+
+const {
+  isAuthenticated,
+  userDeatils,
+  userId,
+  token
+} = useAuth();
+const data = {
+  userId: userDeatils.userId,
+};
+
+
+const [paymentMethodDeglaration, setpaymentMethodsdeglaration] = useState(paymentMethods[0]);
+
+useEffect(() => {
+   setpaymentMethodsdeglaration(paymentMethods[0])
+},[paymentMethods]);
+console.log(paymentMethodDeglaration)
+    useEffect(() => {
+      // Fetch gateway list from backend on component mount
+      const fetchGateways = async () => {
+        
+        try {
+          const response = await GatWaySystem(data);
+          setpaymentMethods(response?.data?.paymentMethods);
+          // setGatewaysCount(response.data.Getwaycount);
+          console.log(response.data.paymentMethods);
+          if (response.data.paymentMethods.length > 0) {
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error("Error fetching gateways:", error);
+        }
+      };
+      
+  
+  
+      
+        fetchGateways();
+      
+    }, [userDeatils.userId, token  ]);
 
   
-    const {
-      isAuthenticated,
-      userDeatils,
-      userId,
-    } = useAuth();
 
+const [Payment, setPayment] = useState(paymentMethods[0])
+console.log(Payment);
 const [newAmount, setNewAmountPay] = useState(0);
   const [gateway_name, setGateway_name] = useState([]);
   const [gateway_Number, setGateway_Number] = useState(null );
@@ -52,6 +94,7 @@ const [newAmount, setNewAmountPay] = useState(0);
       setGateway_name,
       setGateway_Number,
       setPayment_type,
+      Payment, setPayment
     }}>
       {children}
     </PaymentContext.Provider>

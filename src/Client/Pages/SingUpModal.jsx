@@ -12,11 +12,31 @@ export default ({ modalName }) => {
   if (activeModal !== modalName) return null;
 
   const banners = [
-    { id: 0, imageUrl: 'https://img.s628b.com/upload/registerH5Slider/image_211264.jpg' },
-    { id: 1, imageUrl: 'https://img.s628b.com/upload/registerH5Slider/image_199015.jpg' },
-    { id: 2, imageUrl: 'https://img.s628b.com/upload/registerH5Slider/image_231436.jpg' },
-    { id: 3, imageUrl: 'https://img.s628b.com/upload/registerH5Slider/image_227304.jpg' },
-    { id: 4, imageUrl: 'https://img.s628b.com/upload/registerH5Slider/image_199005.jpg' },
+    {
+      id: 0,
+      imageUrl:
+        "https://img.s628b.com/upload/registerH5Slider/image_211264.jpg",
+    },
+    {
+      id: 1,
+      imageUrl:
+        "https://img.s628b.com/upload/registerH5Slider/image_199015.jpg",
+    },
+    {
+      id: 2,
+      imageUrl:
+        "https://img.s628b.com/upload/registerH5Slider/image_231436.jpg",
+    },
+    {
+      id: 3,
+      imageUrl:
+        "https://img.s628b.com/upload/registerH5Slider/image_227304.jpg",
+    },
+    {
+      id: 4,
+      imageUrl:
+        "https://img.s628b.com/upload/registerH5Slider/image_199005.jpg",
+    },
   ];
 
   const [activeBanner, setActiveBanner] = useState(3);
@@ -27,7 +47,6 @@ export default ({ modalName }) => {
       code: "+880",
       flag: "BD",
     },
-   
   ];
 
   // const handleOptionClick = (option) => {
@@ -38,7 +57,9 @@ export default ({ modalName }) => {
 
   const [selectedOption, setSelectedOption] = useState();
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
-  const [selectedCountry, setSelectedCountry] = useState(selectedCurrency?.code);
+  const [selectedCountry, setSelectedCountry] = useState(
+    selectedCurrency?.code
+  );
   const [phoneNumber, setPhoneNumber] = useState();
   // const [referredbyCode, setreferredbyCode] = useState(referralCode);
 
@@ -122,6 +143,8 @@ export default ({ modalName }) => {
     setPassword(value);
   };
 
+  const referralCode = localStorage.getItem("referralCode");
+
   const validatePassword = (password) => {
     const regex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#])[A-Za-z\d@$!%#]{6,}$/;
@@ -146,115 +169,168 @@ export default ({ modalName }) => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  let referredBy = "";
+  let referredBy = referralCode;
+
   // const referredBy = localStorage.getItem("referralCode");
   // referredBy += referralCode;
   // console.log(referralCode);
   const handleSubmit = async () => {
-    const referralCode = localStorage.getItem("referralCode");
     console.log(referralCode);
     // if (!userId || !password || !phoneNumber) {
-      // const referralCode = localStorage.setItem("referralCode", referralCode)
-      console.log(referredBy);
-      console.log(referralCode);
-      console.log(userId, password, selectedCountry, phoneNumber);
-      const data = {
-        userId,
-        password,
-        countryCode: "+088",
-        phone: phoneNumber,
-        referredBy: referralCode,
-      };
+    // const referralCode = localStorage.setItem("referralCode", referralCode)
+    console.log(referredBy);
+    console.log(referralCode);
+    console.log(userId, password, selectedCountry, phoneNumber);
+    const data = {
+      userId,
+      password,
+      countryCode: "+088",
+      phone: phoneNumber,
+      referredBy: referralCode,
+    };
 
-      console.log(data);
-      const result = await userRegistar(data);
-      console.log(result);
-     
+    console.log(data);
+    const result = await userRegistar(data);
+    console.log(result);
   };
 
   return (
     <div className="mcd-popup-page popup-page-wrapper active">
-    <div className="popup-page popup-page--active popup-page--align-top" onClick={(e) => e.stopPropagation()}>
-      <div className="popup-page__backdrop" onClick={closeModal}></div>
-      <div className="popup-page__main popup-page-main popup-page-main--show">
-        <div className="popup-page-main__header new-login">
-          <div className="popup-page-main__title">সাইন আপ</div>
-          <div className="popup-page-main__close" onClick={closeModal}></div>
-        </div>
-        
-        <div className="popup-page-main__container">
-          <div className="content mcd-style member-content third-party-login">
-            <div className="register-entry">
-              <div className="logo-box" style={{ backgroundImage: 'url("https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png")' }}></div>
-              
-              <div className="banner banner-v1">
-                <div className="carousel-wrap style-init siblings">
-                  <div className="cdk-drag item-drag">
-                    <div className="item-left">
-                      <div className="item-wrap">
-                        {banners.map((banner) => (
-                          <div key={banner.id} className="item" style={{ width: '224px' }}>
-                            <div 
-                              className="item-pic" 
-                              style={{ backgroundImage: `url(${banner.imageUrl})` }}
-                            ></div>
-                          </div>
-                        ))}
+      <div
+        className="popup-page popup-page--active popup-page--align-top"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="popup-page__backdrop" onClick={closeModal}></div>
+        <div className="popup-page__main popup-page-main popup-page-main--show">
+          <div className="popup-page-main__header new-login">
+            <div className="popup-page-main__title">সাইন আপ</div>
+            <div className="popup-page-main__close" onClick={closeModal}></div>
+          </div>
+
+          <div className="popup-page-main__container">
+            <div className="content mcd-style member-content third-party-login">
+              <div className="register-entry">
+                <div
+                  className="logo-box"
+                  style={{
+                    backgroundImage:
+                      'url("https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png")',
+                  }}
+                ></div>
+
+                <div className="banner banner-v1">
+                  <div className="carousel-wrap style-init siblings">
+                    <div className="cdk-drag item-drag">
+                      <div className="item-left">
+                        <div className="item-wrap">
+                          {banners.map((banner) => (
+                            <div
+                              key={banner.id}
+                              className="item"
+                              style={{ width: "224px" }}
+                            >
+                              <div
+                                className="item-pic"
+                                style={{
+                                  backgroundImage: `url(${banner.imageUrl})`,
+                                }}
+                              ></div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
+
+                    <ul className="dot-group style-bar">
+                      {banners.map((banner, idx) => (
+                        <li
+                          key={banner.id}
+                          className={activeBanner === idx ? "active" : ""}
+                        >
+                          <span
+                            className="dot-progress"
+                            style={{ animationDuration: "3000ms" }}
+                          ></span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  
-                  <ul className="dot-group style-bar">
-                    {banners.map((banner, idx) => (
-                      <li key={banner.id} className={activeBanner === idx ? 'active' : ''}>
-                        <span className="dot-progress" style={{ animationDuration: '3000ms' }}></span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
+
+                <div className="menu-box"></div>
               </div>
-              
-              <div className="menu-box"></div>
-            </div>
-            
-            <div className="entry-outlet">
-              <form className="ng-invalid ng-dirty ng-touched">
-                <div className="menu-box">
-                  <div className="input-group third-party-input-group-title">
-                    <label>ব্যবহারকারীর নাম</label>
-                    <input 
-                      type="text" 
-                      className="input ng-dirty ng-valid ng-touched" 
-                      placeholder="৪-১৫ অক্ষর নাম্বার এলাউ"
-                      value={userId}
-                      onChange={handleUsername}
-                    />
-                    {userId && <input className="clear active" onClick={() => handleClearUsername('')} />}
-                  </div>
-                  
-                  <div className="input-group password third-party-input-group-title">
-                    <div 
-                      className={`eyes ${password ? 'show' : ''}`} 
-                      onClick={togglePasswordVisibility}
-                    ></div>
-                    <label>পাসওয়ার্ড</label>
-                    <input 
-                      type={password  ? 'text' : 'password'} 
-                      className="input ng-dirty ng-valid ng-touched" 
-                      placeholder="৬-২০ অক্ষর বা সংখ্যা"
-                      value={password}
-                      onChange={handlePassword}
-                    />
-                    {password && <input className="clear active" onClick={() => handleClearPassword('')} />}
-                  </div>
-                  
-                  <div className="input-group phone-number third-party-input-group-title">
-                    <label>ফোন নাম্বার</label>
-                    <div className="input-wrap phone-wrap">
-                      <div className="phone-area-code">
-                        <div className="lang-select">
-                          <button className="btn-select only">
-                            {/* <li>
+
+              <div className="entry-outlet">
+                <form className="ng-invalid ng-dirty ng-touched">
+                  <div className="menu-box">
+                    <div className="input-group third-party-input-group-title">
+                      <label>Referral Code</label>
+
+                      <input
+                        type="text"
+                        className="input ng-dirty ng-valid ng-touched"
+                        placeholder={referralCode}
+                        value={referralCode}
+                        style={{
+                          cursor: "not-allowed",
+                          color: "white",
+                          display: "block",
+                          opacity: "1",
+                          background: "blue",
+                        }}
+                      />
+                      {userId && (
+                        <input
+                          className="clear active"
+                          onClick={() => handleClearUsername("")}
+                        />
+                      )}
+                    </div>
+                    <div className="input-group third-party-input-group-title">
+                      <label>ব্যবহারকারীর নাম</label>
+                      <input
+                        type="text"
+                        className="input ng-dirty ng-valid ng-touched"
+                        placeholder="৪-১৫ অক্ষর নাম্বার এলাউ"
+                        value={userId}
+                        onChange={handleUsername}
+                      />
+                      {userId && (
+                        <input
+                          className="clear active"
+                          onClick={() => handleClearUsername("")}
+                        />
+                      )}
+                    </div>
+
+                    <div className="input-group password third-party-input-group-title">
+                      <div
+                        className={`eyes ${password ? "show" : ""}`}
+                        onClick={togglePasswordVisibility}
+                      ></div>
+                      <label>পাসওয়ার্ড</label>
+                      <input
+                        type={password ? "text" : "password"}
+                        className="input ng-dirty ng-valid ng-touched"
+                        placeholder="৬-২০ অক্ষর বা সংখ্যা"
+                        value={password}
+                        onChange={handlePassword}
+                      />
+                      {password && (
+                        <input
+                          className="clear active"
+                          onClick={() => handleClearPassword("")}
+                        />
+                      )}
+                    </div>
+
+                    <div className="input-group phone-number third-party-input-group-title">
+                      <label>ফোন নাম্বার</label>
+                      <div className="input-wrap phone-wrap">
+                        <div className="phone-area-code">
+                          <div className="lang-select">
+                            <button className="btn-select only">
+                              {/* <li>
                               <img 
                                 value="BD" 
                                 alt="BD" 
@@ -263,70 +339,85 @@ export default ({ modalName }) => {
                               />
                               <span>+880</span>
                             </li> */}
-                            {currencies.map((currency, index) => (
-                                    <li
-                                      key={index}
-                                      onClick={() =>
-                                        setSelectedCurrency(currency.code)
-                                      }
-                                    >
-                                      <img
-                                        alt={currency.code}
-                                        src={`https://img.c88rx.com/cx/h5/assets/images/flag/${currency.flag}.png?v=1737700422219&source=mcdsrc`}
-                                        loading="lazy"
-                                      />
-                                      <span>{currency.code}</span>
-                                    </li>
-                                  ))}
-                          </button>
+                              {currencies.map((currency, index) => (
+                                <li
+                                  key={index}
+                                  onClick={() =>
+                                    setSelectedCurrency(currency.code)
+                                  }
+                                >
+                                  <img
+                                    alt={currency.code}
+                                    src={`https://img.c88rx.com/cx/h5/assets/images/flag/${currency.flag}.png?v=1737700422219&source=mcdsrc`}
+                                    loading="lazy"
+                                  />
+                                  <span>{currency.code}</span>
+                                </li>
+                              ))}
+                            </button>
+                          </div>
                         </div>
+                        <input
+                          type="number"
+                          inputMode="tel"
+                          className="input"
+                          placeholder="ফোন নাম্বার"
+                          value={phoneNumber}
+                          onChange={handlePhoneNumberChange}
+                        />
+                        {phoneNumber && (
+                          <input
+                            className="clear"
+                            onClick={handleClearphoneNumber}
+                          />
+                        )}
                       </div>
-                      <input 
-                        type="number" 
-                        inputMode="tel" 
-                        className="input" 
-                        placeholder="ফোন নাম্বার"
-                        value={phoneNumber}
-                        onChange={handlePhoneNumberChange}
-                      />
-                      {phoneNumber && <input className="clear" onClick={handleClearphoneNumber} />}
+                    </div>
+
+                    <div id="turnstile-container">
+                      <div>
+                        <input type="hidden" name="" value="" />
+                      </div>
                     </div>
                   </div>
-                  
-                  <div id="turnstile-container">
-                    <div>
-                      <input type="hidden" name="" value="" />
-                    </div>
-                  </div>
+                </form>
+
+                <div
+                  className={`button ${
+                    userId && password && phoneNumber?.length === 10
+                      ? ""
+                      : "btn-disabled"
+                  } `}
+                  type="submit"
+                  onClick={() => handleSubmit()}
+                >
+                  <a>সাবমিট</a>
                 </div>
-              </form>
-              
-              <div className={`button ${userId && password && phoneNumber?.length === 10 ? "" : "btn-disabled"} `} type="submit" onClick={() => handleSubmit()}>
-                <a>সাবমিট</a>
               </div>
+
+              <p className="button-tips">
+                <span>ইতোমধ্যে একজন সদস্য ? </span>
+                <a>প্রবেশ করুন</a>
+              </p>
+
+              <p className="footer-tips">
+                <span>
+                  নিবন্ধন করার অর্থ হল আপনার বয়স 18 বছরের বেশি, আপনি পড়েছেন
+                  এবং এতে সম্মত হয়েছেন{" "}
+                </span>
+                <a>শর্তাবলী </a>
+                <span>.</span>
+              </p>
             </div>
-            
-            <p className="button-tips">
-              <span>ইতোমধ্যে একজন সদস্য ? </span>
-              <a >প্রবেশ করুন</a>
-            </p>
-            
-            <p className="footer-tips">
-              <span>নিবন্ধন করার অর্থ হল আপনার বয়স 18 বছরের বেশি, আপনি পড়েছেন এবং এতে সম্মত হয়েছেন </span>
-              <a >শর্তাবলী </a>
-              <span>.</span>
-            </p>
           </div>
         </div>
       </div>
     </div>
-  </div>
   );
 };
 
-
-
-{/* <mcd-popup-page className="popup-page-wrapper active">
+{
+  /* <mcd-popup-page className="popup-page-wrapper active">
       <div className="popup-page popup-page--active popup-page--align-top">
     <div className="" onClick={closeModal}>
       <div onClick={(e) => e.stopPropagation()}>
@@ -347,204 +438,203 @@ export default ({ modalName }) => {
                   {/* <img 
                       src=""
                       alt=""
-                    /> */}
-                // </div>
-                
-              
-                
-                  // <div>
-                  //   <div className="menu-box">
-                  //     <Carousel images={images}></Carousel>
-                  //     {/* <SingupSlider></SingupSlider> */}
-                  //     <div className="input-group currency-number third-party-input-group-title">
-                  //       <label>Choose currency</label>
-                  //       <div className="input-wrap currency-wrap">
-                  //         <div className="currency-area-code">
-                  //           <div className="lang-select">
-                  //             <div
-                  //               className="button btn-select currency-list-area"
-                  //               onClick={() => setIsOpen(!isOpen)}
-                  //             >
-                  //               <li>
-                  //                 <img
-                  //                   alt={selectedCurrency.flag}
-                  //                   src={`https://img.c88rx.com/cx/h5/assets/images/flag/${selectedCurrency.flag}.png?v=1737700422219&source=mcdsrc`}
-                  //                   loading="lazy"
-                  //                 />
-                  //                 <span>{selectedCurrency.Currency}</span>
-                  //               </li>
-                  //             </div>
-                  //             <div
-                  //               className="currency-code-list-group"
-                  //               style={{ display: isOpen ? "block" : "none" }}
-                  //             >
-                  //               <ul className="currency-code-list currency-list-area">
-                  //                 {currencies.map((currency, index) => (
-                  //                   <li
-                  //                     key={index}
-                  //                     onClick={() =>
-                  //                       setSelectedCurrency(currency.code)
-                  //                     }
-                  //                   >
-                  //                     <img
-                  //                       alt={currency.code}
-                  //                       src={`https://img.c88rx.com/cx/h5/assets/images/flag/${currency.flag}.png?v=1737700422219&source=mcdsrc`}
-                  //                       loading="lazy"
-                  //                     />
-                  //                     <span>{currency.code}</span>
-                  //                   </li>
-                  //                 ))}
-                  //               </ul>
-                  //             </div>
-                  //           </div>
-                  //         </div>
-                  //       </div>
-                  //     </div>
-                  //     <div className=""></div>
-                  //   </div>
+                    /> */
+}
+// </div>
 
-                  //   <div className="entry_outlet">
-                  //     <form novalidate="" className="">
-                  //       <div className="menu-box">
-                  //         <div className="input-group">
-                  //           <label htmlFor="userId">Username</label>
-                  //           <input
-                  //             type="text"
-                  //             id="userId"
-                  //             name="userId"
-                  //             placeholder="4-15 char, allow numbers, no space"
-                  //             value={userId}
-                  //             onChange={handleUsername}
-                  //             className="input"
-                  //           />
-                  //           {userId && (
-                  //             <input
-                  //               type="button"
-                  //               className={`clear ${userId ? "active" : ""}`}
-                  //               onClick={handleClearUsername}
-                  //             />
-                  //           )}
-                  //         </div>
-                  //         {error && (
-                  //           <div className="error-message">
-                  //             <span>{error}</span>
-                  //           </div>
-                  //         )}
+// <div>
+//   <div className="menu-box">
+//     <Carousel images={images}></Carousel>
+//     {/* <SingupSlider></SingupSlider> */}
+//     <div className="input-group currency-number third-party-input-group-title">
+//       <label>Choose currency</label>
+//       <div className="input-wrap currency-wrap">
+//         <div className="currency-area-code">
+//           <div className="lang-select">
+//             <div
+//               className="button btn-select currency-list-area"
+//               onClick={() => setIsOpen(!isOpen)}
+//             >
+//               <li>
+//                 <img
+//                   alt={selectedCurrency.flag}
+//                   src={`https://img.c88rx.com/cx/h5/assets/images/flag/${selectedCurrency.flag}.png?v=1737700422219&source=mcdsrc`}
+//                   loading="lazy"
+//                 />
+//                 <span>{selectedCurrency.Currency}</span>
+//               </li>
+//             </div>
+//             <div
+//               className="currency-code-list-group"
+//               style={{ display: isOpen ? "block" : "none" }}
+//             >
+//               <ul className="currency-code-list currency-list-area">
+//                 {currencies.map((currency, index) => (
+//                   <li
+//                     key={index}
+//                     onClick={() =>
+//                       setSelectedCurrency(currency.code)
+//                     }
+//                   >
+//                     <img
+//                       alt={currency.code}
+//                       src={`https://img.c88rx.com/cx/h5/assets/images/flag/${currency.flag}.png?v=1737700422219&source=mcdsrc`}
+//                       loading="lazy"
+//                     />
+//                     <span>{currency.code}</span>
+//                   </li>
+//                 ))}
+//               </ul>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//     <div className=""></div>
+//   </div>
 
-                  //         <div className="input-group password">
-                  //           <div
-                  //             type="button"
-                  //             className={`eyes ${password ? "active" : "not"}`}
-                  //             onClick={togglePasswordVisibility}
-                  //           ></div>
-                  //           <label htmlFor="password">Password</label>
-                  //           <input
-                  //             type={isPasswordVisible ? "text" : "password"}
-                  //             id="password"
-                  //             name="password"
-                  //             placeholder="6-20 Characters and Numbers"
-                  //             value={password}
-                  //             onChange={handlePassword}
-                  //             className="input"
-                  //           />
-                  //           {password && (
-                  //             <input
-                  //               type="button"
-                  //               className={`clear ${password ? "active" : ""}`}
-                  //               onClick={handleClearPassword}
-                  //             />
-                  //           )}
-                  //         </div>
-                  //         {errorPassword && (
-                  //           <div className="error-message">
-                  //             <label>{errorPassword}</label>
-                  //           </div>
-                  //         )}
+//   <div className="entry_outlet">
+//     <form novalidate="" className="">
+//       <div className="menu-box">
+//         <div className="input-group">
+//           <label htmlFor="userId">Username</label>
+//           <input
+//             type="text"
+//             id="userId"
+//             name="userId"
+//             placeholder="4-15 char, allow numbers, no space"
+//             value={userId}
+//             onChange={handleUsername}
+//             className="input"
+//           />
+//           {userId && (
+//             <input
+//               type="button"
+//               className={`clear ${userId ? "active" : ""}`}
+//               onClick={handleClearUsername}
+//             />
+//           )}
+//         </div>
+//         {error && (
+//           <div className="error-message">
+//             <span>{error}</span>
+//           </div>
+//         )}
 
-                  //         <div className="input-group phone-number third-party-input-group-title">
-                  //           <label>Phone Number</label>
-                  //           <div className="input-wrap phone-wrap">
-                  //             <div className="phone-area-code">
-                  //               <div className="lang-select">
-                  //                 <button className="btn-select only">
-                  //                   <li>
-                  //                     <img
-                  //                       alt="BD"
-                  //                       src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1737700422219&source=mcdsrc"
-                  //                       loading="lazy"
-                  //                     />
-                  //                     <span>+880</span>
-                  //                   </li>
-                  //                 </button>
-                  //               </div>
-                  //             </div>
-                  //             <input
-                  //               type="tel"
-                  //               inputMode="tel"
-                  //               className="input invalid"
-                  //               placeholder="Phone Number"
-                  //               value={phoneNumber}
-                  //               onChange={handlePhoneNumberChange}
-                  //             />
-                  //             {phoneNumber && (
-                  //               <input
-                  //                 type="button"
-                  //                 className={`clear ${
-                  //                   phoneNumber ? "active" : ""
-                  //                 }`}
-                  //                 onClick={handleClearphoneNumber}
-                  //               />
-                  //             )}
-                  //             {/* <input className="clear" /> */}
-                  //           </div>
-                  //         </div>
-                  //         {errorNum && (
-                  //           <div className="error-message">
-                  //             <label>{errorNum}</label>
-                  //           </div>
-                  //         )}
-                  //         <div
-                  //           className={`button ${
-                  //             userId && password && phoneNumber > 1234567591
-                  //               ? "active"
-                  //               : "btn-disabled"
-                  //           }`}
-                  //           type="submit"
-                  //           onClick={() => handleSubmit()}
-                  //         >
-                  //           Sign Up
-                  //         </div>
-                  //       </div>
-                  //     </form>
+//         <div className="input-group password">
+//           <div
+//             type="button"
+//             className={`eyes ${password ? "active" : "not"}`}
+//             onClick={togglePasswordVisibility}
+//           ></div>
+//           <label htmlFor="password">Password</label>
+//           <input
+//             type={isPasswordVisible ? "text" : "password"}
+//             id="password"
+//             name="password"
+//             placeholder="6-20 Characters and Numbers"
+//             value={password}
+//             onChange={handlePassword}
+//             className="input"
+//           />
+//           {password && (
+//             <input
+//               type="button"
+//               className={`clear ${password ? "active" : ""}`}
+//               onClick={handleClearPassword}
+//             />
+//           )}
+//         </div>
+//         {errorPassword && (
+//           <div className="error-message">
+//             <label>{errorPassword}</label>
+//           </div>
+//         )}
 
-                  //     <p className="button-tips">
-                  //       <span className="">Already a member ?</span>
-                  //       <Link
-                  //         className=""
-                  //         onClick={() => openModal("LoginModel")}
-                  //       >
-                  //         Log in
-                  //       </Link>
-                  //     </p>
-                  //     <div className="ng-star-inserted">
-                  //       <p className="footer-tips ng-star-inserted">
-                  //         <span>
-                  //           Registering means you are over 18 years old, have
-                  //           read and agree to the
-                  //           <Link className="footer-tips ">
-                  //             Terms &amp; Conditions.
-                  //           </Link>
-                  //         </span>
-                  //       </p>
-                  //     </div>
-                  //   </div>
-                  // </div>
-                
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-    // </div>
-    // </mcd-popup-page>
+//         <div className="input-group phone-number third-party-input-group-title">
+//           <label>Phone Number</label>
+//           <div className="input-wrap phone-wrap">
+//             <div className="phone-area-code">
+//               <div className="lang-select">
+//                 <button className="btn-select only">
+//                   <li>
+//                     <img
+//                       alt="BD"
+//                       src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1737700422219&source=mcdsrc"
+//                       loading="lazy"
+//                     />
+//                     <span>+880</span>
+//                   </li>
+//                 </button>
+//               </div>
+//             </div>
+//             <input
+//               type="tel"
+//               inputMode="tel"
+//               className="input invalid"
+//               placeholder="Phone Number"
+//               value={phoneNumber}
+//               onChange={handlePhoneNumberChange}
+//             />
+//             {phoneNumber && (
+//               <input
+//                 type="button"
+//                 className={`clear ${
+//                   phoneNumber ? "active" : ""
+//                 }`}
+//                 onClick={handleClearphoneNumber}
+//               />
+//             )}
+//             {/* <input className="clear" /> */}
+//           </div>
+//         </div>
+//         {errorNum && (
+//           <div className="error-message">
+//             <label>{errorNum}</label>
+//           </div>
+//         )}
+//         <div
+//           className={`button ${
+//             userId && password && phoneNumber > 1234567591
+//               ? "active"
+//               : "btn-disabled"
+//           }`}
+//           type="submit"
+//           onClick={() => handleSubmit()}
+//         >
+//           Sign Up
+//         </div>
+//       </div>
+//     </form>
+
+//     <p className="button-tips">
+//       <span className="">Already a member ?</span>
+//       <Link
+//         className=""
+//         onClick={() => openModal("LoginModel")}
+//       >
+//         Log in
+//       </Link>
+//     </p>
+//     <div className="ng-star-inserted">
+//       <p className="footer-tips ng-star-inserted">
+//         <span>
+//           Registering means you are over 18 years old, have
+//           read and agree to the
+//           <Link className="footer-tips ">
+//             Terms &amp; Conditions.
+//           </Link>
+//         </span>
+//       </p>
+//     </div>
+//   </div>
+// </div>
+
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// </div>
+// </div>
+// </mcd-popup-page>

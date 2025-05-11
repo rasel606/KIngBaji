@@ -16,7 +16,7 @@ export default ({ modalName }) => {
 
   const { isAuthenticated, userDeatils, userId, token } = useAuth();
 
-  const { gateway_name, gateway_Number, payment_type, newAmount } = usePayNow();
+  const { gateway_name, gateway_Number, payment_type, newAmount,Payment } = usePayNow();
 
   const [timeRemaining, setTimeRemaining] = useState(900);
   const [transactionID, setTransactionID] = useState("");
@@ -74,7 +74,7 @@ export default ({ modalName }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/submitTransaction`,
+        `http://localhost:5000/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
@@ -159,10 +159,11 @@ export default ({ modalName }) => {
                                   className="custom-logo-img"
                                 />
                               </div>
+                              
                             </div>
                             <form className="custom-payment-form">
                               <p className="custom-instruction-text">
-                                {payment_type} to the account below and fill in
+                                {Payment?.payment_type} to the account below and fill in
                                 the required information
                                 <br />
                               </p>
@@ -181,6 +182,21 @@ export default ({ modalName }) => {
                                     className="custom-form-input"
                                     placeholder={newAmount}
                                     value={newAmount}
+                                  />
+                                  <ImCopy className="custom-input-icon" />
+                                </div>
+                              </div>
+                              <div className="custom-form-group">
+                                <label className="custom-form-label">
+                                  Your Process system
+                                </label>
+                                <div className="custom-input-container">
+                                  <input
+                                    type="text"
+                                    disabled
+                                    className="custom-form-input"
+                                    placeholder={Payment?.payment_type}
+                                    value={Payment?.payment_type}
                                   />
                                   <ImCopy className="custom-input-icon" />
                                 </div>

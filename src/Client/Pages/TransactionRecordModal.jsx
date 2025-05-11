@@ -7,36 +7,62 @@ export default ({ modalName }) => {
   const { activeModal, closeModal } = useModal();
   const { userId,userDeatils } = useAuth();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    status: [],
-    paymentType: [],
-    date: "today",
-  });
+ 
   const [transactions, setTransactions] = useState([]);
 
-  const statusOptions = ["Processing", "Rejected", "Approved"];
-  const paymentTypeOptions = ["Deposit", "Withdrawal", "Adjustment"];
-  const dateOptions = ["today", "yesterday", "last7Days"];
+  const statusOptions = [
+    { label: "Processing", value: 0 },
+    { label: "Approved", value: 1 },
+    { label: "Rejected", value: 2 }
+  ];
+  const paymentTypeOptions = [
+    { label: "Deposit", value: 0 },
+    { label: "Withdrawal", value: 1 },
+    { label: "Adjustment", value: 2 }
+  ];
+  const dateOptions = [
+    { label: "Today", value: "today" },
+    { label: "Yesterday", value: "yesterday" },
+    { label: "Last 7 Days", value: "last7days" } // Match backend's 'last7days'
+  ];
 
   // const [activeTab, setActiveTab] = useState("Today");
-  const tabs = ["Today", "Yesterday", "This Week"];
 
-  const handleFilterChange = (type, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [type]: prev[type].includes(value)
-        ? prev[type].filter((item) => item !== value)
-        : [...prev[type], value],
-    }));
+
+  const [filters, setFilters] = useState({
+    status: [0],
+    type: [0],
+    date: "today",
+  });
+
+
+  console.log(filters);
+  const handleFilterChange = (filterType, value) => {
+    setFilters(prev => {
+      if (filterType === "date") {
+        return { ...prev, date: value };
+      }
+      
+      // Toggle array values for multi-select
+      return {
+        ...prev,
+        [filterType]: prev[filterType].includes(value)
+          ? prev[filterType].filter(v => v !== value)
+          : [...prev[filterType], value]
+      };
+    });
   };
-
+  const tabs = [filters.date];
   const fetchTransactions = async () => {
     try {
+      console.log(filters)
       const response = await searchTransactionsbyUserId({
+        params:{
         userId,
         filters,
-      });
-      console.log(response.data);
+        
+      }});
+      console.log(response.data.data);
       setTransactions(response.data.data || []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
@@ -53,35 +79,14 @@ export default ({ modalName }) => {
   const [activeTab, setActiveTab] = useState("timeline");
   const [showDetails, setShowDetails] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [showFilter, setShowFilter] = useState(false);
+
   const handleTransactionClick = (transaction) => {
     setSelectedTransaction(transaction);
     setShowDetails(true);
   };
-  const toggleFilter = () => {
-    setShowFilter(!showFilter);
-  };
-  const handleStatusChange = (status) => {
-    setFilters((prev) => ({
-      ...prev,
-      status: prev.status.includes(status)
-        ? prev.status.filter((s) => s !== status)
-        : [...prev.status, status],
-    }));
-  };
 
-  const handlePaymentTypeChange = (type) => {
-    setFilters((prev) => ({
-      ...prev,
-      paymentType: prev.paymentType.includes(type)
-        ? prev.paymentType.filter((t) => t !== type)
-        : [...prev.paymentType, type],
-    }));
-  };
 
-  const handleDateChange = (date) => {
-    setFilters((prev) => ({ ...prev, date }));
-  };
+
 
   if (activeModal !== modalName) return null;
 
@@ -122,8 +127,8 @@ export default ({ modalName }) => {
                     title="লেনদেন প্রকার"
                     type="checkbox"
                     options={paymentTypeOptions}
-                    selected={filters.paymentType}
-                    onChange={(val) => handleFilterChange("paymentType", val)}
+                    selected={filters.type}
+                    onChange={(val) => handleFilterChange("type", val)}
                   />
 
                   <FilterGroup
@@ -215,11 +220,13 @@ export default ({ modalName }) => {
                         >
                           {console.log(tx.type)}
                           <div className="tags">
-                            {tx.type === 0
-                              ? "Deposit"
-                              : tx.type === 1
-                              ? "Withdrawal"
-                              : "transfer"}
+                            {tx.status === 0
+                              ? "pending"
+                              : parseInt(tx.type) === 1
+                              ? "accepted"
+                              : parseInt(tx.type) === 2
+                              ? "rejected"
+                              : "adjustment"}
                           </div>
                         </div>
                         <div className="item time">
@@ -548,17 +555,21 @@ const FilterGroup = ({ title, type, options, selected, onChange }) => (
   <div className="search-checkbox-group">
     <h2>{title}</h2>
     <ul>
-      {options.map((option) => (
-        <li key={option}>
+    {options.map((option) => (
+        <li key={option.value} onClick={() => onChange(option.value)}> 
+        {/* Use value as key */}
           <input
             type={type}
             name={title}
             checked={
-              type === "radio" ? selected === option : selected.includes(option)
+              type === "radio" 
+                ? selected === option.value 
+                : selected.includes(option.value)
             }
-            onChange={() => onChange(option)}
+            
           />
-          <label>{option}</label>
+          <label > 
+          {option.label}</label>  {/* Render label property */}
         </li>
       ))}
     </ul>

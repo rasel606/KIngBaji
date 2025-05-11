@@ -80,6 +80,7 @@ export default ({ modalName }) => {
     setGateway_name,
     setGateway_Number,
     setPayment_type,
+    Payment, setPayment
   } = usePayNow();
 
   const [paymentMethods, setpaymentMethods] = useState([]);
@@ -91,8 +92,8 @@ export default ({ modalName }) => {
   const [isVerified, setIsVerified] = useState(true);
   const [selectedPaymentAmount, setSelectedPaymentAmount] = useState(0);
   // const [updatedAmount, setUpdatedAmount] = useState(0);
-  const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
-
+  // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
+console.log(Payment)
 
   console.log(selectedPaymentAmount);
   const handelAmount = (blance) => {
@@ -103,22 +104,7 @@ export default ({ modalName }) => {
   };
 
   console.log(payment_type);
-  useEffect(() => {
-    if (paymentMethods.length > 0) {
-      // setPayment(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
-      setGateway_name(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
-    }
-  }, [paymentMethods]);
-  useEffect(() => {
-    if (paymentMethods.length > 0) {
-      setGateway_Number( Payment === null? paymentMethods[0]?.gateway_Number: Payment?.gateway_Number);
-    }
-  }, [paymentMethods]);
-  useEffect(() => {
-    if (paymentMethods .length>0) {
-      setPayment_type( Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type );
-    }
-  }, [paymentMethods]);
+
   useEffect(() => {
     // Fetch gateway list from backend on component mount
     const fetchGateways = async () => {
@@ -135,8 +121,13 @@ export default ({ modalName }) => {
         console.error("Error fetching gateways:", error);
       }
     };
-    fetchGateways();
-  }, [userDeatils.userId, token]);
+    
+
+
+    if (activeModal === modalName) {
+      fetchGateways();
+    }
+  }, [userDeatils.userId, token ,modalName ]);
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const handleChangeAmount = (e) => {
@@ -156,11 +147,50 @@ export default ({ modalName }) => {
  
   console.log(newAmount);
 
-  setGateway_name(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
-  setGateway_Number( Payment === null? paymentMethods[0]?.gateway_Number: Payment?.gateway_Number);
-  setPayment_type( Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type );
+  setGateway_name( paymentMethods[0]?.gateway_name);
+  setGateway_Number( paymentMethods[0]?.gateway_Number);
+  setPayment_type( paymentMethods[0]?.payment_type );
   // referredbyCode: userDeatils.referredbyCode
+  useEffect(() => {
+    if (paymentMethods.length > 0) {
+      // setPayment(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
+      if (activeModal === modalName) {
+        setGateway_name(paymentMethods[0]?.gateway_name);
+      }
+      
+    }
+  }, [paymentMethods]);
 
+
+
+
+
+  useEffect(() => {
+    if (paymentMethods.length > 0) {
+      setGateway_Number( paymentMethods[0]?.gateway_Number);
+    }
+  }, [paymentMethods,modalName]);
+
+
+
+  useEffect(() => {
+    if (paymentMethods.length) {
+      setPayment( paymentMethods[0]);
+    }
+  }, [paymentMethods,modalName]);
+
+
+
+  useEffect(() => {
+    if (paymentMethods .length>0) {
+      setPayment_type(  paymentMethods[0]?.payment_type );
+    }
+  }, [paymentMethods,modalName]);
+
+
+
+
+  
   const navigate = useNavigate();
   console.log(gateway_name)
   console.log(payment_type)

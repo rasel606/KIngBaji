@@ -22,12 +22,36 @@ export default ({ modalName }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [ShowSuccess, setShowSuccess] = useState(false);
 
-  const handleSubmit =async () => {
+  const validateInput = (value) => {
+    const min = "1234567890"; // 3 characters
+    const max = "1234567890"; // 12 characters
+
+    if (value.length < min.length) {
+      // setErrorNum("Phone Number Invalid");
+    } else if (value.length > max.length) {
+      // setErrorNum("Phone Number Invalid");
+    } else {
+      // setErrorNum(""); // Clear message when valid
+    }
+
+    return value;
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ""); // Only allow numbers
+    if (value.length > 11) {
+      // setErrorNum("Phone number must be 11 digits.");
+    }
+    setPhone(validateInput(value));
+  };
+
+  const handleSubmit = async () => {
     // e.preventDefault(); // optional if form used
     // if (!phone.trim()) {
     //   alert("অনুগ্রহ করে সঠিক ফোন নম্বর লিখুন।");
     //   return;
     // }
+
     const payload = {
       userId: userId,
       phone: {
@@ -71,12 +95,65 @@ export default ({ modalName }) => {
           <div className="popup-page-main__container">
             <div className="content member-content new-login third-party-login">
               <div className="content player-content">
-                <div className="content player-content">
-                  <form className="">
-                    <div className="menu-box">
-                      <div className="input-group">
-                        <label>Phone</label>
-                        <input
+                <div className="menu-box">
+                  <div className="input-group">
+                    <label>Phone</label>
+                    <div className="input-wrap phone-wrap">
+                      <div className="phone-area-code">
+                        <div className="lang-select">
+                          <button className="btn-select only">
+                            <li>
+                              <img
+                                alt={userDeatils.phone.country_code}
+                                src={`https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1737700422219&source=mcdsrc`}
+                                loading="lazy"
+                              />
+                              <span>
+                                {userDeatils.countryCode}{" "}
+                                {console.log(userDeatils.countryCode)}{" "}
+                              </span>
+                            </li>
+                          </button>
+                        </div>
+                      </div>
+
+                      <input
+                        type="number"
+                        inputMode="tel"
+                        className="input"
+                        placeholder="ফোন নাম্বার"
+                        value={phone}
+                        onChange={handlePhoneNumberChange}
+                      />
+                    </div>
+                    {phone && (
+                      <input className="clear" onClick={() => setPhone("")} />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div
+                className={`button ${
+                  phone || userDeatils.phone[0].number ? "btn" : "btn-disabled"
+                }`}
+                onClick={() => handleSubmit()}
+              >
+                <a>Send verificatin code</a>
+              </div>
+              <p className="button-tips player">
+              For your privacy, the information cannot be modified after confirmation.If you need help, please contact {" "}
+                <i>Customer Service.</i>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+{
+  /* <input
                           type="text"
                           className="input "
                           placeholder="Your phone number ..."
@@ -124,12 +201,5 @@ export default ({ modalName }) => {
                       </div>
                     </div>
                   )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+                </div>  */
+}

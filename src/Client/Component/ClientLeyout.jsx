@@ -54,17 +54,7 @@ import AddMobileNumberModel from "../Pages/AddMobileNumberModel";
 export default () => {
 
 
-  // const [isOpen, setIsOpen] = useState(false);
-  // const [isOpenProfile, setIsOpenProfile] = useState(false);
-  // const [selectedCurrency, setSelectedCurrency] = useState(currencyList[0]);
-  // const [isIsDepositModal, setIsDepositModal] = useState(false);
-
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
-  // const [isMyProfileModal, setIsMyProfileModal] = useState(false);
-  // const [isProfileModal, setIsProfileModal] = useState(false);
-
-  // const { openModal } = useContext()
+const { modal, setModal } = useModal();
   const user = false;
   const { activeModal, openModal, closeModal } = useModal();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
@@ -92,150 +82,35 @@ export default () => {
     }
   }, []);
 
-  //  useEffect(() => {
-  //   if (isSignedUp) {
-  //     closeModal("SignUpModal");
-  //   }
-  // }, [isSignedUp, closeModal]);
 
-  const onLogout = () => {
-    // removeSessions();
-  };
 
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     // Reset menu states when closing
+    // setShowSecondMenu(false);
     if (!isMenuOpen) {
       setActiveCategory("");
       setShowSecondMenu(true);
     }
   };
   return (
-    <>
+    <div>
 
 
 
 
 
       {isMobile ? (
-        <div >
+        <div className="app-container">
          
-         
-         <div className="toolbar">
-         <HeaderGroup toggleMenu={toggleMenu} isMenuOpen={isMenuOpen}  ></HeaderGroup>
-         <ProfileModel modalName="ProfileModel"></ProfileModel>
-          {isAuthenticated ? (
-            <>
-              
-            
-              <ul>
-                <li className="home active">
-                  <Link to={"/"}>
-                    <img
-                      className="item-icon"
-                      style={{
-                        display: "flex",
-                      }}
-                      src={
-                        "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-home.svg?v=1736240945415"
-                      }
-                      alt=""
-                    />
-
-                    <p>Home</p>
-                  </Link>
-                </li>
-
-                <li className="home active">
-                  <Link>
-                    <img
-                      className="item-icon"
-                      style={{
-                        display: "flex",
-                      }}
-                      src={
-                        "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-promotion.svg?v=1736849889723"
-                      }
-                      alt=""
-                    />
-
-                    <p>Promotions</p>
-                  </Link>
-                </li>
-                <li
-                  className="home active"
-                  onClick={() => openModal("DepositModel")}
-                >
-                  <Link>
-                    <img
-                      className="item-icon"
-                      style={{
-                        display: "flex",
-                      }}
-                      src={
-                        "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-deposit.svg?v=1736849889723"
-                      }
-                      alt=""
-                    />
-
-                    <p>Deposit</p>
-                  </Link>
-                </li>
-                <li className="home active" onClick={() => openModal("ProfileModel")}>
-                  <Link>
-                    <span
-                      className="item-icon"
-                      style={{
-                        display: "block",
-                        backgroundImage: `url("https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-mine.svg?v=1736240945415")`,
-                        opacity: "1",
-                      }}
-                      alt=""
-                    />
-
-                    <p>Account</p>
-                  </Link>
-                </li>
-              </ul>
-            </>
-          ) : (
-
-            
-            <div className="beforelogin havelanguage" >
-              <div className="language-select" onClick={() => openModal("CurrencyLanguageSelector")}>
-                <img
-                  src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1736240945415&source=mcdsrc"
-                  alt=""
-                />
-                <div>
-                  <p>ENGLISH</p>
-                  <p>বাংলা</p>
-                </div>
-              </div>
-              <div
-                className="register-button"
-                onClick={() => openModal("SingUpModal")}
-              >
-                <p>Sign Up</p>
-              </div>
-              <div
-                className="login-button"
-                onClick={() => openModal("LoginModel")}
-              >
-                <p>Login</p>
-              </div>
-            </div>
-          )}
-
-          {/* ========================================= */}
-        <MyProfilemodal modalName="modal2"></MyProfilemodal>
-        {/* ========================================= */}
-        </div>
-        </div>
-      ) : (
-        <div>This is the desktop version</div>
-      )}
+         <HeaderGroup isMenuOpen={isMenuOpen}
+  toggleMenu={() => setIsMenuOpen(!isMenuOpen)}
+  showSecondMenu={showSecondMenu}
+  setShowSecondMenu={setShowSecondMenu}
+  activeCategory={activeCategory}
+  setIsMenuOpen={setIsMenuOpen} ></HeaderGroup>
+        
 
       {/* <div className="side-bar-item">
         <img
@@ -247,7 +122,7 @@ export default () => {
 
       
       
-      <div style={{ marginTop: "40px" }}>
+      <div style={{ marginTop: "40px" }} onClick={()=>toggleMenu()}>
         <Outlet />
         
       </div>
@@ -299,10 +174,10 @@ export default () => {
         {/* ========================================= */}  
         <VipGiftPointsPopupModel modalName="VipGiftPointsPopupModel" ></VipGiftPointsPopupModel>
 
-
+        <ProfileModel modalName="ProfileModel"></ProfileModel>
         {/* ========================================= */}
         <LoginModel modalName="LoginModel"></LoginModel>
-
+        <MyProfilemodal modalName="modal2"></MyProfilemodal>
         
      
         <SingUpModal modalName="SingUpModal"></SingUpModal>
@@ -314,8 +189,121 @@ export default () => {
 
         <SideNavPopUp modalName="SideNavPopUp"></SideNavPopUp>
       </div>
+      <div className="toolbar">
+         
+         
+         {isAuthenticated ? (
+           <>
+             
+           
+             <ul>
+               <li className="home active">
+                 <Link to={"/"}>
+                   <img
+                     className="item-icon"
+                     style={{
+                       display: "flex",
+                     }}
+                     src={
+                       "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-home.svg?v=1736240945415"
+                     }
+                     alt=""
+                   />
 
+                   <p>Home</p>
+                 </Link>
+               </li>
+
+               <li className="home active">
+                 <Link>
+                   <img
+                     className="item-icon"
+                     style={{
+                       display: "flex",
+                     }}
+                     src={
+                       "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-promotion.svg?v=1736849889723"
+                     }
+                     alt=""
+                   />
+
+                   <p>Promotions</p>
+                 </Link>
+               </li>
+               <li
+                 className="home active"
+                 onClick={() => openModal("DepositModel")}
+               >
+                 <Link>
+                   <img
+                     className="item-icon"
+                     style={{
+                       display: "flex",
+                     }}
+                     src={
+                       "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-deposit.svg?v=1736849889723"
+                     }
+                     alt=""
+                   />
+
+                   <p>Deposit</p>
+                 </Link>
+               </li>
+               <li className="home active" onClick={() => openModal("ProfileModel")}>
+                 <Link>
+                   <span
+                     className="item-icon"
+                     style={{
+                       display: "block",
+                       backgroundImage: `url("https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-mine.svg?v=1736240945415")`,
+                       opacity: "1",
+                     }}
+                     alt=""
+                   />
+
+                   <p>Account</p>
+                 </Link>
+               </li>
+             </ul>
+           </>
+         ) : (
+
+           
+           <div className="beforelogin havelanguage" >
+             <div className="language-select" onClick={() => openModal("CurrencyLanguageSelector")}>
+               <img
+                 src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1736240945415&source=mcdsrc"
+                 alt=""
+               />
+               <div>
+                 <p>ENGLISH</p>
+                 <p>বাংলা</p>
+               </div>
+             </div>
+             <div
+               className="register-button"
+               onClick={() => openModal("SingUpModal")}
+             >
+               <p>Sign Up</p>
+             </div>
+             <div
+               className="login-button"
+               onClick={() => openModal("LoginModel")}
+             >
+               <p>Login</p>
+             </div>
+           </div>
+         )}
+
+         {/* ========================================= */}
+       
+       {/* ========================================= */}
+       </div>
+       </div>
+     ) : (
+       <div>This is the desktop version</div>
+     )}
       
-    </>
+    </div>
   );
 };

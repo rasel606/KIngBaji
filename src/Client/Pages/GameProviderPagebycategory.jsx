@@ -122,7 +122,7 @@ export default () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://api.kingbaji.live/api/v1/New-table-Games-with-Providers?category=${category_name}`,
+          `http://localhost:5000/api/v1/New-table-Games-with-Providers?category=${category_name}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -155,7 +155,7 @@ export default () => {
 
     try {
       const res = await fetch(
-        `https://api.kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ""}&p_type=${categories}&page=${page}`
+        `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ""}&p_type=${categories}&page=${page}`
       );
       const result = await res.json();
 
@@ -204,7 +204,7 @@ export default () => {
     try {
       if(userId)
         {const response = await fetch(
-        "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+        "http://localhost:5000/api/v1/launch_gamePlayer",
         {
           method: "POST",
           headers: {
@@ -250,7 +250,7 @@ export default () => {
       await handelUserDetails(userId);
       // if(userId){
         const response = await axios.post(
-          "https://api.kingbaji.live/api/v1/user_balance",
+          "http://localhost:5000/api/v1/user_balance",
           { userId }
         );
         setBalance(response.data.balance);
@@ -324,9 +324,9 @@ export default () => {
           </div>
         </div>
       </div>
-<Footer></Footer>
+{/* <Footer></Footer> */}
       {showPopup && playGameData?.gameUrl && (
-        <ProtectedRoute>
+
         <div className="popup-page-wrapper active" onClick={handleClosePopup}>
           <div
             className="popup-page show-toolbar popup-page--active popup-page--align-top"
@@ -352,8 +352,36 @@ export default () => {
             </div>
           </div>
         </div>
-        </ProtectedRoute>
+   
       )}
     </div>
   );
 };
+
+
+
+{/* <div className="popup-page-wrapper active" onClick={handleClosePopup}>
+          <div
+            className="popup-page show-toolbar popup-page--active popup-page--align-top"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="popup-page__main popup-page-main popup-page-main--show">
+              <div className="popup-page-main__header new-login-tab">
+                <div className="popup-page-main__title">KingBaji</div>
+                <div
+                  className="popup-page-main__close"
+                  onClick={handleClosePopup}
+                ></div>
+              </div>
+              <div className="popup-page-main__container">
+                <iframe
+                  src={playGameData.gameUrl}
+                  title="Game"
+                  width="100%"
+                  height="100%"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div> */}

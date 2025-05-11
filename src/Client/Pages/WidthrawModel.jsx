@@ -110,7 +110,7 @@ export default ({ modalName }) => {
   const [PaymentAct, setPaymentAct] = useState("");
   const [selectedPhone, setSelectedPhone] = useState("");
   const [Mood, setMood] = useState(); //paymentMethods[0]
-  const [isVerified, setIsVerified] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
   // let selectedPaymentAmount =0
   const handelAmount = (blance) => {
     setUpdatedAmount(parseInt(blance));
@@ -183,7 +183,7 @@ export default ({ modalName }) => {
     }
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
+        `http://localhost:5000/api/v1/widthdraw_with_transaction`,
         {
           userId: userDeatils.userId,
           gateway_name:Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name,
@@ -476,7 +476,7 @@ export default ({ modalName }) => {
                               <div className="select-card">
                                 <div className="select-card-inner">
                                   <div className="card-number">
-                                    {userDeatils.phone[0].number}
+                                    0{userDeatils.phone[0].number}
                                   </div>
                                 </div>
                               </div>
