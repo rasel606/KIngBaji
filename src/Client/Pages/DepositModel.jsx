@@ -147,9 +147,9 @@ console.log(Payment)
  
   console.log(newAmount);
 
-  setGateway_name( paymentMethods[0]?.gateway_name);
-  setGateway_Number( paymentMethods[0]?.gateway_Number);
-  setPayment_type( paymentMethods[0]?.payment_type );
+  setGateway_name( Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
+  setGateway_Number(Payment === null ? paymentMethods[0]?.gateway_Number : Payment?.gateway_Number);
+  setPayment_type(Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type);
   // referredbyCode: userDeatils.referredbyCode
   useEffect(() => {
     if (paymentMethods.length > 0) {
@@ -175,7 +175,7 @@ console.log(Payment)
 
   useEffect(() => {
     if (paymentMethods.length) {
-      setPayment( paymentMethods[0]);
+      setPayment( Payment.length === null ?paymentMethods[0] : Payment);
     }
   }, [paymentMethods,modalName]);
 

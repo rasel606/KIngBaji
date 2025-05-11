@@ -15,6 +15,8 @@ export default ({ modalName }) => {
   const [canClaimBonus, setCanClaimBonus] = useState(false);
   const [claimableBonus, setClaimableBonus] = useState(0);
 
+  console.log(userDeatils);
+
   const invitationCode = `${userDeatils.referralCode}`;
   const invitationUrl = `http://localhost:3000/?ref=${userDeatils.referralCode}`;
   const [showBonusDetails, setShowBonusDetails] = useState(false);
