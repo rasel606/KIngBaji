@@ -26,9 +26,8 @@ export default ({
   const handleItemClick = (index, item) => {
     setActiveIndex(index);
     setActive(item);
-    
   };
-  console.log("item",data[0]?.category.uniqueProviders);
+  console.log("item", data[0]?.category);
   // const toggleMenu = () => {
   //   setIsMenuOpen(!isMenuOpen);
   //   // Reset menu states when closing
@@ -45,7 +44,7 @@ export default ({
 
   useEffect(() => {
     setLoading(true);
-    const url = "http://localhost:5000/api/v1/New-table-categories";
+    const url = "https://api.kingbaji.live/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -60,11 +59,6 @@ export default ({
         console.log("data", data);
       });
   }, []);
-
-  useEffect(() => {
-    // console.log("activeCat", active);
-    setActive([])
-  }, [active,data]);
 
   console.log("activeCat", active);
 
@@ -86,7 +80,6 @@ export default ({
           </ul>
         </div>
       </div>
-
       <div className="header-title"></div>
       <div
         className="logo"
@@ -96,9 +89,9 @@ export default ({
             "url(https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png)",
         }}
       ></div>
-.
-        <div className="cdk-overlay-container" onChange={()=>toggleMenu()}>
-      {/* {isMenuOpen && ( */}
+      .
+      <div className="cdk-overlay-container" onChange={() => toggleMenu()}>
+        {isMenuOpen && (
           <div className="cdk-overlay-backdrop dialog-backdrop cdk-overlay-backdrop-showing">
             <div
               className="cdk-global-overlay-wrapper"
@@ -174,7 +167,7 @@ export default ({
                                     "url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-promotion.png?v=1725363175075)",
                                 }}
                               ></span>
-                              <a href="/bd/bn/promotion">প্রমোশন</a>
+                              <a>প্রমোশন</a>
                             </li>
                           </ul>
 
@@ -210,8 +203,8 @@ export default ({
                           </div>
                         </div>
 
-                        {/* {showSecondMenu && active && ( */}
-                          <div className={isMenuOpen ? "menu-second-ul active" : "menu-second-ul"}>
+                        {showSecondMenu && active && (
+                          <div className="menu-second-ul active">
                             <div className="menu-second-header">
                               <button
                                 className="back-button"
@@ -220,7 +213,7 @@ export default ({
                                 Back
                               </button>
                               <h3>
-                                {
+                                {/* {
                                   data.find(
                                     (cat) =>
                                       cat?.uniqueProviders ===
@@ -238,42 +231,43 @@ export default ({
                                         active.category?.name
                                     )?.category?.name
                                   )                                    
-}
+} */}
                               </h3>
                             </div>
-                            <ul className={isMenuOpen ? "menu-second-ul active" : "menu-second-ul"}>
-                              {active?.uniqueProviders && active?.uniqueProviders.map((provider) => (
-                                <li key={provider.id}>
-                                  <Link
-                                    onClick={toggleMenu}
-                                    to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
-                                      active.name
-                                    )}/${encodeURIComponent(
-                                      provider.providercode
-                                    )}`}
-                                  >
-                                    {console.log("provider", provider)}
-                                    <img
-                                      alt={`provider-${provider.id}`}
-                                      src={provider.url}
-                                      loading="lazy"
-                                    />
-                                    <p>{provider.company}</p>
-                                  </Link>
-                                </li>
-                              ))}
+                            <ul className="menu-second-ul">
+                              {active?.uniqueProviders &&
+                                active?.uniqueProviders.map((provider) => (
+                                  <li key={provider.id}>
+                                    <Link
+                                      onClick={toggleMenu}
+                                      to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
+                                        active.name
+                                      )}/${encodeURIComponent(
+                                        provider.providercode
+                                      )}`}
+                                    >
+                                      {console.log("provider", provider)}
+                                      <img
+                                        alt={`provider-${provider.id}`}
+                                        src={provider.url}
+                                        loading="lazy"
+                                      />
+                                      <p>{provider.company}</p>
+                                    </Link>
+                                  </li>
+                                ))}
                             </ul>
                           </div>
-                        {/* )} */}
+                        )}
                       </div>
                     )}
-                    <div class="menu-mask ng-trigger-popBgTriggerAni ng-star-inserted" style={{ display: isMenuOpen? "block": "none"}}></div>
+                    {/* <div class="menu-mask ng-trigger-popBgTriggerAni ng-star-inserted" style={{ display: isMenuOpen? "block": "none"}}></div> */}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-      {/* )} */}
+        )}
       </div>
     </header>
   );
