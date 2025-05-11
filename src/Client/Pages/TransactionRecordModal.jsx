@@ -5,29 +5,28 @@ import { useAuth } from "../Component/AuthContext";
 
 export default ({ modalName }) => {
   const { activeModal, closeModal } = useModal();
-  const { userId,userDeatils } = useAuth();
+  const { userId, userDeatils } = useAuth();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
- 
+
   const [transactions, setTransactions] = useState([]);
 
   const statusOptions = [
     { label: "Processing", value: 0 },
     { label: "Approved", value: 1 },
-    { label: "Rejected", value: 2 }
+    { label: "Rejected", value: 2 },
   ];
   const paymentTypeOptions = [
     { label: "Deposit", value: 0 },
     { label: "Withdrawal", value: 1 },
-    { label: "Adjustment", value: 2 }
+    { label: "Adjustment", value: 2 },
   ];
   const dateOptions = [
     { label: "Today", value: "today" },
     { label: "Yesterday", value: "yesterday" },
-    { label: "Last 7 Days", value: "last7days" } // Match backend's 'last7days'
+    { label: "Last 7 Days", value: "last7days" }, // Match backend's 'last7days'
   ];
 
   // const [activeTab, setActiveTab] = useState("Today");
-
 
   const [filters, setFilters] = useState({
     status: [0],
@@ -35,33 +34,32 @@ export default ({ modalName }) => {
     date: "today",
   });
 
-
   console.log(filters);
   const handleFilterChange = (filterType, value) => {
-    setFilters(prev => {
+    setFilters((prev) => {
       if (filterType === "date") {
         return { ...prev, date: value };
       }
-      
+
       // Toggle array values for multi-select
       return {
         ...prev,
         [filterType]: prev[filterType].includes(value)
-          ? prev[filterType].filter(v => v !== value)
-          : [...prev[filterType], value]
+          ? prev[filterType].filter((v) => v !== value)
+          : [...prev[filterType], value],
       };
     });
   };
   const tabs = [filters.date];
   const fetchTransactions = async () => {
     try {
-      console.log(filters)
+      console.log(filters);
       const response = await searchTransactionsbyUserId({
-        params:{
-        userId,
-        filters,
-        
-      }});
+        params: {
+          userId,
+          filters,
+        },
+      });
       console.log(response.data.data);
       setTransactions(response.data.data || []);
     } catch (error) {
@@ -84,9 +82,6 @@ export default ({ modalName }) => {
     setSelectedTransaction(transaction);
     setShowDetails(true);
   };
-
-
-
 
   if (activeModal !== modalName) return null;
 
@@ -138,6 +133,9 @@ export default ({ modalName }) => {
                     selected={filters.date}
                     onChange={(val) => handleFilterChange("date", val)}
                   />
+                  <div class="searchpage-bar active" onClick={()=>setIsFilterOpen(false)}>
+                    <button class="button"> Confirm </button>
+                  </div>
                 </div>
 
                 <div className="searchpage-bar">
@@ -555,21 +553,19 @@ const FilterGroup = ({ title, type, options, selected, onChange }) => (
   <div className="search-checkbox-group">
     <h2>{title}</h2>
     <ul>
-    {options.map((option) => (
-        <li key={option.value} onClick={() => onChange(option.value)}> 
-        {/* Use value as key */}
+      {options.map((option) => (
+        <li key={option.value} onClick={() => onChange(option.value)}>
+          {/* Use value as key */}
           <input
             type={type}
             name={title}
             checked={
-              type === "radio" 
-                ? selected === option.value 
+              type === "radio"
+                ? selected === option.value
                 : selected.includes(option.value)
             }
-            
           />
-          <label > 
-          {option.label}</label>  {/* Render label property */}
+          <label>{option.label}</label> {/* Render label property */}
         </li>
       ))}
     </ul>
