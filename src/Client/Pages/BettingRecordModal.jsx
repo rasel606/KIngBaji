@@ -57,23 +57,17 @@ export default ({ modalName }) => {
   const GetBettingHistor = async () => {
     try {
       const response = await GetBettingHistoryByMember({
-        params:{
-        userId,
-        filters,
-        
-      }});
-      console.log(response.data.data);
+          userId,
+          filters,
+      });
+      console.log(response.data);
       setRecords(response.data.data || []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
       setRecords([]);
     }
   };
-  useEffect(() => {
-    if (activeModal === modalName) {
-      GetBettingHistor();
-    }
-  }, [activeModal, userId, filters]);
+
 
   useEffect(() => {
     if (activeModal === modalName) {
@@ -123,11 +117,7 @@ export default ({ modalName }) => {
   const gameTypes = selectedGameTypes;
   // console.log(platforms);
 
-  useEffect(() => {
-    if (activeModal === modalName) {
-      GetBettingHistor();
-    }
-  }, [activeModal, filters, userId]);
+
 
   if (activeModal !== modalName) return null;
   // Sample data
@@ -233,8 +223,11 @@ export default ({ modalName }) => {
                     selected={filters.date}
                     onChange={(val) => handleFilterChange("date", val)}
                   />
-                  <div class="searchpage-bar active" onClick={()=>setIsFilterOpen(false)}>
-                    <button class="button"> Confirm </button>
+                  <div
+                    className="searchpage-bar active"
+                    onClick={() => setIsFilterOpen(false)}
+                  >
+                    <button className="button"> Confirm </button>
                   </div>
                 </div>
 
@@ -406,7 +399,7 @@ export default ({ modalName }) => {
                     <div className="list-content">
                       <ul>
                         {console.log(selectedRecord)}
-                        {selectedRecord?.bets?.map((betTxnRecord, index) => (
+                        {selectedRecord?.records?.map((betTxnRecord, index) => (
                           <li
                             key={index}
                             className="betting-record-list record-item settled"
@@ -458,16 +451,13 @@ export default ({ modalName }) => {
   );
 };
 
-
-
 const FilterGroup = ({ title, type, options, selected, onChange }) => (
   <div className="search-checkbox-group">
-
     <h2>{title}</h2>
     <ul>
-    {options.map((option) => (
-        <li key={option.value} onClick={() => onChange(option.label)}>
-        {/* Use value as key */}
+      {options.map((option) => (
+        <li key={option.value} onClick={() => onChange(option.value)}>
+          {/* Use value as key */}
           <input
             type={type}
             name={title}
@@ -476,14 +466,10 @@ const FilterGroup = ({ title, type, options, selected, onChange }) => (
                 ? selected === option.label
                 : selected.includes(option.label)
             }
-
           />
-          <label >
-          {option.label}</label>  {/* Render label property */}
+          <label>{option.label}</label> {/* Render label property */}
         </li>
       ))}
     </ul>
   </div>
-
 );
-

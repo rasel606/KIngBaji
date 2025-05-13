@@ -55,10 +55,10 @@ export default ({ modalName }) => {
     try {
       console.log(filters);
       const response = await searchTransactionsbyUserId({
-        params: {
+       
           userId,
           filters,
-        },
+        
       });
       console.log(response.data.data);
       setTransactions(response.data.data || []);
