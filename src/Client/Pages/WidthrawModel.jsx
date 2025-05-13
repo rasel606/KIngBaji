@@ -5,6 +5,7 @@ import { useAuth } from "../Component/AuthContext";
 import { GatWaySystem } from "../Component/Axios-API-Service/AxiosAPIService";
 import { usePayNow } from "../PaymentContext/PaymenyContext";
 import axios from "axios";
+import { useWidthrowNow } from "../PaymentContext/WidthrawPaymentContext";
 
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
@@ -90,11 +91,13 @@ export default ({ modalName }) => {
     gateway_name,
     gateway_Number,
     payment_type,
-    newAmount, setNewAmountPay,
+    newWidthrowAmount,
+       setNewWidthrowAmountPay,
+    // newAmount, setNewAmountPay,
     setGateway_name,
     setGateway_Number,
     setPayment_type,
-  } = usePayNow();
+  } = useWidthrowNow();
 
   const [paymentMethods, setpaymentMethods] = useState([]);
 
@@ -116,8 +119,16 @@ export default ({ modalName }) => {
     setUpdatedAmount(parseInt(blance));
     const updatedAmount =
       parseInt(selectedPaymentAmount || 0) + parseInt(blance);
-    setSelectedPaymentAmount(parseInt(updatedAmount));
-    console.log(updatedAmount);
+       if (
+      updatedAmount >= 200 &&
+      updatedAmount <= 25000
+    ) {
+      setSelectedPaymentAmount(updatedAmount);
+    } else {
+      // alert(
+      //   `Amount must be between ${Payment?.minimun_amount} and ${Payment?.maximun_amount}`
+      // );
+    }
   };
   console.log(paymentMethods);
   useEffect(() => {
@@ -160,7 +171,7 @@ console.log(userDeatils.isVerified);
   };
 
   // userId: userId,
- setNewAmountPay(selectedPaymentAmount);
+ setNewWidthrowAmountPay(selectedPaymentAmount);
   // useEffect(() => {
   //    if (paymentMethods.length > 0) {
   //     setGateway_name(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name)
@@ -189,7 +200,7 @@ console.log(userDeatils.isVerified);
     }
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
+        `http://localhost:5000/api/v1/widthdraw_with_transaction`,
         {
           userId: userDeatils.userId,
           gateway_name:Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name,
@@ -347,7 +358,9 @@ console.log(userDeatils.isVerified);
                       </div>
                       <div className="select-group checkbox-style">
                         <ul className="col3">
-                          {paymentMethods.map((paymentMethod, index) => (
+                          {paymentMethods.length > 0 
+                          ?
+                           paymentMethods.map((paymentMethod, index) => (
                             <li key={paymentMethod._id}>
                               <input
                                 type="radio"
@@ -370,7 +383,11 @@ console.log(userDeatils.isVerified);
                                 {/* <span className="item-icon"></span> */}
                               </label>
                             </li>
-                          ))}
+                          ))
+                          
+                          :
+                          <p>No Payment Method</p>
+                          }
                         </ul>
                       </div>
                     </div>

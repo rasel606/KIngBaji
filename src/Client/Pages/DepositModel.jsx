@@ -97,14 +97,14 @@ export default ({ modalName }) => {
     // let = updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
     const updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
     if (
-      updatedAmount >= Payment?.minimun_amount &&
-      updatedAmount <= Payment?.maximun_amount
+      updatedAmount >= 200 &&
+      updatedAmount <= 25000
     ) {
       setSelectedPaymentAmount(updatedAmount);
     } else {
-      alert(
-        `Amount must be between ${Payment?.minimun_amount} and ${Payment?.maximun_amount}`
-      );
+      // alert(
+      //   `Amount must be between ${Payment?.minimun_amount} and ${Payment?.maximun_amount}`
+      // );
     }
   };
 
@@ -441,7 +441,7 @@ export default ({ modalName }) => {
                         <div className="title">
                           <h2>
                             <span>Amount</span>
-                            <i>৳ 200.00 - ৳ 30,000.00</i>
+                            <i>৳ 200.00 - ৳ 25,000.00</i>
                           </h2>
                         </div>
                         <div className="select-group style-add-amount">
