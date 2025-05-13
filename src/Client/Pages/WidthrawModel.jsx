@@ -110,7 +110,7 @@ export default ({ modalName }) => {
   const [PaymentAct, setPaymentAct] = useState("");
   const [selectedPhone, setSelectedPhone] = useState("");
   const [Mood, setMood] = useState(); //paymentMethods[0]
-  const [isVerified, setIsVerified] = useState(false);
+  // const [isVerified, setIsVerified] = useState(userDeatils?.isVerified.phone);
   // let selectedPaymentAmount =0
   const handelAmount = (blance) => {
     setUpdatedAmount(parseInt(blance));
@@ -125,7 +125,13 @@ export default ({ modalName }) => {
       setPayment(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
     }
   }, [paymentMethods]);
+console.log(userDeatils.isVerified);
 
+  // useEffect(() => {
+  //   if (userDeatils.length > 0) {
+  //     setIsVerified(userDeatils?.isVerified.phone);
+  //   }
+  // }, [userDeatils]);
   useEffect(() => {
     const fetchGateways = async () => {
       console.log(data);
@@ -183,7 +189,7 @@ export default ({ modalName }) => {
     }
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
+        `http://localhost:5000/api/v1/widthdraw_with_transaction`,
         {
           userId: userDeatils.userId,
           gateway_name:Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name,
@@ -279,11 +285,11 @@ export default ({ modalName }) => {
                           <span>Main Wallet</span>
                           <div className="icon-refresh"></div>
                         </div>
-                        <h4>0</h4>
+                        <h4>{userDeatils.balance.toFixed(2)}</h4>
                       </div>
                       <span className="item-bg"></span>
                     </div>
-                    {!isVerified && (
+                    {userDeatils?.isVerified.phone !== true && (
                         <div className="tips-info verify-tips tips-info-toggle">
                           <div className="title-box">
                             <h5>
@@ -325,7 +331,7 @@ export default ({ modalName }) => {
                       )}
                     {/* Payment Method Section */}
                     <div className="menu-box">
-                      {!isVerified && (
+                      {userDeatils?.isVerified.phone !== true && (
                         <div className="kyc-verify-mask">
                           <div className="kyc-verify-mask-icon"></div>
                           <div className="kyc-verify-mask-message">
@@ -370,7 +376,7 @@ export default ({ modalName }) => {
                     </div>
 
                     {/* Amount Section */}
-                    {isVerified  &&(<div className="menu-box">
+                    {userDeatils?.isVerified.phone === true &&(<div className="menu-box">
                       <div className="title">
                         <h2>
                           <span>Amount</span>
@@ -434,7 +440,7 @@ export default ({ modalName }) => {
                     </div>)}
 
                     {/* Phone Number Section */}
-                    {isVerified  &&( <div className="menu-box withdraw-menu-phone">
+                    {userDeatils?.isVerified.phone === true  &&( <div className="menu-box withdraw-menu-phone">
                       <div className="title">
                         <h2>
                           <span>Please select phone number</span>

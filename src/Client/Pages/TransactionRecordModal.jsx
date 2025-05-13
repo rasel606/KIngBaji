@@ -55,10 +55,8 @@ export default ({ modalName }) => {
     try {
       console.log(filters);
       const response = await searchTransactionsbyUserId({
-       
-          userId,
-          filters,
-        
+        userId,
+        filters,
       });
       console.log(response.data.data);
       setTransactions(response.data.data || []);
@@ -133,7 +131,10 @@ export default ({ modalName }) => {
                     selected={filters.date}
                     onChange={(val) => handleFilterChange("date", val)}
                   />
-                  <div class="searchpage-bar active" onClick={()=>setIsFilterOpen(false)}>
+                  <div
+                    class="searchpage-bar active"
+                    onClick={() => setIsFilterOpen(false)}
+                  >
                     <button class="button"> Confirm </button>
                   </div>
                 </div>
@@ -209,20 +210,20 @@ export default ({ modalName }) => {
                           className={`item status ${
                             tx.status === 0
                               ? "pending"
-                              : tx.type === 1
+                              : tx.status === 1
                               ? "positive"
-                              : tx.type === 2
+                              : tx.status === 2
                               ? "negative"
                               : "revert"
                           }`}
                         >
-                          {console.log(tx.type)}
+                          {console.log(tx.status)}
                           <div className="tags">
                             {tx.status === 0
                               ? "pending"
-                              : parseInt(tx.type) === 1
+                              : tx.status === 1
                               ? "accepted"
-                              : parseInt(tx.type) === 2
+                              : tx.status === 2
                               ? "rejected"
                               : "adjustment"}
                           </div>

@@ -30,7 +30,6 @@ export default ({ modalName }) => {
     "আরও একটি বিকল্প",
   ];
 
-
   const Amount = [
     { id: "0", value: 2000, label: "2,000" },
     { id: "1", value: 5000, label: "5,000" },
@@ -51,11 +50,7 @@ export default ({ modalName }) => {
     { id: 5, name: "নরমাল ডিপোজিট" },
   ];
 
-
-
   // const paymentTypes = [{ _id: "0", name: "Send Money" },{ _id: "1", name: "Cash Out" },{ id: "2", name: "Payment" }];
-
-
 
   const {
     isAuthenticated,
@@ -76,11 +71,13 @@ export default ({ modalName }) => {
     gateway_name,
     gateway_Number,
     payment_type,
-    newAmount, setNewAmountPay,
+    newAmount,
+    setNewAmountPay,
     setGateway_name,
     setGateway_Number,
     setPayment_type,
-    Payment, setPayment
+    Payment,
+    setPayment,
   } = usePayNow();
 
   const [paymentMethods, setpaymentMethods] = useState([]);
@@ -93,14 +90,22 @@ export default ({ modalName }) => {
   const [selectedPaymentAmount, setSelectedPaymentAmount] = useState(0);
   // const [updatedAmount, setUpdatedAmount] = useState(0);
   // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
-console.log(Payment)
+  console.log(Payment);
 
   console.log(selectedPaymentAmount);
   const handelAmount = (blance) => {
     // let = updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
     const updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
-    setSelectedPaymentAmount(updatedAmount);
-   
+    if (
+      updatedAmount >= Payment?.minimun_amount &&
+      updatedAmount <= Payment?.maximun_amount
+    ) {
+      setSelectedPaymentAmount(updatedAmount);
+    } else {
+      alert(
+        `Amount must be between ${Payment?.minimun_amount} and ${Payment?.maximun_amount}`
+      );
+    }
   };
 
   console.log(payment_type);
@@ -121,13 +126,11 @@ console.log(Payment)
         console.error("Error fetching gateways:", error);
       }
     };
-    
-
 
     if (activeModal === modalName) {
       fetchGateways();
     }
-  }, [userDeatils.userId, token ,modalName ]);
+  }, [userDeatils.userId, token, modalName]);
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const handleChangeAmount = (e) => {
@@ -138,18 +141,23 @@ console.log(Payment)
     setSelectedOption(event.target.value);
   };
 
-
   // userId: userId,
 
-    
-      setNewAmountPay(selectedPaymentAmount);
-    
- 
+  setNewAmountPay(selectedPaymentAmount);
+
   console.log(newAmount);
 
-  setGateway_name( Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
-  setGateway_Number(Payment === null ? paymentMethods[0]?.gateway_Number : Payment?.gateway_Number);
-  setPayment_type(Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type);
+  setGateway_name(
+    Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
+  );
+  setGateway_Number(
+    Payment === null
+      ? paymentMethods[0]?.gateway_Number
+      : Payment?.gateway_Number
+  );
+  setPayment_type(
+    Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
+  );
   // referredbyCode: userDeatils.referredbyCode
   useEffect(() => {
     if (paymentMethods.length > 0) {
@@ -157,65 +165,44 @@ console.log(Payment)
       if (activeModal === modalName) {
         setGateway_name(paymentMethods[0]?.gateway_name);
       }
-      
     }
   }, [paymentMethods]);
 
-
-
-
-
   useEffect(() => {
     if (paymentMethods.length > 0) {
-      setGateway_Number( paymentMethods[0]?.gateway_Number);
+      setGateway_Number(paymentMethods[0]?.gateway_Number);
     }
-  }, [paymentMethods,modalName]);
-
-
+  }, [paymentMethods, modalName]);
 
   useEffect(() => {
     if (paymentMethods.length) {
       setPayment(paymentMethods[0] || Payment);
     }
-  }, [paymentMethods,modalName]);
-
-
+  }, [paymentMethods, modalName]);
 
   useEffect(() => {
-    if (paymentMethods .length>0) {
-      setPayment_type(  paymentMethods[0]?.payment_type );
+    if (paymentMethods.length > 0) {
+      setPayment_type(paymentMethods[0]?.payment_type);
     }
-  }, [paymentMethods,modalName]);
+  }, [paymentMethods, modalName]);
 
-
-
-
-  
   const navigate = useNavigate();
-  console.log(gateway_name)
-  console.log(payment_type)
+  console.log(gateway_name);
+  console.log(payment_type);
 
   const handlePaymentSubmit = () => {
-    
     if (!userId || !selectedPaymentAmount || !token) {
       alert("Please fill in all required fields.");
       return;
     }
-console.log(gateway_name)
-    
-      openModal(`${gateway_name}`);
-    
-    
-      
-    
+    console.log(gateway_name);
+
+    openModal(`${gateway_name}`);
   };
 
   const handlePaymentAmount = async () => {
-    
-    
     // Force context update before opening modal
-    setNewAmountPay(selectedPaymentAmount); 
-    
+    setNewAmountPay(selectedPaymentAmount);
   };
 
   const userVarifayed = false;
@@ -363,7 +350,6 @@ console.log(gateway_name)
                                     />
                                   </div>
                                   <span>{paymentMethod.gateway_name}</span>
-                                  
 
                                   <div className="tag-rebate-money ng-star-inserted">
                                     <p>
@@ -382,7 +368,7 @@ console.log(gateway_name)
                             ))}
                           </ul>
                         </div>
-                       
+
                         <div className="select-group">
                           <ul className="col2 ">
                             <li className="ng-star-inserted">
@@ -414,19 +400,18 @@ console.log(gateway_name)
                         </div>
                         <div className="select-group checkbox-style">
                           <ul className="col2">
-                            
-                              <li >
-                                <input
-                                  type="radio"
-                                  name="depositSetting"
-                                  id={`depositSetting_`}
-                                  // checked={Mood == Mathod.name}
-                                />
-                                <label htmlFor={`depositSetting`}>
-                                  <span>{payment_type}</span>
-                                </label>
-                              </li>
-                            
+                            <li>
+                              <input
+                                type="radio"
+                                name="depositSetting"
+                                id={`depositSetting_`}
+                                // checked={Mood == Mathod.name}
+                              />
+                              <label htmlFor={`depositSetting`}>
+                                <span>{payment_type}</span>
+                              </label>
+                            </li>
+
                             {/* {paymentTypes.map((type) => (
                                     <li key={type.id} className="payment-type">
                                       <input
@@ -461,39 +446,45 @@ console.log(gateway_name)
                         </div>
                         <div className="select-group style-add-amount">
                           <ul className="col4">
-                            {Amount && Amount.map((amount, index) => (
-                              <li key={index}>
-                                <input
-                                  type="radio"
-                                  name="depositAmount"
-                                  value={amount.value}
-                                  checked={selectedPaymentAmount == amount.value}
-                                  id={`depositAmount_${amount.id}`}
-                                  placeholder = {amount?.value}
-                                  onClick={() => handelAmount(amount.value)}
-                                />
-                                {/* {console.log("selectedPaymentAmount",selectedPaymentAmount)}
+                            {Amount &&
+                              Amount.map((amount, index) => (
+                                <li key={index}>
+                                  <input
+                                    type="radio"
+                                    name="depositAmount"
+                                    value={amount.value}
+                                    checked={
+                                      selectedPaymentAmount == amount.value
+                                    }
+                                    id={`depositAmount_${amount.id}`}
+                                    placeholder={amount?.value}
+                                    onClick={() => handelAmount(amount.value)}
+                                  />
+                                  {/* {console.log("selectedPaymentAmount",selectedPaymentAmount)}
                                 {console.log("amount.value",amount.value)} */}
-                                <label htmlFor={`depositAmount_${index ? index : ""}`}>
-                                  <span>{amount.value}</span>
-                                </label>
-                                
-                              </li>
-                            ))}
-                            
+                                  <label
+                                    htmlFor={`depositAmount_${
+                                      index ? index : ""
+                                    }`}
+                                  >
+                                    <span>{amount.value}</span>
+                                  </label>
+                                </li>
+                              ))}
                           </ul>
                         </div>
                         <div className="input-group money">
                           <label htmlFor="amount">৳</label>
                           <div className="input-wrap">
-                          <input
-                            type="text"
-                            placeholder="0.00"
-                            
-                            inputMode="numeric"
-                            value={selectedPaymentAmount}
-                            onChange={(e) => setSelectedPaymentAmount(e.target.value)}
-                          />
+                            <input
+                              type="text"
+                              placeholder="0.00"
+                              inputMode="numeric"
+                              value={selectedPaymentAmount}
+                              onChange={(e) =>
+                                setSelectedPaymentAmount(e.target.value)
+                              }
+                            />
                             {selectedPaymentAmount && (
                               <Link
                                 className={`delete-btn ${
@@ -508,29 +499,34 @@ console.log(gateway_name)
                             )}
                           </div>
                         </div>
-                        
+
                         <h5>
-                        <div className="tips-info note">
-                          <i className="tips-icon"></i>
-                          <span style={{ whiteSpace: "pre-wrap",color:"white" }}>
-                            ১/ব্যক্তিগত তথ্য"-এর অধীনে ক্যাশ আউট করার আগে
-                            সর্বোচ্চ ৩টি মোবাইল নম্বর যোগ করুন এবং ভেরিফাই করুন।
-                            ২/আপনার ডিপোজিট প্রক্রিয়ার দ্রুত সফল করতে সঠিক
-                            ক্যাশ আউট নাম্বার , এমাউন্ট এবং ট্রানজেকশন আইডি সহ
-                            সাবমিট দিন। ৩/যেকোনো ডিপোজিট করার আগে সবসময় আমাদের
-                            ডিপোজিট পেইজে নাম্বার চেক করুন । ৪/ডিপোজিট পেন্ডিং
-                            অবস্থায় আপনি ২টি ডিপোজিট এর জন্য ট্রাই করতে পারবেন।
-                            আপনি কোনো সমস্যার সম্মুখীন হলে লাইভচ্যাট সহায়তা নিতে
-                            পারেন। ৫ ১.৩০-এর নিচের ODDs বাজি, উইথড্র টার্নওভারের
-                            প্রয়োজনীয়তার জন্য গণনা করা হবে না।
-                          </span>
+                          <div className="tips-info note">
+                            <i className="tips-icon"></i>
+                            <span
+                              style={{ whiteSpace: "pre-wrap", color: "white" }}
+                            >
+                              ১/ব্যক্তিগত তথ্য"-এর অধীনে ক্যাশ আউট করার আগে
+                              সর্বোচ্চ ৩টি মোবাইল নম্বর যোগ করুন এবং ভেরিফাই
+                              করুন। ২/আপনার ডিপোজিট প্রক্রিয়ার দ্রুত সফল করতে
+                              সঠিক ক্যাশ আউট নাম্বার , এমাউন্ট এবং ট্রানজেকশন
+                              আইডি সহ সাবমিট দিন। ৩/যেকোনো ডিপোজিট করার আগে
+                              সবসময় আমাদের ডিপোজিট পেইজে নাম্বার চেক করুন ।
+                              ৪/ডিপোজিট পেন্ডিং অবস্থায় আপনি ২টি ডিপোজিট এর জন্য
+                              ট্রাই করতে পারবেন। আপনি কোনো সমস্যার সম্মুখীন হলে
+                              লাইভচ্যাট সহায়তা নিতে পারেন। ৫ ১.৩০-এর নিচের ODDs
+                              বাজি, উইথড্র টার্নওভারের প্রয়োজনীয়তার জন্য গণনা
+                              করা হবে না।
+                            </span>
                           </div>
                         </h5>
-                      
                       </div>
-                      
+
                       <div className="member-content">
-                        <div className="button submit" onClick={()=>handlePaymentSubmit()}>
+                        <div
+                          className="button submit"
+                          onClick={() => handlePaymentSubmit()}
+                        >
                           <a>Submit</a>
                         </div>
                       </div>
@@ -543,8 +539,5 @@ console.log(gateway_name)
         </div>
       </div>
     </div>
-
-
-
   );
 };

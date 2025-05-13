@@ -8,16 +8,20 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   const { userDeatils, token, updateUserDetails } = useAuth();
   const [isOpenToggle, setIsOpenToggle] = useState(true);
+  const [isOpenToggle1, setIsOpenToggle1] = useState(true);
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(userDeatils.phone || "");
-  const [isPhoneVerified, setIsPhoneVerified] = useState(
-    userDeatils.phoneisVerified || false
-  );
+  // const [isPhoneVerified, setIsPhoneVerified] = useState(
+  //   userDeatils?.isVerified.phone || false
+  // );
 
   if (activeModal !== modalName) return null;
 
   const toggleList = () => {
     setIsOpenToggle(!isOpenToggle);
+  };
+  const toggleListOne = () => {
+    setIsOpenToggle1(!isOpenToggle1);
   };
 
   const handleAddName = () => {
@@ -38,6 +42,13 @@ export default ({ modalName }) => {
   const handleAddMobile = () => {
     openModal("AddMobileNumberModel");
   };
+
+  
+    // useEffect(() => {
+    //   if (userDeatils.length > 0) {
+    //     setIsPhoneVerified(userDeatils?.isVerified?.phone);
+    //   }
+    // }, [userDeatils,modalName]);
 
   // const handleSendVerificationCode = async () => {
   //   try {
@@ -60,6 +71,11 @@ export default ({ modalName }) => {
   //     setLoading(false);
   //   }
   // };
+
+
+
+
+
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -141,7 +157,7 @@ export default ({ modalName }) => {
                     <div className="right-box">
                       <a
                         className="goto-myvip"
-                        href="/bd/en/member/vip-points-exchange(popup:member/new-profile-info)"
+                        onClick={() => openModal("MyVipModal")}
                       >
                         <div className="myvip-text">
                           <span>My VIP</span>
@@ -158,7 +174,7 @@ export default ({ modalName }) => {
                   </div>
                 </div>
 
-                <div className="tips-info verify-tips tips-info-toggle">
+                {userDeatils?.isVerified.phone !== true &&(<div className="tips-info verify-tips tips-info-toggle">
                   <div className="title-box">
                     <h5>
                       <i
@@ -193,7 +209,7 @@ export default ({ modalName }) => {
                       </li>
                     </ol>
                   )}
-                </div>
+                </div>)}
 
                 <div className="tips-info verify-tips tips-info-toggle">
                   <div className="title-box">
@@ -211,15 +227,15 @@ export default ({ modalName }) => {
                       </span>
                     </h5>
                     <div
-                      className={`toggle-btn ${isOpenToggle ? "active" : ""}`}
-                      onClick={toggleList}
+                      className={`toggle-btn ${isOpenToggle1 ? "active" : ""}`}
+                      onClick={toggleListOne}
                       style={{
                         maskImage:
                           "url('https://img.s628b.com/sb/h5/assets/images/icon-set/icon-arrow-type09.svg?v=1745315543147')",
                       }}
                     ></div>
                   </div>
-                  {isOpenToggle && (
+                  {isOpenToggle1 && (
                     <ol className="tips-info-block active">
                       <li className="personal-info">
                         <a>
@@ -229,14 +245,14 @@ export default ({ modalName }) => {
                           </ul>
                         </a>
                       </li>
-                      <li className="contact-info">
+                      {userDeatils?.isVerified.phone !== true&& (<li className="contact-info">
                         <a>
                           <label>Contact Info</label>
                           <ul>
                             <li>Phone Number</li>
                           </ul>
                         </a>
-                      </li>
+                      </li>)}
                     </ol>
                   )}
                 </div>

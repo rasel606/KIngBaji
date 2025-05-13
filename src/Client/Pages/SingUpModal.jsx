@@ -171,7 +171,7 @@ export default ({ modalName }) => {
 
   let referredBy = referralCode;
 
-  // const referredBy = localStorage.getItem("referralCode");
+  // const referralCode = localStorage.getItem("referralCode");
   // referredBy += referralCode;
   // console.log(referralCode);
   const handleSubmit = async () => {
