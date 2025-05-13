@@ -18,7 +18,7 @@ export default ({ modalName }) => {
   console.log(userDeatils);
 
   const invitationCode = `${userDeatils.referralCode}`;
-  const invitationUrl = `http://localhost:3000/?ref=${userDeatils.referralCode}`;
+  const invitationUrl = `https://kingbaji.live/?ref=${userDeatils.referralCode}`;
   const [showBonusDetails, setShowBonusDetails] = useState(false);
 
   const toggleBonusDetails = () => {
