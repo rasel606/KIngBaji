@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
 import { useAuth } from "../Component/AuthContext";
-import { GatWaySystem } from "../Component/Axios-API-Service/AxiosAPIService";
+import { GatWaySystem, GatWaySystemWidthrow } from "../Component/Axios-API-Service/AxiosAPIService";
 import { usePayNow } from "../PaymentContext/PaymenyContext";
 import axios from "axios";
 import { useWidthrowNow } from "../PaymentContext/WidthrawPaymentContext";
@@ -147,7 +147,7 @@ console.log(userDeatils.isVerified);
     const fetchGateways = async () => {
       console.log(data);
       try {
-        const response = await GatWaySystem(data);
+        const response = await GatWaySystemWidthrow(data);
         setpaymentMethods(response?.data?.paymentMethods);
         // setGatewaysCount(response.data.Getwaycount);
         console.log(response.data.paymentMethods);
@@ -200,7 +200,7 @@ console.log(userDeatils.isVerified);
     }
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
+        `http://localhost:5000/api/v1/widthdraw_with_transaction`,
         {
           userId: userDeatils.userId,
           gateway_name:Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name,
