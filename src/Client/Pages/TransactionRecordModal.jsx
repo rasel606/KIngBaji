@@ -29,9 +29,9 @@ export default ({ modalName }) => {
   // const [activeTab, setActiveTab] = useState("Today");
 
   const [filters, setFilters] = useState({
-    status: [0],
-    type: [0],
-    date: "today",
+    status: [0,1,2],
+    type: [0,1],
+    date: "lest7days",
   });
 
   console.log(filters);
