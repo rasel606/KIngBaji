@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://api.kingbaji.live/api/v1" });
+const API = axios.create({ baseURL: "http://localhost:5000/api/v1" });
 
 // Interceptor to attach token to all requests
 API.interceptors.request.use((req) => {
@@ -54,3 +54,4 @@ export const GetPaymentMethodsUser = (paydata) => API.post("/deposit_with_bonus"
 
 export const GetGameProvider = () => API.get("/get_all_providers");
 export const GetGameCategory= () => API.get("/get_all_category");
+export const GetMessages= (userId) => API.get(`/get_notifications/${userId}`);

@@ -29,7 +29,6 @@ export default (props) => {
     "https://i.ibb.co.com/gdQVX9d/image-5.jpg",
   ];
 
- 
   const games = [
     {
       name: "Super Ace",
@@ -85,6 +84,60 @@ export default (props) => {
     console.log(item);
   };
 
+
+    const handleClosePopup = () => {
+    setShowPopup(false);
+    handleRefresh(userId);
+  };
+
+    const [isPlaying, setIsPlaying] = useState(false);
+      const [playGameData, setPlayGameData] = useState(null);
+        const [gameData, setGameData] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+   const handlePlayGameProvider = async (game) => {
+    if (isPlaying) return;
+console.log(game)
+    // setIsPlaying(true);
+    setLoading(true);
+
+    try {
+      if(userId)
+        {const response = await fetch(
+        "http://localhost:5000/api/v1/launch_gamePlayer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            game_id: "0",
+            p_type: game.p_type,
+            p_code: game.providercode,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      console.log(data);
+      if (data.errMsg === "Success" && userId) {
+        console.log(data);
+        setPlayGameData(data);
+        setShowPopup(true);
+      }}
+    } catch (error) {
+      console.error("Error launching game:", error);
+    } finally {
+      setIsPlaying(false);
+      setLoading(false);
+    }
+  };
+
+
+
+
   const referralCode = localStorage.getItem("referralCode");
   console.log(localStorage.getItem("referralCode"));
   console.log(referralCode);
@@ -98,7 +151,7 @@ export default (props) => {
   useEffect(() => {
     handleRefresh();
     setLoading(true);
-    const url = "https://api.kingbaji.live/api/v1/New-table-categories";
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -144,6 +197,7 @@ export default (props) => {
   const [balance, setBalance] = useState(userDeatils.balance);
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState(userId);
+  
   const handleRefresh = async () => {
     if (refreshing) return;
 
@@ -153,17 +207,19 @@ export default (props) => {
     try {
       // handelUserDetails(userId);
 
-      if(userId){const response = await axios.post(
-        "https://api.kingbaji.live/api/v1/user_balance",
-        { userId }
-      );
-      console.log(response);
-      setBalance(response.data.balance);
+      if (userId) {
+        const response = await axios.post(
+          "http://localhost:5000/api/v1/user_balance",
+          { userId }
+        );
+        console.log(response);
+        setBalance(response.data.balance);
 
-      if (response.data.hasOwnProperty("balance")) {
-        verifyUser(token); // Ensure token is available in scope
+        if (response.data.hasOwnProperty("balance")) {
+          verifyUser(token); // Ensure token is available in scope
+        }
+        setLoading(false);
       }
-      setLoading(false);}
     } catch (error) {
       // console.error("Error fetching balance:", error);
     } finally {
@@ -183,10 +239,9 @@ export default (props) => {
 
   useEffect(() => {
     if (userId) {
-      setLoading(false);// Call the function whenever userId changes
-    }else{
+      setLoading(false); // Call the function whenever userId changes
+    } else {
       handleRefresh();
-      
     }
   }, [setRefreshing, userId, balance, loading, token]);
 
@@ -197,8 +252,6 @@ export default (props) => {
           <Carousel images={images}></Carousel>
           <Marquee></Marquee>
 
-
-          
           <div className="game-nav-container">
             <div
               className={`${
@@ -240,20 +293,44 @@ export default (props) => {
                       <div className="card1">
                         <ul>
                           {active?.uniqueProviders?.map((item, index) => {
-                            return (
-                              <li>
-                                <Link
-                                  to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
-                                    active.name
-                                  )}/${encodeURIComponent(item.providercode)}`}
-                                >
-                                  <img src={item.image_url} alt="" />
-                                  <p>{item.company}</p>
-                                </Link>
-                              </li>
-
-                              // {`${activeIndex !== 0 ? `gamesProvidersPageWithCategory/${encodeURIComponent(active.name)}/${encodeURIComponent(item.providercode)}` : ""}`}
-                            );
+                            // যদি প্রথম ২ ক্যাটাগরি হয়, তাহলে লিঙ্ক না দিয়ে সরাসরি গেম প্লে কল দিন
+                            if (activeIndex < 2) {
+                              // প্রথম ২ ক্যাটাগরি
+                              return (
+                                <li key={index}>
+                                  <Link
+                                    onClick={() => handlePlayGameProvider(item)}
+                                    
+                                  >
+                                    <img
+                                      src={item.image_url}
+                                      alt={item.company}
+                                    />
+                                    <p>{item.company}</p>
+                                  </Link>
+                                </li>
+                              );
+                            } else {
+                              // বাকি ক্যাটাগরি লিঙ্ক সহ
+                              return (
+                                <li key={index}>
+                                  {console.log(active)}
+                                  <Link
+                                    to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
+                                      active.name
+                                    )}/${encodeURIComponent(
+                                      item.providercode
+                                    )}`}
+                                  >
+                                    <img
+                                      src={item.image_url}
+                                      alt={item.company}
+                                    />
+                                    <p>{item.company}</p>
+                                  </Link>
+                                </li>
+                              );
+                            }
                           })}
                         </ul>
                       </div>
@@ -272,9 +349,35 @@ export default (props) => {
           </div>
         </div>
       </div>
-      {/* ========================================= */}
-              <MyProfilemodal modalName="modal2"></MyProfilemodal>
-              {/* ========================================= */}
+       {showPopup && playGameData?.gameUrl && (
+
+        <div className="popup-page-wrapper active" onClick={handleClosePopup}>
+          <div
+            className="popup-page show-toolbar popup-page--active popup-page--align-top"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="popup-page__main popup-page-main popup-page-main--show">
+              <div className="popup-page-main__header new-login-tab">
+                <div className="popup-page-main__title">KingBaji</div>
+                <div
+                  className="popup-page-main__close"
+                  onClick={handleClosePopup}
+                ></div>
+              </div>
+              <div className="popup-page-main__container">
+                <iframe
+                  src={playGameData.gameUrl}
+                  title="Game"
+                  width="100%"
+                  height="100%"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+   
+      )}
     </div>
   );
 };

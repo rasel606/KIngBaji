@@ -572,3 +572,4 @@ const FilterGroup = ({ title, type, options, selected, onChange }) => (
     </ul>
   </div>
 );
+
