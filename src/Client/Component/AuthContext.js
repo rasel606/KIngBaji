@@ -117,6 +117,7 @@ const verifyUserToken = async (token) => {
       setUserId(response.data.user.userId);
       setToken(response.data.token);
       closeModal()
+      localStorage.removeItem('referralCode');
       // return response
     } catch (error) {
       console.error(error);

@@ -46,6 +46,9 @@ const SearchTab = ({ providers, selectedProvider, onProviderChange }) => (
           } ng-star-inserted`}
           onClick={() => onProviderChange(provider.providercode)}
         >
+          {console.log(provider.
+providercode
+)}
           <div className="provider-label">{provider.providercode}</div>
         </li>
       ))}
@@ -108,7 +111,7 @@ export default () => {
   const { category_name, providercode } = useParams();
   const [showPopup, setShowPopup] = useState(false);
   const { userDeatils, userId } = useAuth();
-  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [selectedProvider, setSelectedProvider] = useState(providercode ? providercode : []);
   const [categories, setCategories] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [balance, setBalance] = useState(userDeatils?.balance || 0);
@@ -148,14 +151,14 @@ export default () => {
   // useEffect(() => {
   //   fetchGames();
   // }, [selectedProvider, categories, category_name]);
-  console.log(categories);
+  console.log(category_name, providercode );
 
   const fetchGames = async () => {
     if (!categories) return;
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ""}&p_type=${categories}&page=${page}`
+        `http://localhost:5000/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ""}&page=${page}`
       );
       const result = await res.json();
 

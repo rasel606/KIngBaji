@@ -113,7 +113,7 @@ console.log(game)
           body: JSON.stringify({
             userId,
             game_id: "0",
-            p_type: game.p_type,
+            g_type: game.g_type,
             p_code: game.providercode,
           }),
         }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useModal } from "./ModelContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default (props) => {
     // const { activeModal, openModal, closeModal } = useModal();
@@ -66,6 +66,9 @@ export default (props) => {
     };
 
 
+    const navigate = useNavigate();
+
+
     
       useEffect(() => {
 
@@ -115,7 +118,7 @@ console.log("activeCat",active)
       </div>
 
       <div className="header-title" ></div>
-      <div 
+      <div onClick={() => navigate("/")}
         className="logo"
         tabIndex="0"
         style={{
