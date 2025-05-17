@@ -74,7 +74,7 @@ export default ({ modalName }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/submitTransaction`,
+        `https://api.kingbaji.live/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
