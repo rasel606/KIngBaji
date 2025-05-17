@@ -158,7 +158,7 @@ export default () => {
 
     try {
       const res = await fetch(
-        `https://api.kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider || ""}&page=${page}`
+        `https://api.kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider}&page=${page}`
       );
       const result = await res.json();
 
