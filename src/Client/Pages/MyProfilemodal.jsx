@@ -77,7 +77,7 @@ const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
 
 
 
-
+console.log(userDeatils)
 
 
   const formatDate = (dateString) => {
@@ -283,13 +283,13 @@ const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
                           </div>
                         </div>
                         <div className="right">
-                          {!userDeatils.name ? (
+                          {!userDeatils?.name ? (
                             <button className="button" onClick={handleAddName}>
                               Add
                             </button>
                           ) : (
                             <div className="status verified-btn">
-                              {userDeatils.name ? userDeatils.name : "Verified"}
+                              {userDeatils?.name ? userDeatils?.name : "Verified"}
                             </div>
                           )}
                         </div>
@@ -322,7 +322,7 @@ const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
                           </div>
                         </div>
                         <div className="right">
-                          {!userDeatils.birthday ? (
+                          {!userDeatils?.birthday ? (
                             <button
                               className="button"
                               onClick={handleAddBirthday}
@@ -330,7 +330,7 @@ const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
                               Add
                             </button>
                           ) : (
-                            <div className="status verified-btn">{formatDate(userDeatils.birthday)}</div>
+                            <div className="status verified-btn">{formatDate(userDeatils?.birthday)}</div>
                           )}
                         </div>
                       </div>

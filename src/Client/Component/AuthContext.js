@@ -46,7 +46,7 @@ const AuthContextProvider = ({ children }) => {
   };
   
   verifyUser();
-}, []);
+}, [loading]);
 
   const Token = async (token) => {
     if (!token) {
@@ -80,7 +80,7 @@ const AuthContextProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [token]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
+  }, [token,loading]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
 
   // Login function
 

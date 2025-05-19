@@ -8,8 +8,10 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, loginUser, logoutUser, userId } =
+  const { isAuthenticated, loginUser, logoutUser ,userDeatils} =
     useAuth();
+
+   const userId = userDeatils ? userDeatils?.userId : "";
 
   const [formData, setFormData] = useState({
     userId: userId,
@@ -36,7 +38,8 @@ export default ({ modalName }) => {
     return age;
   };
   console.log(formData);
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+ e.preventDefault();
     // Age validation
     const age = calculateAge(formData.birthday);
     if (age < 18) {
@@ -96,7 +99,7 @@ export default ({ modalName }) => {
                     </div>
                   </div>
                 </form>
-                <div className={`button ${formData.birthday ? "" : "btn-disabled"}`} onClick={() => handleSubmit()}>
+                <div className={`button ${formData.birthday ? "" : "btn-disabled"}`} onClick={handleSubmit}>
                   <a>Submit</a>
                 </div>
                 <p className="button-tips player">

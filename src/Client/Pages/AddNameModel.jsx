@@ -10,22 +10,30 @@ export default ({
   const {  activeModal, openModal, closeModal  } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, loginUser, logoutUser, userId,userDeatils } = useAuth();
+  const { isAuthenticated, loginUser, logoutUser,userDeatils,setLoading,loading } = useAuth();
   const [name, setName] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [ShowSuccess, setShowSuccess] = useState(false);
+
+
+
+  const userId = userDeatils?.userId || "";
+
   const handleSubmit = async(e) => {
-    
+     e.preventDefault();
+    setLoading(true)
     try {
-      if(userDeatils.length > 0){
+      
+      if(userDeatils?.userId){
         const response= await UpdateName(name,userId)
         
         if(response.data.status === 200){
           alert(response.data.message);
-          setTimeout(() => {
+          setLoading(false)
+          
             setShowSuccess(false);
-            openModal('MyProfilemodal');
-          }, 1000)
+            closeModal()
+          
         }else{
           alert(response.data.message)
         }
@@ -63,7 +71,7 @@ export default ({
                       </div>
                     </div>
                   </form>
-                  <div className={`button ${name ? "" : "btn-disabled"}`} onClick={()=>handleSubmit()}>
+                  <div className={`button ${name ? "" : "btn-disabled"}`} onClick={handleSubmit}>
                     <a>Submit</a>
                   </div>
                   <p className="button-tips player">
