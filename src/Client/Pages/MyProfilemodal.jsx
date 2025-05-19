@@ -7,10 +7,13 @@ import AddMobileNumberModel from "./AddMobileNumberModel";
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   const { userDeatils, token, updateUserDetails } = useAuth();
+const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
+
+
   const [isOpenToggle, setIsOpenToggle] = useState(true);
   const [isOpenToggle1, setIsOpenToggle1] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState(userDeatils.phone || "");
+  const [phoneNumber, setPhoneNumber] = useState(userPhoneNumber);
   // const [isPhoneVerified, setIsPhoneVerified] = useState(
   //   userDeatils?.isVerified.phone || false
   // );
@@ -174,7 +177,7 @@ export default ({ modalName }) => {
                   </div>
                 </div>
 
-                {userDeatils?.isVerified.phone !== true &&(<div className="tips-info verify-tips tips-info-toggle">
+                {userDeatils?.isVerified?.phone !== true &&(<div className="tips-info verify-tips tips-info-toggle">
                   <div className="title-box">
                     <h5>
                       <i

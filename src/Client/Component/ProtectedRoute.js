@@ -9,8 +9,8 @@ export default ({
       isAuthenticated,
       loginUser,
       logoutUser,
-      verifyUserToken,
-      verifyUser,
+      Token,
+
       token,
       userDeatils,
       userId,
@@ -21,14 +21,15 @@ export default ({
   // const {  activeModal, openModal, closeModal  } = useModal();
   const [showPopup, setShowPopup] = useState(false);
 
-  // const isAuthenticated = () => {
-  //   return !!localStorage.getItem('token');
-  // };
-
-  if (!isAuthenticated) {
-    
-    return openModal('login');
+ if (loading) {
+    return <div>Loading...</div>; // Show loading state
   }
+
+  if (!isAuthenticated && !loading) {
+    openModal('login');
+    return <Navigate to="/" />;
+  }
+  
 
   return children;
 };

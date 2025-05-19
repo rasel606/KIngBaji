@@ -35,11 +35,7 @@ export default [
       element: <GameProviderPagebycategory />,
     },
     
-    // {
-    //   path: "/profile",
-    //   element: <MyProfilemodal />,
-    // },
-    
+
   ]
 }
 ]

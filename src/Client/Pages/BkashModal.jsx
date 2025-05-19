@@ -14,7 +14,9 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, userDeatils, userId, token } = useAuth();
+  const { isAuthenticated, userDeatils,  token } = useAuth();
+
+   const userId = userDeatils?.userId || "";
 
   const { gateway_name, gateway_Number, payment_type, newAmount,Payment } = usePayNow();
 

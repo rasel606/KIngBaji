@@ -19,11 +19,16 @@ console.log(paymentMethods);
 const {
   isAuthenticated,
   userDeatils,
-  userId,
+
   token
 } = useAuth();
+
+  const userId = userDeatils?.userId || "";
+  // const referredBy = userDeatils?.referredBy || "";
+
+
 const data = {
-  userId: userDeatils.userId,
+  userId: userId,
 };
 
 
@@ -38,13 +43,15 @@ console.log(paymentMethodDeglaration)
       const fetchGateways = async () => {
         
         try {
+           if (isAuthenticated) {
           const response = await GatWaySystem(data);
           setpaymentMethods(response?.data?.paymentMethods);
           // setGatewaysCount(response.data.Getwaycount);
           console.log(response.data.paymentMethods);
-          if (response.data.paymentMethods.length > 0) {
+          if (response?.data.paymentMethods?.length > 0) {
             setLoading(false);
           }
+        }
         } catch (error) {
           console.error("Error fetching gateways:", error);
         }
@@ -55,7 +62,7 @@ console.log(paymentMethodDeglaration)
       
         fetchGateways();
       
-    }, [userDeatils.userId, token  ]);
+    }, [isAuthenticated, token  ]);
 
   
 
@@ -65,7 +72,6 @@ const [newAmount, setNewAmountPay] = useState(0);
   const [gateway_name, setGateway_name] = useState([]);
   const [gateway_Number, setGateway_Number] = useState(null );
   const [payment_type, setPayment_type] = useState("");
-  const [referredBy, setreferredBy] = useState(userDeatils.referredBy);
   console.log(payment_type)
   // const [selectedPayment, setSelectedPayment] = useState(null );
   // const [showVerification, setShowVerification] = useState(false);

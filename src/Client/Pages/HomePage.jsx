@@ -56,19 +56,45 @@ export default (props) => {
     isAuthenticated,
     loginUser,
     logoutUser,
-    verifyUserToken,
-    verifyUser,
+    Token,
+    
     token,
     userDeatils,
-    userId,
+
     loading,
     setLoading,
   } = useAuth();
+
+
+
+    const userId = userDeatils?.userId || "";
+  // const referredBy = userDeatils?.referredBy || "";
+
+
+  // const userdata = {
+  //   userId: userId
+  // };
+
+
+  const userBalance =userDeatils ? userDeatils.balance : ""
 
   const [active, setActive] = useState(data[0]?.category);
   const [activeIndex, setActiveIndex] = useState(
     data[0]?.category.uniqueProviders
   );
+
+  const referralCode = localStorage.getItem("referralCode");
+  console.log(localStorage.getItem("referralCode"));
+  console.log(referralCode);
+
+  const [balance, setBalance] = useState(userBalance);
+  const [refreshing, setRefreshing] = useState(false);
+  const [userData, setUserData] = useState(userId);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playGameData, setPlayGameData] = useState(null);
+  const [gameData, setGameData] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -84,67 +110,9 @@ export default (props) => {
     console.log(item);
   };
 
-
-    const handleClosePopup = () => {
-    setShowPopup(false);
-    handleRefresh(userId);
-  };
-
-    const [isPlaying, setIsPlaying] = useState(false);
-      const [playGameData, setPlayGameData] = useState(null);
-        const [gameData, setGameData] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-   const handlePlayGameProvider = async (game) => {
-    if (isPlaying) return;
-console.log(game)
-    // setIsPlaying(true);
-    setLoading(true);
-
-    try {
-      if(userId)
-        {const response = await fetch(
-        "https://api.kingbaji.live/api/v1/launch_gamePlayer",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            game_id: "0",
-            g_type: game.g_type,
-            p_code: game.providercode,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      console.log(data);
-      if (data.errMsg === "Success" && userId) {
-        console.log(data);
-        setPlayGameData(data);
-        setShowPopup(true);
-      }}
-    } catch (error) {
-      console.error("Error launching game:", error);
-    } finally {
-      setIsPlaying(false);
-      setLoading(false);
-    }
-  };
-
-
-
-
-  const referralCode = localStorage.getItem("referralCode");
-  console.log(localStorage.getItem("referralCode"));
-  console.log(referralCode);
-
   const [isFixed, setIsFixed] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-
+  const [gameWindow, setGameWindow] = useState(null);
   const [scrollStopped, setScrollStopped] = useState(false);
   let scrollTimeout;
 
@@ -194,56 +162,90 @@ console.log(game)
     navigate("/modal1");
   };
 
-  const [balance, setBalance] = useState(userDeatils.balance);
-  const [refreshing, setRefreshing] = useState(false);
-  const [userData, setUserData] = useState(userId);
-  
-  const handleRefresh = async () => {
-    if (refreshing) return;
+  const handlePlay = async (game) => {
+    if (isPlaying) return;
 
-    setRefreshing(true);
+    setIsPlaying(true);
     setLoading(true);
-    // handelUserDetails(userId);
+
     try {
-      // handelUserDetails(userId);
-
       if (userId) {
-        const response = await axios.post(
-          "https://api.kingbaji.live/api/v1/user_balance",
-          { userId }
+        const response = await fetch(
+          "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+              game_id: "0",
+              g_type: game.g_type,
+              p_code: game.providercode,
+            }),
+          }
         );
-        console.log(response);
-        setBalance(response.data.balance);
 
-        if (response.data.hasOwnProperty("balance")) {
-          verifyUser(token); // Ensure token is available in scope
+        const data = await response.json();
+
+        console.log(data);
+        if (data.errMsg === "Success" && userId) {
+          console.log(data);
+          setPlayGameData(data);
+          setShowPopup(true);
         }
-        setLoading(false);
       }
     } catch (error) {
-      // console.error("Error fetching balance:", error);
+      console.error("Error launching game:", error);
     } finally {
-      setTimeout(() => setRefreshing(false), 1000); // Proper finally block
+      setIsPlaying(false);
+      setLoading(false);
     }
-  };
-
-  const handelUserDetails = async (userId) => {
-    setLoading(true);
-    const result = await UserAllDetails(userId);
-    // console.log( result = await UserAllDetails(userId))
-    console.log(result.data.user.balance);
-    setBalance(result.data.user.balance);
-    setUserData(result.data.user);
-    setLoading(false);
   };
 
   useEffect(() => {
-    if (userId) {
-      setLoading(false); // Call the function whenever userId changes
-    } else {
-      handleRefresh();
+    return () => {
+      if (gameWindow && !gameWindow.closed) {
+        gameWindow.close();
+      }
+    };
+  }, [gameWindow]);
+
+  /** 🚀 Refresh Balance */
+  const handleRefresh = async (userId) => {
+    try {
+      await handelUserDetails(userId);
+      // if(userId){
+      const response = await axios.post(
+        "https://api.kingbaji.live/api/v1/user_balance",
+        { userId }
+      );
+      setBalance(response.data.balance);
+      console.log("Balance Data:", response.data);
+      // }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
     }
-  }, [setRefreshing, userId, balance, loading, token]);
+  };
+
+  /** 🚀 Fetch User Details */
+  const handelUserDetails = async (userId) => {
+    const result = await UserAllDetails(userId);
+    setBalance(result.data.user.balance);
+  };
+
+  /** 🚀 Handle Popup Close */
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    handleRefresh(userId);
+  };
+
+  useEffect(() => {
+    if (!showPopup && userId) {
+      handleRefresh(userId);
+    }
+  }, [showPopup, userId]);
 
   return (
     <div className="">
@@ -299,8 +301,7 @@ console.log(game)
                               return (
                                 <li key={index}>
                                   <Link
-                                    onClick={() => handlePlayGameProvider(item)}
-                                    
+                                    onClick={() => handlePlay(item)}
                                   >
                                     <img
                                       src={item.image_url}
@@ -349,8 +350,7 @@ console.log(game)
           </div>
         </div>
       </div>
-       {showPopup && playGameData?.gameUrl && (
-
+      {showPopup && playGameData?.gameUrl && (
         <div className="popup-page-wrapper active" onClick={handleClosePopup}>
           <div
             className="popup-page show-toolbar popup-page--active popup-page--align-top"
@@ -376,7 +376,6 @@ console.log(game)
             </div>
           </div>
         </div>
-   
       )}
     </div>
   );

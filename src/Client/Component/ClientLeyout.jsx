@@ -69,14 +69,14 @@ export default () => {
   const { activeModal, openModal, closeModal } = useModal();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
-  const {isAuthenticated, loginUser, logoutUser, verifyUser } = useAuth();
+  const {isAuthenticated, loginUser, logoutUser } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeCategory, setActiveCategory] = useState("");
     const [showSecondMenu, setShowSecondMenu] = useState(true);
 
-  useEffect(() => {
-    verifyUser();
-  }, [verifyUser]);
+  // useEffect(() => {
+  //   verifyUser();
+  // }, [verifyUser]);
 
   const location = useLocation();
   
@@ -237,13 +237,6 @@ export default () => {
         <div>This is the desktop version</div>
       )}
 
-      {/* <div className="side-bar-item">
-        <img
-          src="https://img.k516g.com/kg/h5/assets/images/icon-set/theme-icon/icon-home.png?v=1735560372671"
-          style={{ height: "50px" }}
-        />
-        <span className="side-bar-item-caption">Home</span>
-      </div> */}
 
       
       
@@ -265,7 +258,6 @@ export default () => {
 <UpayModal modalName="Upay"></UpayModal>
         {/* ========================================= */}
         <TurnOverModal modalName="TurnOverModal"></TurnOverModal>
-        {/* <TransactionRecordModal modalName="TurnOverModal"></TransactionRecordModal> */}
 
         {/* ========================================= */}
         <RefferBonusModel modalName="RefferBonusModel"></RefferBonusModel>
@@ -308,7 +300,6 @@ export default () => {
         <SingUpModal modalName="SingUpModal"></SingUpModal>
 
         <DepositModel modalName="DepositModel"></DepositModel>
-        {/* <GamePlay modalName="GamePlay"></GamePlay> */}
 
         <CurrencyLanguageSelector modalName="CurrencyLanguageSelector"></CurrencyLanguageSelector>
 

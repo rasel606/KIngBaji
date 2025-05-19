@@ -14,9 +14,12 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, userDeatils, userId, token } = useAuth();
+  const { isAuthenticated, userDeatils, token } = useAuth();
 
-  const { gateway_name, gateway_Number, payment_type, amount } = usePayNow();
+  const userId = userDeatils?.userId || "";
+
+  const { gateway_name, gateway_Number, payment_type, newAmount, Payment } =
+    usePayNow();
 
   const [timeRemaining, setTimeRemaining] = useState(900);
   const [transactionID, setTransactionID] = useState("");
@@ -40,20 +43,8 @@ export default ({ modalName }) => {
 
   const type = 0;
 
-  // console.log(
-
-  //   userId,
-  //   gateway_name,
-  //   amount,
-  //   referredBy,
-  //   payment_type,
-  //   gateway_number,
-  //   type,
-  //   "transactionID",transactionID
-  // );
-
   const [gateways, setGateways] = useState();
-
+  const [ShowSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const handleTransactionIDChange = (e) => {
@@ -62,31 +53,40 @@ export default ({ modalName }) => {
     setIsTransactionValid(/^[a-zA-Z0-9]{10}$/.test(value));
   };
   const params = {
-    userId,
-    gateway_name,
-    amount,
+    userId: userDeatils.userId,
+    gateway_name: gateway_name,
+    amount: newAmount,
     referredBy: userDeatils.referredBy,
-    payment_type,
-    gateway_Number,
+    payment_type: payment_type,
+    gateway_Number: gateway_Number,
     transactionID,
-    type,
+    mobile: userDeatils.phone[0].number,
+    type: parseInt(0),
   };
-  console.log(params);
+  console.log(payment_type);
+  const [PayType, setPayType] = useState(payment_type);
+  const mainAmount = newAmount;
+  // const PayType = payment_type;
+  console.log(mainAmount);
+  console.log(PayType);
+  const [amountnew, setAmountNew] = useState(newAmount);
+
+  console.log("1", amountnew);
 
   const handlePayment = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/submitTransaction/`,
+        `https://api.kingbaji.live/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
-          amount: amount,
+          base_amount: amountnew,
           referredBy: userDeatils.referredBy,
-          payment_type: payment_type,
+          payment_type: PayType,
           gateway_Number: gateway_Number,
           transactionID,
-          mobile: userDeatils.phone,
+          mobile: userDeatils.phone[0].number,
           type: parseInt(0),
         },
         {
@@ -101,10 +101,12 @@ export default ({ modalName }) => {
 
       if (response.data.success === true) {
         console.log(response.data.success);
-
         setTimeout(() => {
-          window.location.reload(); // Reload the page after navigation
-        }, 500);
+          setShowSuccess(false);
+          closeModal(); // Optionally close the modal after showing success
+          navigate("/"); // or your success redirect
+          window.location.reload(); // If you want to reload after redirect
+        }, 2000);
       }
       if (response.data.success === false) {
         console.log(response.data.success);
@@ -119,6 +121,12 @@ export default ({ modalName }) => {
       console.error("Error making payment:", error);
     }
   };
+
+  useEffect(() => {
+    if (newAmount <= 0) {
+      closeModal(); // Close if amount is invalid
+    }
+  }, [newAmount]);
 
   return (
     <div
@@ -139,9 +147,9 @@ export default ({ modalName }) => {
                         <div className="custom-content-lg">
                           <div
                             className="custom-timer-container"
-                            style={{ background: "#F7941D" }}
+                            style={{ background: "#000080" }}
                           >
-                            <h1 className="custom-timer-display">
+                            <h1 className="custom-timer-display" style={{ color: "white" }}>
                               {formatTime(timeRemaining)}
                             </h1>
                             <span className="custom-timer-label">
@@ -160,13 +168,13 @@ export default ({ modalName }) => {
                             </div>
                             <form className="custom-payment-form">
                               <p className="custom-instruction-text">
-                                {payment_type} to the account below and fill in
-                                the required information
+                                {Payment?.payment_type} to the account below and
+                                fill in the required information
                                 <br />
                               </p>
                               {/* <span className="custom-instruction-subtext">
-                                    নীচের অ্যাকাউন্টে অর্থ {payment_type} করুন এবং প্রয়োজনীয় তথ্য পূরণ করুন।
-                                  </span> */}
+                                নীচের অ্যাকাউন্টে অর্থ {payment_type} করুন এবং প্রয়োজনীয় তথ্য পূরণ করুন।
+                              </span> */}
 
                               <div className="custom-form-group">
                                 <label className="custom-form-label">
@@ -177,7 +185,23 @@ export default ({ modalName }) => {
                                     type="text"
                                     disabled
                                     className="custom-form-input"
-                                    placeholder={amount}
+                                    placeholder={newAmount}
+                                    value={newAmount}
+                                  />
+                                  <ImCopy className="custom-input-icon" />
+                                </div>
+                              </div>
+                              <div className="custom-form-group">
+                                <label className="custom-form-label">
+                                  Your Process system
+                                </label>
+                                <div className="custom-input-container">
+                                  <input
+                                    type="text"
+                                    disabled
+                                    className="custom-form-input"
+                                    placeholder={Payment?.payment_type}
+                                    value={Payment?.payment_type}
                                   />
                                   <ImCopy className="custom-input-icon" />
                                 </div>
@@ -190,9 +214,10 @@ export default ({ modalName }) => {
                                 <div className="custom-input-container">
                                   <input
                                     type="text"
-                                    disabled={!isTransactionValid}
+                                    disabled
                                     className="custom-form-input"
-                                    placeholder={gateway_Number}
+                                    placeholder={"0" + gateway_Number}
+                                    value={"0" + gateway_Number}
                                   />
                                   <ImCopy className="custom-input-icon" />
                                 </div>
@@ -207,7 +232,9 @@ export default ({ modalName }) => {
                                     type="text"
                                     required
                                     className="custom-form-input"
+                                    style={{ appearance: "auto" }}
                                     value={transactionID}
+                                    placeholder={transactionID}
                                     onChange={handleTransactionIDChange}
                                     maxLength="10"
                                     minLength="10"
@@ -232,6 +259,43 @@ export default ({ modalName }) => {
                 </div>
               </div>
             </div>
+            {ShowSuccess === true ? (
+              <div className="pop-wrap pop-success">
+                <div className="register-success-wrap">
+                  <div className="register-success-cont">
+                    <div className="register-success-txt top-inner">
+                      <div className="success-checkmark">
+                        <div className="check-icon">
+                          <span className="icon-line line-tip"></span>
+                          <span className="icon-line line-long"></span>
+                          <div className="icon-circle"></div>
+                          <div className="icon-fix"></div>
+                        </div>
+                      </div>
+                      <h4>Success</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="pop-wrap pop-success">
+                <div className="register-success-wrap">
+                  <div className="register-success-cont">
+                    <div className="register-success-txt top-inner">
+                      <div className="success-checkmark">
+                        <div className="check-icon">
+                          <span className="icon-line line-tip"></span>
+                          <span className="icon-line line-long"></span>
+                          <div className="icon-circle"></div>
+                          <div className="icon-fix"></div>
+                        </div>
+                      </div>
+                      <h4>Success</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

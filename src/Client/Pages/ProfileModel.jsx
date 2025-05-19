@@ -18,8 +18,8 @@ export default ({ modalName }) => {
     loginUser,
     logout,
     logoutUser,
-    verifyUserToken,
-    verifyUser,
+    Token,
+    
     token,
     userDeatils,
     userId,
@@ -48,12 +48,12 @@ export default ({ modalName }) => {
         "https://api.kingbaji.live/api/v1/user_balance",
         { userId }
       );
-      // console.log(response);
-      //  setBalance(response.data.balance);
+      console.log(response);
+       setBalance(response.data.balance);
 
-      if (response.data.hasOwnProperty("balance")) {
-        verifyUser(token); // Ensure token is available in scope
-      }
+      // if (response.data.hasOwnProperty("balance")) {
+      //   (token); // Ensure token is available in scope
+      // }
     } catch (error) {
       // console.error("Error fetching balance:", error);
     } finally {
@@ -91,7 +91,7 @@ export default ({ modalName }) => {
   //      setBalance(response.data.balance);
 
   //      if (response.data.hasOwnProperty("balance")) {
-  //        verifyUser(token); // Ensure token is available in scope
+  //        (token); // Ensure token is available in scope
   //      }
   //    } catch (error) {
   //      console.error("Error fetching balance:", error);

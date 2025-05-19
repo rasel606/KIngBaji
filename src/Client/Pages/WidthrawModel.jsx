@@ -76,12 +76,14 @@ export default ({ modalName }) => {
     isAuthenticated,
     loginUser,
     logoutUser,
-    verifyUserToken,
-    verifyUser,
+    Token,
+  
     token,
     userDeatils,
-    userId,
+
   } = useAuth();
+
+   const userId = userDeatils?.userId || "";
 
   const data = {
     userId: userId,
@@ -136,7 +138,7 @@ export default ({ modalName }) => {
       setPayment(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
     }
   }, [paymentMethods]);
-console.log(userDeatils.isVerified);
+
 
   // useEffect(() => {
   //   if (userDeatils.length > 0) {
@@ -160,7 +162,7 @@ console.log(userDeatils.isVerified);
       }
     };
     fetchGateways();
-  }, [userDeatils.userId, token]);
+  }, [userDeatils, token]);
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   // const inputRef = useRef(null);
@@ -199,10 +201,11 @@ console.log(userDeatils.isVerified);
       return;
     }
     try {
+      // console.log(userId, selectedPaymentAmount,gateway_name,userDeatils.referredBy,userDeatils.phone[0].number);
       const response = await axios.post(
         `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
         {
-          userId: userDeatils.userId,
+          userId: userId,
           gateway_name:Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name,
           referredBy: userDeatils.referredBy,
           mobile: userDeatils.phone[0].number,

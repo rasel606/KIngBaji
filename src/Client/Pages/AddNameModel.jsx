@@ -10,14 +10,14 @@ export default ({
   const {  activeModal, openModal, closeModal  } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, loginUser, logoutUser, verifyUser,userId } = useAuth();
+  const { isAuthenticated, loginUser, logoutUser, userId,userDeatils } = useAuth();
   const [name, setName] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [ShowSuccess, setShowSuccess] = useState(false);
   const handleSubmit = async(e) => {
     
     try {
-      if(verifyUser){
+      if(userDeatils.length > 0){
         const response= await UpdateName(name,userId)
         
         if(response.data.status === 200){

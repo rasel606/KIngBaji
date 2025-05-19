@@ -18,68 +18,72 @@ const AuthContextProvider = ({ children }) => {
   const [userDeatils, setUserDeatils] = useState(null || "");
   const [loading, setLoading] = useState(true);
 
-const [email, setEmail] = useState(null||"");
-const [showPopup, setShowPopup] = useState(false);
+  const [email, setEmail] = useState(null || "");
+  const [showPopup, setShowPopup] = useState(false);
 
 
-console.log("isAuthenticated", userDeatils, userId, token);
-console.log("isAuthenticated -1 ", userDeatils, );
-console.log("isAuthenticated - 2", userId);
-console.log("isAuthenticated - 3", token);
+  console.log("isAuthenticated", userDeatils, userId, token);
+  console.log("isAuthenticated -1 ", userDeatils,);
+  console.log("isAuthenticated - 2", userId);
+  console.log("isAuthenticated - 3", token);
 
 
 
 
 
-  const verifyUser = async (token) => {
-    if (!token) return;
-    console.log(token)
-    const data = await verify(token);
-    console.log(data)
-    if (data.message === 'User authenticated') {
-      setIsAuthenticated(true);
-      setUserId(data.user.userId);
-      setUserDeatils(data.user);
-     
-      console.log(data)
-      return data
-    } else {
-      setIsAuthenticated(false);
+ useEffect(() => {
+  const  verifyUser= async () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      try {
+        await verify(token);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        logout();
+      }
     }
-}
-
-const verifyUserToken = async (token) => {
-  if (!token) {
-    console.log('No token found');
-    setIsAuthenticated(false);
     setLoading(false);
-    return;
-  }
+  };
+  
+  verifyUser();
+}, []);
 
-  setLoading(true);
-  axios.get('https://api.kingbaji.live/api/v1/verify', {
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-  })
-    .then((response) => {
-      setIsAuthenticated(true);
-      setUserId(response.data.userId);
-      setUserDeatils(response.data.user);
-      console.log(response.data.user);
-    })
-    .catch(() => {
+  const Token = async (token) => {
+    if (!token) {
+      console.log('No token found');
       setIsAuthenticated(false);
-      setUserId(null);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    axios.get('https://api.kingbaji.live/api/v1/verify', {
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     })
-    .finally(() => setLoading(false));
-}
+      .then((response) => {
+        setIsAuthenticated(true);
+        setUserId(response.data.userId);
+        setUserDeatils(response.data.user);
+        console.log(response.data.user);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setUserId(null);
+      })
+      .finally(() => setLoading(false));
+  }
 
 
   useEffect(() => {
-    verifyUserToken(token);
-  }, [token,userId>0]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
+    if (token) {
+      Token(token);
+    } else {
+      setLoading(false);
+    }
+  }, [token]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
 
   // Login function
-  
+
 
 
 
@@ -88,40 +92,61 @@ const verifyUserToken = async (token) => {
       console.log(userId, password);
       const response = await LoginUser(userId, password);
       console.log(response);
-  
       const token = response.data.token;
-      localStorage.setItem('token', token);
-  
-      console.log("Token",response,response.data)
-      
-      localStorage.setItem('authToken', response.data.token);
+      const userData = response.data.user; // Get user object directly from response
+
+      localStorage.setItem('authToken', token);
       setIsAuthenticated(true);
-      setUserId(response.data.user[0].userId);
-      setToken(response.data.token);
-      closeModal()
-      return response
+      setUserId(userData.userId);
+      setToken(token);
+
+      // Set complete user details from response
+      setUserDeatils({
+        userId: userData.userId,
+        phone: userData.phone,
+        balance: userData.balance,
+        referralCode: userData.referralCode,
+        // ... include other necessary fields ...
+      });
+
+      closeModal();
+      return response;
     } catch (error) {
-      console.error(error);
+      console.error('Login error:', error);
+      throw error; // Propagate error for handling in components
     }
   };
-  
+
   const userRegistar = async (data) => {
     console.log(data)
     try {
       console.log(data)
       const response = await CreateUser(data);
       console.log(response)
-      
+      const token = response.data.token;
+      const userData = response.data.user;
       localStorage.setItem('authToken', response.data.token);
+      if (response.data.token) {
+        localStorage.removeItem('referralCode');
+      }
       setIsAuthenticated(true);
       setUserId(response.data.user.userId);
       setToken(response.data.token);
-      closeModal()
-      localStorage.removeItem('referralCode');
+      setUserDeatils({
+        userId: userData.userId,
+        phone: userData.phone,
+        balance: userData.balance,
+        referralCode: userData.referralCode,
+        // ... include other necessary fields ...
+      });
+
+      closeModal();
+      return response;
+
       // return response
     } catch (error) {
       console.error(error);
-      
+
     }
   };
 
@@ -130,16 +155,17 @@ const verifyUserToken = async (token) => {
 
   const logout = async () => {
     await localStorage.removeItem('authToken');
-   
+
     setIsAuthenticated(false);
-    
+    setUserDeatils(null);
+    setToken(null);
     setUserId(null);
     setEmail(null);
     closeModal()
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout ,verifyUser,userRegistar,token, userId, userDeatils , loading,setLoading}}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, userRegistar, token, userId, userDeatils, loading, setLoading }}>
       {children}
 
     </AuthContext.Provider>

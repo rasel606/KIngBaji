@@ -14,7 +14,7 @@ export default ({
     isAuthenticated,
     loginUser,
     logoutUser,
-    verifyUser,
+    
     userId,
     userDeatils,
   } = useAuth();

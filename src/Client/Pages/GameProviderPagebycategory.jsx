@@ -161,10 +161,11 @@ export default () => {
         `https://api.kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider}&page=${page}`
       );
       const result = await res.json();
-
+console.log(result.data);
       if (result.success) {
         if (result.data.length < 24) setHasMore(false);
         setGameData((prev) => [...prev, ...result.data]);
+        
         setPage((prev) => prev + 1);
       }
     } catch (error) {

@@ -10,7 +10,7 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, login, logoutUser, verifyUser } = useAuth();
+  const { isAuthenticated, login, logoutUser,  } = useAuth();
 
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState("");

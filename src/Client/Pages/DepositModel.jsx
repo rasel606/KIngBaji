@@ -56,8 +56,8 @@ export default ({ modalName }) => {
     isAuthenticated,
     loginUser,
     logoutUser,
-    verifyUserToken,
-    verifyUser,
+    Token,
+    
     token,
     userDeatils,
     userId,

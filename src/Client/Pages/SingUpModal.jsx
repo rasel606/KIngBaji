@@ -115,7 +115,7 @@ export default ({ modalName }) => {
   const handleClearphoneNumber = () => setPhoneNumber("");
 
   const toggleDropdown = () => setIsOpen(!isOpen);
-  const { isAuthenticated, loginUser, logoutUser, verifyUser, userRegistar } =
+  const { isAuthenticated, loginUser, logoutUser, userRegistar } =
     useAuth();
   const validateUsername = (userId) => {
     return userId.length >= 4 && userId.length <= 15;
@@ -181,7 +181,7 @@ export default ({ modalName }) => {
     console.log(referredBy);
     console.log(referralCode);
     console.log(userId, password, selectedCountry, phoneNumber);
-    const data = {
+    const userData = {
       userId,
       password,
       countryCode: "+088",
@@ -189,9 +189,15 @@ export default ({ modalName }) => {
       referredBy: referralCode,
     };
 
-    console.log(data);
-    const result = await userRegistar(data);
-    console.log(result);
+    try {
+      await userRegistar(userData);
+      alert("Registration successful");
+      handleClearUsername();
+      handleClearPassword();
+      handleClearphoneNumber();
+    } catch (err) {
+      alert("Registration failed");
+    }
   };
 
   return (
