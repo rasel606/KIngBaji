@@ -61,13 +61,14 @@ export default (props) => {
     token,
     userDeatils,
 
-    loading,
-    setLoading,
+    // loading,
+    // setLoading,
   } = useAuth();
 
+const [loading,
+    setLoading] = useState(true);
 
-
-    const userId = userDeatils?.userId || "";
+    const userId = userDeatils?.userId;
   // const referredBy = userDeatils?.referredBy || "";
 
 

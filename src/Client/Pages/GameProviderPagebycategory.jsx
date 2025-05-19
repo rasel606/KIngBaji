@@ -103,6 +103,7 @@ const SortBar = () => (
 );
 
 export default () => {
+    const { userDeatils} = useAuth();
   const [data, setData] = useState([]);
   const [gameData, setGameData] = useState([]);
   const [filteredGames, setFilteredGames] = useState([]);
@@ -110,7 +111,6 @@ export default () => {
   const [loading, setLoading] = useState(true);
   const { category_name, providercode } = useParams();
   const [showPopup, setShowPopup] = useState(false);
-  const { userDeatils, userId } = useAuth();
   const [selectedProvider, setSelectedProvider] = useState(providercode);
   const [categories, setCategories] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -119,6 +119,8 @@ export default () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const loader = useRef();
+
+    const userId = userDeatils?.userId;
 
   /** 🚀 Fetch Category Data */
   useEffect(() => {

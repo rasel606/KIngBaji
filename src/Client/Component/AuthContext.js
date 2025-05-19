@@ -16,7 +16,7 @@ const AuthContextProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('authToken'));
   const [userId, setUserId] = useState(null || "");
   const [userDeatils, setUserDeatils] = useState(null || "");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState(null || "");
   const [showPopup, setShowPopup] = useState(false);
