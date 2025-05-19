@@ -116,7 +116,7 @@ export default ({ modalName }) => {
                           onClick={() => handleClearUsername('userId')}
                         />
                       )}
-                      {userId && <div className="member-error-box">{userId}</div>}
+                      {setError && <div className="member-error-box">{setError}</div>}
                     </div>
                     
                     <div className="input-group password third-party-input-group-title">
@@ -141,7 +141,7 @@ export default ({ modalName }) => {
                           onClick={() => handleClearPassword('password')}
                         />
                       )}
-                      {password && <div className="member-error-box">{password}</div>}
+                      {errorPassword && <div className="member-error-box">{errorPassword}</div>}
                     </div>
                     
                     <div className="login-info-box" onClick={() => openModal("ResetmypasswordModal")}>
