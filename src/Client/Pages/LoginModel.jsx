@@ -164,15 +164,15 @@ export default ({ modalName }) => {
 
                   <div className="button" onClick={() => handleLogin()}>
                     <a>Login</a>
-                    <div></div>
+                    
                   </div>
                 </form>
 
                 <p
                   className="button-tips"
-                  onClick={() => openModal("SingUpModal")}
+                  
                 >
-                  <span>Do not have an account? </span>
+                  <span onClick={() => openModal("SingUpModal")}>Do not have an account? </span>
                   <a href="/register">Sign Up</a>
                 </p>
               </div>

@@ -73,7 +73,7 @@ export default (props) => {
       useEffect(() => {
 
         setLoading(true);
-        const url = "https://api.kingbaji.live/api/v1/New-table-categories";
+        const url = "http://localhost:5000/api/v1/New-table-categories";
         const response = fetch(url, {
           method: "GET",
           headers: {
