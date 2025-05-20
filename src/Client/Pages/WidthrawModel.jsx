@@ -203,7 +203,7 @@ export default ({ modalName }) => {
     try {
       // console.log(userId, selectedPaymentAmount,gateway_name,userDeatils.referredBy,userDeatils.phone[0].number);
       const response = await axios.post(
-        `http://localhost:5000/api/v1/widthdraw_with_transaction`,
+        `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
         {
           userId: userId,
           gateway_name:Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name,
