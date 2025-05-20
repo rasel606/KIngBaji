@@ -10,7 +10,7 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, login, logoutUser,  } = useAuth();
+  const { isAuthenticated, login, logoutUser } = useAuth();
 
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState("");
@@ -79,7 +79,6 @@ export default ({ modalName }) => {
   };
 
   return (
-
     <div className="popup-page-wrapper active">
       <div className="popup-page popup-page--active popup-page--align-top">
         <div className="popup-page__backdrop" onClick={closeModal}></div>
@@ -91,12 +90,18 @@ export default ({ modalName }) => {
           <div className="popup-page-main__container">
             <div className="content mcd-style member-content new-login third-party-login">
               <div className="quick-login-wrapper">
-                <div 
-                  className="logo-box" 
-                  style={{ backgroundImage: 'url("https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png")' }}
+                <div
+                  className="logo-box"
+                  style={{
+                    backgroundImage:
+                      'url("https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png")',
+                  }}
                 ></div>
-                
-                <form onSubmit={(e) => e.preventDefault()} className="quick-login-form">
+
+                <form
+                  onSubmit={(e) => e.preventDefault()}
+                  className="quick-login-form"
+                >
                   <div className="menu-box">
                     <div className="input-group third-party-input-group-title">
                       <label htmlFor="userId">Username</label>
@@ -104,24 +109,26 @@ export default ({ modalName }) => {
                         type="text"
                         id="userId"
                         name="userId"
-                        className={`input ${userId ? 'error' : ''}`}
+                        className={`input ${userId ? "error" : ""}`}
                         placeholder="4-15 char, allow number"
                         value={userId}
                         onChange={handleUsername}
                       />
                       {userId && (
-                        <input 
-                          type="button" 
-                          className="clear active" 
-                          onClick={() => handleClearUsername('userId')}
+                        <input
+                          type="button"
+                          className="clear active"
+                          onClick={() => handleClearUsername("userId")}
                         />
                       )}
-                      {setError && <div className="member-error-box">{setError}</div>}
+                      {setError && (
+                        <div className="member-error-box">{setError}</div>
+                      )}
                     </div>
-                    
+
                     <div className="input-group password third-party-input-group-title">
-                      <div 
-                        className={`eyes ${isPasswordVisible ? 'show' : ''}`} 
+                      <div
+                        className={`eyes ${isPasswordVisible ? "show" : ""}`}
                         onClick={togglePasswordVisibility}
                       ></div>
                       <label htmlFor="password">Password</label>
@@ -129,35 +136,42 @@ export default ({ modalName }) => {
                         type={isPasswordVisible ? "text" : "password"}
                         id="password"
                         name="password"
-                        className={`input ${password ? 'error' : ''}`}
+                        className={`input ${password ? "error" : ""}`}
                         placeholder="6-20 Characters and Numbers"
                         value={password}
                         onChange={handlePassword}
                       />
                       {password && (
-                        <input 
-                          type="button" 
-                          className="clear active" 
-                          onClick={() => handleClearPassword('password')}
+                        <input
+                          type="button"
+                          className="clear active"
+                          onClick={() => handleClearPassword("password")}
                         />
                       )}
-                      {errorPassword && <div className="member-error-box">{errorPassword}</div>}
+                      {errorPassword && (
+                        <div className="member-error-box">{errorPassword}</div>
+                      )}
                     </div>
-                    
-                    <div className="login-info-box" onClick={() => openModal("ResetmypasswordModal")}>
+
+                    <div className="login-info-box">
                       <div className="forgetpassword-buttn">
-                        <a >Forgot password?</a>
+                        <a onClick={() => openModal("ResetmypasswordModal")}>
+                          Forgot password?
+                        </a>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="button" onClick={() => handleLogin()}>
                     <a>Login</a>
                     <div></div>
                   </div>
                 </form>
-                
-                <p className="button-tips" onClick={() => openModal("SingUpModal")}>
+
+                <p
+                  className="button-tips"
+                  onClick={() => openModal("SingUpModal")}
+                >
                   <span>Do not have an account? </span>
                   <a href="/register">Sign Up</a>
                 </p>
@@ -217,8 +231,8 @@ export default ({ modalName }) => {
     //               <div className="input-group password">
     //                 {/* <div className="input-group password">
     //                     <div type="button"
-    //                        className={`eyes ${password ? "active" : "not"}`} 
-                        
+    //                        className={`eyes ${password ? "active" : "not"}`}
+
     //                       onClick={togglePasswordVisibility}
     //                     ></div>
     //                     <label htmlFor="password">Password</label>
