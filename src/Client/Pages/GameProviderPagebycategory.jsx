@@ -46,9 +46,7 @@ const SearchTab = ({ providers, selectedProvider, onProviderChange }) => (
           } ng-star-inserted`}
           onClick={() => onProviderChange(provider.providercode)}
         >
-          {console.log(provider.
-providercode
-)}
+          {console.log(provider.providercode)}
           <div className="provider-label">{provider.providercode}</div>
         </li>
       ))}
@@ -103,7 +101,7 @@ const SortBar = () => (
 );
 
 export default () => {
-    const { userDeatils} = useAuth();
+  const { userDeatils } = useAuth();
   const [data, setData] = useState([]);
   const [gameData, setGameData] = useState([]);
   const [filteredGames, setFilteredGames] = useState([]);
@@ -116,11 +114,11 @@ export default () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [balance, setBalance] = useState(userDeatils?.balance || 0);
   const [gameWindow, setGameWindow] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const loader = useRef();
-
-    const userId = userDeatils?.userId;
+  const limit = 24;
+  const userId = userDeatils?.userId;
 
   /** 🚀 Fetch Category Data */
   useEffect(() => {
@@ -153,7 +151,7 @@ export default () => {
   // useEffect(() => {
   //   fetchGames();
   // }, [selectedProvider, categories, category_name]);
-  console.log(category_name, providercode );
+  console.log(category_name, providercode);
 
   const fetchGames = async () => {
     if (!categories) return;
@@ -163,11 +161,11 @@ export default () => {
         `https://api.kingbaji.live/api/v1/New-Games-with-Providers-By-Category?category=${category_name}&provider=${selectedProvider}&page=${page}`
       );
       const result = await res.json();
-console.log(result.data);
+      console.log(result.data);
       if (result.success) {
-        if (result.data.length < 24) setHasMore(false);
+        if (result.data.length < limit) setHasMore(false);
         setGameData((prev) => [...prev, ...result.data]);
-        
+
         setPage((prev) => prev + 1);
       }
     } catch (error) {
@@ -180,9 +178,9 @@ console.log(result.data);
     setGameData([]);
     setHasMore(true);
   }, [selectedProvider]);
-  useEffect(() => {
-    if (page === 1) fetchGames(); // initial
-  }, [categories, selectedProvider]);
+  // useEffect(() => {
+  //   if (page === 1) fetchGames(); // initial
+  // }, [categories, selectedProvider]);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -193,11 +191,11 @@ console.log(result.data);
       { threshold: 1 }
     );
 
-    if (loader.current) {
-      observer.observe(loader.current);
-    }
+     if (loader.current) observer.observe(loader.current);
 
-    return () => observer.disconnect();
+    return () => {
+      if (loader.current) observer.unobserve(loader.current);
+    };
   }, [gameData, hasMore]);
 
   /** 🚀 Handle Game Click */
@@ -208,32 +206,33 @@ console.log(result.data);
     setLoading(true);
 
     try {
-      if(userId)
-        {const response = await fetch(
-        "https://api.kingbaji.live/api/v1/launch_gamePlayer",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            game_id: game.g_code,
-            p_type: game.p_type,
-            p_code: game.p_code,
-          }),
-        }
-      );
+      if (userId) {
+        const response = await fetch(
+          "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+              game_id: game.g_code,
+              p_type: game.p_type,
+              p_code: game.p_code,
+            }),
+          }
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      console.log(data);
-      if (data.errMsg === "Success" && userId) {
         console.log(data);
-        setPlayGameData(data);
-        setShowPopup(true);
-      }}
+        if (data.errMsg === "Success" && userId) {
+          console.log(data);
+          setPlayGameData(data);
+          setShowPopup(true);
+        }
+      }
     } catch (error) {
       console.error("Error launching game:", error);
     } finally {
@@ -255,14 +254,13 @@ console.log(result.data);
     try {
       await handelUserDetails(userId);
       // if(userId){
-        const response = await axios.post(
-          "https://api.kingbaji.live/api/v1/user_balance",
-          { userId }
-        );
-        setBalance(response.data.balance);
-        console.log("Balance Data:", response.data);
+      const response = await axios.post(
+        "https://api.kingbaji.live/api/v1/user_balance",
+        { userId }
+      );
+      setBalance(response.data.balance);
+      console.log("Balance Data:", response.data);
       // }
-      
     } catch (error) {
       console.error("Error fetching balance:", error);
     }
@@ -301,28 +299,26 @@ console.log(result.data);
               <SortBar />
 
               <div className="games-main">
-                {
-                  gameData?.map((game, index) => (
-                    <div className="games-box">
-                      {/* {console.log(game)} */}
-                      <div className="pic" onClick={() => handlePlay(game)}>
-                        <p>
-                          <img
-                            src={game?.imgFileName}
-                            alt={game.name}
-                            loading="lazy"
-                          />
-                        </p>
-                      </div>
-                      <div className="text">
-                        <h3>{game.gameName?.gameName_enus || game.name}</h3>
-                      </div>
+                {gameData?.map((game, index) => (
+                  <div className="games-box">
+                    {/* {console.log(game)} */}
+                    <div className="pic" onClick={() => handlePlay(game)}>
+                      <p>
+                        <img
+                          src={game?.imgFileName}
+                          alt={game.name}
+                          loading="lazy"
+                        />
+                      </p>
                     </div>
-                  ))
-                }
+                    <div className="text">
+                      <h3>{game.gameName?.gameName_enus || game.name}</h3>
+                    </div>
+                  </div>
+                ))}
               </div>
               <div ref={loader} className="loading">
-              {hasMore && <div className="list-loading"></div>}
+                {hasMore && <div className="list-loading"></div>}
                 {!hasMore && <div className="prompt">－end of page－</div>}
               </div>
               {/* <div style={{ height: '10px', visibility: 'hidden' }}>anchor</div> */}
@@ -330,9 +326,8 @@ console.log(result.data);
           </div>
         </div>
       </div>
-<Footer></Footer>
+      <Footer></Footer>
       {showPopup && playGameData?.gameUrl && (
-
         <div className="popup-page-wrapper active" onClick={handleClosePopup}>
           <div
             className="popup-page show-toolbar popup-page--active popup-page--align-top"
@@ -358,15 +353,13 @@ console.log(result.data);
             </div>
           </div>
         </div>
-   
       )}
     </div>
   );
 };
 
-
-
-{/* <div className="popup-page-wrapper active" onClick={handleClosePopup}>
+{
+  /* <div className="popup-page-wrapper active" onClick={handleClosePopup}>
           <div
             className="popup-page show-toolbar popup-page--active popup-page--align-top"
             onClick={(e) => e.stopPropagation()}
@@ -390,4 +383,5 @@ console.log(result.data);
               </div>
             </div>
           </div>
-        </div> */}
+        </div> */
+}

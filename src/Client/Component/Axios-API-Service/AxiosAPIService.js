@@ -33,6 +33,7 @@ export const UserEmailOptVerify = (phone,userId,code) => API.post("/verify_opt",
 export const searchTransactionsbyUserId = (data) => API.post("/searchTransactionsbyUserId", data);
 export const UserHistory = (data) => API.post("/user-history", data);
 export const getUserSocialLinks = (data) => API.post("/get_user_social_links", data);
+export const getReferredUsers = (data) => API.post("/get_referred_users", data);
 
 export const verifyEmail = (formData) => API.post("/verify-email", formData);
 export const Emailsend = (formData) => API.post("/send-otp", formData);
