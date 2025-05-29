@@ -148,7 +148,7 @@ export default (props) => {
                       style={{ display: isMenuOpen ? "block" : "none" }}
                       onClick={() => setIsMenuOpen(false)}
                     ></div>
-                    <div className="menu active">
+                    <div className={`menu ${isMenuOpen ? "active" :""}`} >
                       <div className="menu-first">
                         <ul className="home">
                           <li data-category="home">
@@ -166,7 +166,7 @@ export default (props) => {
                         </ul>
 
                         <ul className="vendor">
-                          {data?.map((category, index) => (
+                          {categories?.map((category, index) => (
                             <li
                               key={category.id}
                               className={activeIndex === index ? "active" : ""}
@@ -177,7 +177,7 @@ export default (props) => {
                             >
                               {console.log(
                                 "category",
-                                category.category?.image
+                                category?.image
                               )}
                               <span
                                 className="item-icon"

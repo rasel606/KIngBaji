@@ -24,15 +24,15 @@ export default ({ modalName }) => {
 
   const handlePassword = (e) => {
     const value = e.target.value;
-    const min = "1234"; // 3 characters
-    const max = "12345678901"; // 12 characters
+    const min = "123456"; // 3 characters
+    const max = "1234567890abcdefghijk"; // 12 characters
 
     const regex =
       "/...^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%#])[A-Za-zd@$!%#]{8,}$.../";
     if (value.length < min.length) {
-      seterrorPassword("Password minimum length is 4");
+      seterrorPassword("Password minimum length is 6");
     } else if (value.length > max.length) {
-      seterrorPassword("Password maximum length is 12");
+      seterrorPassword("Password maximum length is 20");
     } else if (!validatePassword(value)) {
       seterrorPassword("Password must be 6-20 characters long.");
     } else {
