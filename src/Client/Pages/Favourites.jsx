@@ -1,6 +1,23 @@
 import React from 'react'
+import { useAuth } from '../Component/AuthContext';
 
 export default ()=> {
+    const {
+      isAuthenticated,
+      loginUser,
+      logoutUser,
+      Token,
+      isLoginNotify, setIsLoginNotify,
+      token,
+      userDeatils,
+  
+      // loading,
+      // setLoading,
+    } = useAuth();
+
+    const newNotrify = () => {
+       setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
+    }
     const scrollimages = [
         {
           src: "https://i.ibb.co.com/DChN5S5/img-1.jpg",
@@ -27,8 +44,8 @@ export default ()=> {
             <div className="recommend-bg">
               <div className="recommend-main">
                 {scrollimages.map((image) => (
-                  <div key={image.id} className="recommend-card">
-                    <a href="#">
+                  <div key={image.id} className="recommend-card" >
+                    <a href="#"> 
                       <img alt={image.id} src={image.src} loading="lazy" />
                     </a>
                   </div>

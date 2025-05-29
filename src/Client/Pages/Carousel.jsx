@@ -1,102 +1,98 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-export default ({ images }) => {
-  const [activeIndex, setActiveIndex] = useState(4);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [translate, setTranslate] = useState(0);
-  const carouselRef = useRef(null);
-  const itemWidth = 265.6;
+export default () => {
+  const images = [
+    "https://img.s628b.com/upload/h5Announcement/image_218846.jpg",
+    "https://img.s628b.com/upload/h5Announcement/image_231401.jpg",
+    "https://img.s628b.com/upload/h5Announcement/image_218523.jpg",
+    "https://img.s628b.com/upload/h5Announcement/image_221809.jpg",
+    "https://img.s628b.com/upload/h5Announcement/image_227293.jpg",
+    "https://img.s628b.com/upload/h5Announcement/image_236835.png",
+    "https://img.s628b.com/upload/h5Announcement/image_211169.jpg",
+    "https://img.s628b.com/upload/h5Announcement/image_241498.jpg",
+    "https://img.s628b.com/upload/h5Announcement/image_216168.jpg",
+  ];
 
-  // Auto-rotate configuration
-  const autoRotate = true;
-  const rotateDelay = 5000;
+  const marqueeRef = useRef(null);
+  const intervalRef = useRef(null);
+  const positionRef = useRef(0);
+  const itemWidthRef = useRef(0);
 
   useEffect(() => {
-    let interval;
-    if (autoRotate) {
-      interval = setInterval(() => {
-        setActiveIndex(prev => (prev + 1) % images.length);
-      }, rotateDelay);
-    }
-    return () => clearInterval(interval);
+    const marquee = marqueeRef.current;
+    if (!marquee) return;
+
+    const wrapper = marquee.querySelector('.item-wrap');
+    const firstItem = wrapper.querySelector('.item');
+    if (!firstItem) return;
+
+    // Get initial item width
+    itemWidthRef.current = firstItem.offsetWidth;
+    
+    const moveSlider = () => {
+      positionRef.current -= itemWidthRef.current;
+      
+      // Reset position when we've scrolled through all original images
+      if (Math.abs(positionRef.current) >= itemWidthRef.current * images.length) {
+        positionRef.current = 0;
+        // Remove transition for instant reset
+        wrapper.style.transition = 'none';
+        wrapper.style.transform = `translateX(${positionRef.current}px)`;
+        
+        // Force reflow before adding transition back
+        void wrapper.offsetWidth;
+      }
+      
+      // Apply smooth transition
+      wrapper.style.transition = 'transform 1s ease-in-out';
+      wrapper.style.transform = `translateX(${positionRef.current}px)`;
+    };
+
+    // Start the auto-slide interval (5 seconds)
+    intervalRef.current = setInterval(moveSlider, 5000);
+
+    // Handle window resize
+    const handleResize = () => {
+      // Update item width on resize
+      itemWidthRef.current = firstItem.offsetWidth;
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearInterval(intervalRef.current);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [images.length]);
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.clientX);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const deltaX = e.clientX - startX;
-    setTranslate(deltaX);
-  };
-
-  const handleMouseUp = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    
-    const delta = translate;
-    if (Math.abs(delta) > itemWidth / 4) {
-      setActiveIndex(prev => 
-        delta > 0 
-          ? (prev - 1 + images.length) % images.length 
-          : (prev + 1) % images.length
-      );
-    }
-    setTranslate(0);
-  };
-
   return (
-    <div className="ng-star-inserted" id="mcd-carousel-banner-1">
-      <div className="banner">
-        <div className="banner-v1 ng-star-inserted">
-          <div className="carousel-wrap style-init mcd siblings" 
-               data-auto="true" 
-               data-delay="500"
-               ref={carouselRef}
-               onMouseDown={handleMouseDown}
-               onMouseMove={handleMouseMove}
-               onMouseUp={handleMouseUp}
-               onMouseLeave={handleMouseUp}>
-            
-            <div className="cdk-drag item-drag" 
-                 style={{ transform: `translate3d(${-activeIndex * itemWidth + translate}px, 0, 0)` }}>
-              <div className="item-left">
-                <div className="item-wrap">
-                  {images.map((img, idx) => (
-                    <div key={idx} 
-                         className="item ng-star-inserted" 
-                         idx={idx}
-                         message-id={idx + 1000}
-                         style={{ width: `${itemWidth}px` }}>
-                      <div className="item-pic ng-star-inserted" 
-                           style={{ backgroundImage: `url(${img})` }} />
-                    </div>
-                  ))}
-                </div>
+    <div className="banner">
+      <div className="banner-v1" ref={marqueeRef}>
+        <div className="carousel-wrap style-init mcd siblings" data-auto="true" data-delay="500">
+          <div className="cdk-drag item-drag">
+            <div className="item-left">
+              <div className="item-wrap">
+                {[...images, ...images].map((url, idx) => (
+                  <div key={idx} className="item" style={{ width: "265.6px" }}>
+                    <div
+                      className="item-pic"
+                      style={{ backgroundImage: `url("${url}")` }}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-
-            <ul className="dot-group style-bar">
-              {images.map((_, idx) => (
-                <li key={idx} 
-                    href="#" 
-                    value="4" 
-                    idx={idx}
-                    className={`ng-star-inserted ${activeIndex === idx ? 'active' : ''}`}>
-                  <span className="dot-progress" 
-                        style={{ animationDuration: `${rotateDelay}ms` }} />
-                </li>
-              ))}
-            </ul>
           </div>
+          <ul className="dot-group style-bar">
+            {images.map((_, idx) => (
+              <li key={idx}>
+                <span className={`dot-progress ${idx === 0 ? "active" : ""}`} 
+                      style={{ animationDuration: "5000ms" }}></span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-
-     
     </div>
   );
 };
-

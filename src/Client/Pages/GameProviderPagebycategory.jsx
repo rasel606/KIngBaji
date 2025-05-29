@@ -101,19 +101,19 @@ const SortBar = () => (
 );
 
 export default () => {
-  const { userDeatils } = useAuth();
+  const { userDeatils, isLoginNotify, setIsLoginNotify } = useAuth();
   const [data, setData] = useState([]);
   const [gameData, setGameData] = useState([]);
-  const [filteredGames, setFilteredGames] = useState([]);
-  const [playGameData, setPlayGameData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { category_name, providercode } = useParams();
-  const [showPopup, setShowPopup] = useState(false);
-  const [selectedProvider, setSelectedProvider] = useState(providercode);
-  const [categories, setCategories] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [balance, setBalance] = useState(userDeatils?.balance || 0);
   const [gameWindow, setGameWindow] = useState(null);
+  const [playGameData, setPlayGameData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+   const { category_name, providercode } = useParams();
+  const [selectedProvider, setSelectedProvider] = useState(providercode);
+  const [categories, setCategories] = useState([]);
+   const [filteredGames, setFilteredGames] = useState([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const loader = useRef();
@@ -191,7 +191,7 @@ export default () => {
       { threshold: 1 }
     );
 
-     if (loader.current) observer.observe(loader.current);
+    if (loader.current) observer.observe(loader.current);
 
     return () => {
       if (loader.current) observer.unobserve(loader.current);
@@ -201,6 +201,10 @@ export default () => {
   /** 🚀 Handle Game Click */
   const handlePlay = async (game) => {
     if (isPlaying) return;
+    if (!userDeatils) {
+      setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
+      return;
+    }
 
     setIsPlaying(true);
     setLoading(true);
@@ -226,7 +230,6 @@ export default () => {
 
         const data = await response.json();
 
-        console.log(data);
         if (data.errMsg === "Success" && userId) {
           console.log(data);
           setPlayGameData(data);
@@ -235,6 +238,7 @@ export default () => {
       }
     } catch (error) {
       console.error("Error launching game:", error);
+      // setError(error);
     } finally {
       setIsPlaying(false);
       setLoading(false);
@@ -251,6 +255,10 @@ export default () => {
 
   /** 🚀 Refresh Balance */
   const handleRefresh = async (userId) => {
+       if (!userDeatils?.userId) {
+      setIsLoginNotify(true);
+      return;
+    }
     try {
       await handelUserDetails(userId);
       // if(userId){

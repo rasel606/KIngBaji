@@ -1,267 +1,407 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useModal } from "../Component/ModelContext";
 
 export default ({ modalName }) => {
-    const { activeModal, openModal, closeModal } = useModal();
-    if (activeModal !== modalName) return null;
-    const [giftPoints, setGiftPoints] = useState(0);
-    const [realMoney, setRealMoney] = useState(0);
-    const [inputPoints, setInputPoints] = useState(0);
+  const { activeModal, openModal, closeModal } = useModal();
 
-    const handleConvertClick = () => {
-        if (inputPoints >= 5000) {
-            setRealMoney(inputPoints / 1000); // Conversion ratio
-        } else {
-            alert("Minimum Gift Required: 5000 Points");
-        }
-    };
+  const [activePopup, setActivePopup] = useState("main");
+  const [vpInput, setVpInput] = useState("");
+  const [moneyInput, setMoneyInput] = useState("");
+  const [convertSuccess, setConvertSuccess] = useState(false);
+  if (activeModal !== modalName) return null;
+  // VIP data - could come from props/API in a real app
+  const vipData = {
+    level: "Copper",
+    levelIcon:
+      "https://img.s628b.com/sb/h5/assets/images/icon-set/player/vip/vip-sidenav-1.svg",
+    currentPoints: 0,
+    progress: 0,
+    nextLevelRequirement: 1000,
+    conversionRatio: 1000,
+    minConversion: 5000,
+    history: {
+      year: 2025,
+      month: "May",
+      acquired: "0.3",
+    },
+  };
 
-    const [points, setPoints] = useState(0);
-    const [showGiftModal, setShowGiftModal] = useState(false);
-  
-    const handlePointsChange = (e) => {
-      setPoints(e.target.value);
-    };
-  
-    const handleMoneyChange = (e) => {
-      setRealMoney(e.target.value);
-    };
+  const handleVpChange = (e) => {
+    const value = e.target.value;
+    setVpInput(value);
+    // Auto-calculate money value
+    if (value) {
+      setMoneyInput((parseInt(value) / vipData.conversionRatio).toString());
+    } else {
+      setMoneyInput("");
+    }
+  };
 
-    const toggleGiftModal = () => {
-        setShowGiftModal(!showGiftModal);
-    };
+  const handleMoneyChange = (e) => {
+    const value = e.target.value;
+    setMoneyInput(value);
+    // Auto-calculate VP value
+    if (value) {
+      setVpInput((parseInt(value) * vipData.conversionRatio).toString());
+    } else {
+      setVpInput("");
+    }
+  };
 
-    return (
-        <div className="modal-overlay" >
-            <div >
-                <div className="popup-page__main popup-page-main popup-page-main--show">
-                    <div className="popup-page-main__header">
-                        <div className="popup-page-main__title">My wallet</div>
-                        <div className="popup-page-main__close" ></div>
-                    </div>
+  const handleConvert = () => {
+    if (parseInt(vpInput) >= vipData.minConversion) {
+      setConvertSuccess(true);
+      setTimeout(() => setConvertSuccess(false), 3000);
+    }
+  };
 
-                    <div className="content mcd-style player-content vip-content">
-                        <div className="item-ani player-vip-box deco vip-card lv2" >
-                            <a className="player-gift-points" >
-                                <img
-                                    className="card-top"
-                                    alt="banner"
-                                    src="https://img.c88rx.com/cx/h5/assets/images/vip/banner.png?v=1737700422219"
-                                    loading="lazy"
-                                />
-                                <div className="card-bottom">
-                                    <span>View Gift Points T&amp;C</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div className="item-ani player-vip-box total">
-                            <div className="title">Gift Points</div>
-                            <div className="status-box">
-                                <div className="status">
-                                    <div className="number">{giftPoints}</div>
-                                    <div className="text">Points</div>
-                                </div>
-                                <div className="cleader">
-                                    <span
-                                        className="item-icon"
-                                        style={{
-                                            maskImage:
-                                                "url('https://img.c88rx.com/cx/h5/assets/images/icon-set/player/vip/icon-points.svg?v=1737700422219')",
-                                        }}
-                                    ></span>
-                                    <a className="vip-cleader"></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="item-ani player-vip-box cash-card">
-                            <div className="title">
-                                <h2>
-                                    <span>Convert Gifts</span>
-                                </h2>
-                                <div className="refresh">
-                                    <div className="text">Refresh</div>
-                                    <div
-                                        className="refresh-icon"
-                                        style={{
-                                            maskImage:
-                                                "url('https://img.c88rx.com/cx/h5/assets/images/icon-set/icon-refresh-type01.svg?v=1737700422219')",
-                                        }}
-                                    ></div>
-                                </div>
-                            </div>
-                            <div className="cash-points">
-                                <div className="coin">
-                                    <div className="movie-box">
-                                        <video
-                                            width="100%"
-                                            height="100%"
-                                            autoPlay
-                                            playsInline
-                                            loop
-                                            mcdsrc="/assets/images/vip/coin-rotate-silver.png"
-                                            className="ng-tns-c2440093474-7"
-                                            poster="https://img.c88rx.com/cx/h5/assets/images/vip/coin-rotate-silver.png?v=1737700422219"
-                                        >
-                                            <source
-                                                src="/assets/images/vip/coin-rotate-silver-alpha.mov"
-                                                type="video/quicktime"
-                                                className="ng-tns-c2440093474-7"
-                                                src="https://img.c88rx.com/cx/h5/assets/images/vip/coin-rotate-silver-alpha.mov?v=1737700422219"
-                                            />
-                                            <source
-                                                src="/assets/images/vip/coin-rotate-silver-alpha.webm"
-                                                type="video/webm"
-                                                className="ng-tns-c2440093474-7"
-                                                src="https://img.c88rx.com/cx/h5/assets/images/vip/coin-rotate-silver-alpha.webm?v=1737700422219"
-                                            />
-                                        </video>
-                                    </div>
-                                    <div className="convert-icon">
-                                        <div className="chevron"></div>
-                                        <div className="chevron"></div>
-                                    </div>
-                                    <div className="movie-box">
-                                        <video
-                                            width="100%"
-                                            height="100%"
-                                            autoPlay
-                                            playsInline
-                                            loop
-                                            mcdsrc="/assets/images/vip/coin-rotate-gold.png"
-                                            className="ng-tns-c2440093474-7"
-                                            poster="https://img.c88rx.com/cx/h5/assets/images/vip/coin-rotate-gold.png?v=1737700422219"
-                                        >
-                                            <source
-                                                mcdsrc="/assets/images/vip/coin-rotate-gold-alpha.mov"
-                                                type="video/quicktime"
-                                                className="ng-tns-c2440093474-7"
-                                                src="https://img.c88rx.com/cx/h5/assets/images/vip/coin-rotate-gold-alpha.mov?v=1737700422219"
-                                            />
-                                            <source
-                                                mcdsrc="/assets/images/vip/coin-rotate-gold-alpha.webm"
-                                                type="video/webm"
-                                                className="ng-tns-c2440093474-7"
-                                                src="https://img.c88rx.com/cx/h5/assets/images/vip/coin-rotate-gold-alpha.webm?v=1737700422219"
-                                            />
-                                        </video>
-                                    </div>
-                                </div>
-                                <div className="cash-detail">
-                                    <div className="cash-input">
-                                        <div className="detail-title">
-                                            <span>Points</span>
-                                            <p className="text">
-                                                Minimum Gift Required: <span>5000</span>
-                                            </p>
-                                        </div>
-                                        <input
-                                            type="number"
-                                            inputMode="decimal"
-                                            placeholder="0"
-                                            value={points}
-                                            onChange={handlePointsChange}
-                                            className="ng-tns-c2440093474-7 ng-untouched ng-pristine ng-valid"
-                                        />
-                                    </div>
-                                    <div className="conversion">
-                                        <div className="ratio">
-                                            <span>Gift Conversion Ratio</span>
-                                            <div className="text">1000</div>
-                                        </div>
-                                    </div>
-                                    <div className="cash-input">
-                                        <div className="detail-title">
-                                            <span>Real Money</span>
-                                        </div>
-                                        <input
-                                            type="number"
-                                            inputMode="decimal"
-                                            placeholder="0"
-                                            value={realMoney}
-                                            onChange={handleMoneyChange}
-                                            className="ng-tns-c2440093474-7 ng-untouched ng-pristine ng-valid"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div className="item-ani button-ani button default" onClick={handleConvertClick}>
-                            Convert to Real Money
-                            <img
-                                alt="convert-button-dfbg"
-                                src="https://img.c88rx.com/cx/h5/assets/images/player/vip/convert-button-dfbg.png?v=1737700422219"
-                                loading="lazy"
-                            />
-                        </div>
-                    </div>
-
-                </div>
-
+  return (
+    <div className="vip-system">
+      {/* Main VIP Popup */}
+      <div
+        className={`popup-page-wrapper ${
+          activePopup === "main" ? "active" : ""
+        }`}
+      >
+        <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
+          <div className="popup-page__backdrop" ></div>
+          <div className="popup-page__main popup-page-main popup-page-main--show">
+            <div className="popup-page-main__header">
+              
+              <div className="popup-page-main__title">My VIP</div>
+              <div className="popup-page-main__close" onClick={closeModal}></div>
             </div>
-            {showGiftModal && (
-                <div className="pop-wrap gift-points-pop show">
-                    <button className="btn-close" onClick={toggleGiftModal}></button>
-                    <div className="detail-banner">
-                        <img
-                            src="https://img.c88rx.com/cx/h5/assets/images/vip/banner-2.png?v=1739269017539&source=mcdsrc"
-                            alt="banner-2"
-                            loading="lazy"
-                        />
+            <div className="popup-page-main__container">
+              <div className="content mcd-style player-content vip-content">
+                <div className="player-vip-box deco vip-card lv1">
+                  <div className="card-top">
+                    <div className="vip-lv-area">
+                      <div className="lv-totem">
+                        <span
+                          className="item-icon"
+                          style={{
+                            backgroundImage: `url(${vipData.levelIcon})`,
+                          }}
+                        ></span>
+                      </div>
+                      <div className="lv-text">
+                        <div className="text">VIP LEVEL</div>
+                        <h2>{vipData.level}</h2>
+                      </div>
+                      <a
+                        className="lv-history"
+                        onClick={() => setActivePopup("history")}
+                      >
+                        <span
+                          className="item-icon"
+                          style={{
+                            maskImage:
+                              'url("https://img.s628b.com/sb/h5/assets/images/icon-set/player/vip/icon-history.svg")',
+                          }}
+                        ></span>
+                        <p>history</p>
+                      </a>
                     </div>
-                    <div className="pop-inner content-style">
-                        <p>Start Earning Unlimited Gift Points And Exchange Them For Real Cash Now!</p>
-                        <h4>How to Participate:</h4>
-                        <ul>
-                            <li>Register an account with Crickex.</li>
-                            <li>Place bets and start earning gift points.</li>
-                            <li>Exchange your gift points for real money.</li>
-                        </ul>
-                        <h4>Event Details:</h4>
-                        <div className="table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Product (Games)</th>
-                                        <th>Turnover</th>
-                                        <th>Gift Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Slots, Lottery & Sports</td>
-                                        <td>৳1</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Live Casino, Table & Crash</td>
-                                        <td>৳2</td>
-                                        <td>1</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <strong className="tips-block">Note: 1,000 Gift Points is equivalent to 1 real money.</strong>
+                    <div className="vip-lv-area">
+                      <div className="progress-bar">
+                        <div className="bar">
+                          <div
+                            className="bar-inner"
+                            style={{ width: `${vipData.progress}%` }}
+                          ></div>
                         </div>
-                        <h4>Terms & Conditions:</h4>
-                        <ul>
-                            <li>All Crickex players are eligible for this promotion.</li>
-                            <li>Redeem your gift points with a minimum of 5,000 points.</li>
-                            <li>1,000 gift points equal 1 real money.</li>
-                            <li>Earn unlimited gift points!</li>
-                            <li>Please check our Promotion Terms & Conditions for excluded games.</li>
-                            <li>Turnover calculations are updated daily after 22:00 BST.</li>
-                            <li>Arcade games are excluded from this promotion.</li>
-                            <li>Each player can only open one account to claim this bonus.</li>
-                            <li>Fraudulent activities will result in forfeiture of balance.</li>
-                            <li>Crickex reserves the right to modify or cancel the promotion.</li>
-                            <li>Players must comply with the promotion terms.</li>
-                            <li>Crickex’s Terms & Conditions apply.</li>
-                        </ul>
+                        <div className="number">
+                          <span></span>
+                          <span></span>
+                        </div>
+                      </div>
+                      <div
+                        className="next-lv-totem"
+                        style={{
+                          backgroundImage:
+                            'url("https://img.s628b.com/sb/h5/assets/images/icon-set/player/vip/vip-totem-bg-2.svg")',
+                        }}
+                      ></div>
                     </div>
+                    <p>
+                      You need {vipData.nextLevelRequirement} turnovers to
+                      proceed to the 2 level.
+                    </p>
+                  </div>
                 </div>
-            )}
-        </div>
 
-    );
+                <div className="player-vip-box total">
+                  <div className="title">VIP Points</div>
+                  <div className="status-box">
+                    <div className="status">
+                      <div className="number">{vipData.currentPoints}</div>
+                      <div className="text">VP</div>
+                    </div>
+                    <a
+                      className="cleader"
+                      onClick={() => setActivePopup("points")}
+                    >
+                      <span
+                        className="item-icon"
+                        style={{
+                          maskImage:
+                            'url("https://img.s628b.com/sb/h5/assets/images/icon-set/player/vip/icon-points.svg")',
+                        }}
+                      ></span>
+                      <p>detail</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="player-vip-box cash-card">
+                  <div className="title">
+                    <h2>
+                      <span> Convert VP </span>
+                    </h2>
+                  </div>
+                  <div className="cash-points">
+                    <div className="coin">
+                      <div className="movie-box">
+                        <video
+                          width="100%"
+                          height="100%"
+                          autoPlay
+                          playsInline
+                          loop
+                          poster="https://img.s628b.com/sb/h5/assets/images/vip/coin-rotate-silver.png"
+                        >
+                          <source
+                            src="https://img.s628b.com/sb/h5/assets/images/vip/coin-rotate-silver-alpha.mov"
+                            type="video/quicktime"
+                          />
+                          <source
+                            src="https://img.s628b.com/sb/h5/assets/images/vip/coin-rotate-silver-alpha.webm"
+                            type="video/webm"
+                          />
+                        </video>
+                      </div>
+                      <div className="convert-icon">
+                        <div className="chevron"></div>
+                        <div className="chevron"></div>
+                      </div>
+                      <div className="movie-box">
+                        <video
+                          width="100%"
+                          height="100%"
+                          autoPlay
+                          playsInline
+                          loop
+                          poster="https://img.s628b.com/sb/h5/assets/images/vip/coin-rotate-gold.png"
+                        >
+                          <source
+                            src="https://img.s628b.com/sb/h5/assets/images/vip/coin-rotate-gold-alpha.mov"
+                            type="video/quicktime"
+                          />
+                          <source
+                            src="https://img.s628b.com/sb/h5/assets/images/vip/coin-rotate-gold-alpha.webm"
+                            type="video/webm"
+                          />
+                        </video>
+                      </div>
+                    </div>
+                    <div className="cash-detail">
+                      <div className="cash-input">
+                        <div className="detail-title">
+                          <span>Points</span>
+                          <p className="text">
+                            Minimum VP Required:{" "}
+                            <span>{vipData.minConversion}</span>
+                          </p>
+                        </div>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          placeholder="0"
+                          value={vpInput}
+                          onChange={handleVpChange}
+                        />
+                      </div>
+                      <div className="conversion">
+                        <div className="ratio">
+                          <span>VP Conversion Ratio : </span>
+                          <div className="text">{vipData.conversionRatio}</div>
+                        </div>
+                      </div>
+                      <div className="cash-input">
+                        <div className="detail-title">
+                          <span>Real Money</span>
+                        </div>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          placeholder="0"
+                          value={moneyInput}
+                          onChange={handleMoneyChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="button-ani button default"
+                  onClick={handleConvert}
+                >
+                  Convert to Real Money
+                  <img
+                    alt="convert-button-dfbg"
+                    src="https://img.s628b.com/sb/h5/assets/images/player/vip/convert-button-dfbg.png"
+                  />
+                </div>
+
+                {convertSuccess && (
+                  <div id="convert-content" className="convert-content">
+                    <div className="convert-ani">
+                      <div className="coin-block">
+                        <video
+                          width="100%"
+                          height="100%"
+                          loop
+                          poster="https://img.s628b.com/sb/h5/assets/images/vip/vip-coin.png"
+                        >
+                          <source
+                            src="https://img.s628b.com/sb/h5/assets/images/vip/vip-coin-alpha.mov"
+                            type="video/quicktime"
+                          />
+                          <source
+                            src="https://img.s628b.com/sb/h5/assets/images/vip/vip-coin-alpha.webm"
+                            type="video/webm"
+                          />
+                        </video>
+                        <div className="convert-success text">Success !</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* VIP History Popup */}
+      {activePopup === "history" && (
+        <div
+          className={`popup-page-wrapper ${
+            activePopup === "history" ? "active" : ""
+          }`}
+        >
+          <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
+            <div className="popup-page__backdrop"></div>
+            <div className="popup-page__main popup-page-main popup-page-main--show">
+              <div className="popup-page-main__header">
+                <div
+                  className="popup-page-main__back"
+                  onClick={() => setActivePopup("main")}
+                
+                >
+                  
+                  </div>
+                <div className="popup-page-main__title">VIP History</div>
+                <div className="popup-page-main__close" onClick={closeModal}></div>
+              </div>
+              <div className="popup-page-main__container">
+                <div className="content mcd-style player-content vip-content">
+                  <div className="acquired-content">
+                    <div className="history-content">
+                      <div className="vip-year">{vipData.history.year}</div>
+                      <div className="vip-history-list">
+                        <ul className="form-vip-history">
+                          <li className="vip-month">{vipData.history.month}</li>
+                          <li className="lv1 vip-level">
+                            <span
+                              className="item-icon"
+                              style={{
+                                backgroundImage: `url(${vipData.levelIcon})`,
+                              }}
+                            ></span>
+                            <div className="text">VIP LEVEL</div>
+                            <div className="level">{vipData.level}</div>
+                          </li>
+                          <li className="vip-acquired">
+                            <div className="text">Experience Acquired</div>
+                            <div className="acquired">
+                              {vipData.history.acquired}
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VIP Points Popup */}
+      {activePopup === "points" && (
+        <div
+          className={`popup-page-wrapper ${
+            activePopup === "points" ? "active" : ""
+          }`}
+        >
+          <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
+            <div className="popup-page__backdrop"></div>
+            <div className="popup-page__main popup-page-main popup-page-main--show">
+              <div className="popup-page-main__header">
+                <div
+                  className="popup-page-main__back"
+                  onClick={() => setActivePopup("main")}
+                  // style={{
+                  //   maskImage:
+                  //     'url("/assets/images/icon-set/icon-arrow-type01.svg")',
+                  // }}
+                ></div>
+                <div className="popup-page-main__title">VIP Points (VP)</div>
+                <div className="popup-page-main__close" onClick={closeModal}></div>
+              </div>
+              <div className="popup-page-main__container">
+                <div className="content mcd-style player-content player-vip">
+                  <div className="player-top">
+                    <div className="tab-btn-section">
+                      <div className="tab-btn tab-btn-page">
+                        <div
+                          className="line"
+                          style={{
+                            width: "calc(50%)",
+                            transform: "translate(0%, 0px)",
+                          }}
+                        ></div>
+                        <div className="btn active">
+                          <div className="text">VP Received</div>
+                        </div>
+                        <div className="btn">
+                          <div className="text">VP Used</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="tab-content tab-content-page">
+                    <div className="inner-box">
+                      <div className="no-result">
+                        <div className="pic">
+                          <img
+                            alt="no-data"
+                            src="https://img.s628b.com/sb/h5/assets/images/no-data.png"
+                          />
+                        </div>
+                        <div className="text">No Data</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };

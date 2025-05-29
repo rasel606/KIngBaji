@@ -73,6 +73,7 @@ export default ({ modalName }) => {
     payment_type,
     newAmount,
     setNewAmountPay,
+    showAmountLimit, setShowAmountLimit,
     setGateway_name,
     setGateway_Number,
     setPayment_type,
@@ -87,7 +88,7 @@ export default ({ modalName }) => {
   const [showVerification, setShowVerification] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isVerified, setIsVerified] = useState(true);
-  const [selectedPaymentAmount, setSelectedPaymentAmount] = useState(0);
+  const [selectedPaymentAmount, setSelectedPaymentAmount] = useState("0");
   // const [updatedAmount, setUpdatedAmount] = useState(0);
   // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
   console.log(Payment);
@@ -95,17 +96,10 @@ export default ({ modalName }) => {
   console.log(selectedPaymentAmount);
   const handelAmount = (blance) => {
     // let = updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
-    const updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
-    if (
-      updatedAmount >= 200 &&
-      updatedAmount <= 25000
-    ) {
-      setSelectedPaymentAmount(updatedAmount);
-    } else {
-      // alert(
-      //   `Amount must be between ${Payment?.minimun_amount} and ${Payment?.maximun_amount}`
-      // );
-    }
+    let updatedAmount = 0
+     updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
+
+    setSelectedPaymentAmount(updatedAmount);
   };
 
   console.log(payment_type);
@@ -143,7 +137,7 @@ export default ({ modalName }) => {
 
   // userId: userId,
 
-  setNewAmountPay(selectedPaymentAmount);
+  
 
   console.log(newAmount);
 
@@ -189,21 +183,19 @@ export default ({ modalName }) => {
   const navigate = useNavigate();
   console.log(gateway_name);
   console.log(payment_type);
-
+setNewAmountPay(selectedPaymentAmount);
   const handlePaymentSubmit = () => {
-    if (!userId || !selectedPaymentAmount || !token) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    console.log(gateway_name);
-
-    openModal(`${gateway_name}`);
+   if (selectedPaymentAmount > 199 && selectedPaymentAmount < 25001) {
+    openModal(`${gateway_name}`);; // Call the modal open function here
+  } else {
+    setShowAmountLimit("Sorry! your amount Invalid. Please enter amount between ৳ 300 and ৳ 25,000."); // Show limit modal if outside the valid range
+  }
   };
 
-  const handlePaymentAmount = async () => {
-    // Force context update before opening modal
-    setNewAmountPay(selectedPaymentAmount);
-  };
+  // const handlePaymentAmount = async () => {
+  //   // Force context update before opening modal
+  //   setNewAmountPay(selectedPaymentAmount);
+  // };
 
   const userVarifayed = false;
 
@@ -302,7 +294,7 @@ export default ({ modalName }) => {
                           </div>
                           <ol className="tips-info-block active">
                             <li className="contact-info">
-                              <a onClick={() => openModal("modal2")}>
+                              <a onClick={() => openModal("MyProfileModel")}>
                                 <label>Contact Info</label>
                                 <ul>
                                   <li>Phone Number</li>
@@ -356,13 +348,13 @@ export default ({ modalName }) => {
                                       <span>+</span>3<span>%</span>
                                     </p>
                                   </div>
-                                  {/* <span
-                                className="item-icon"
+                                  <span
+                                className={`${Payment === paymentMethod?"item-icon":""}`}
                                 style={{
                                   maskImage:
                                     'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
                                 }}
-                              ></span> */}
+                              ></span>
                                 </label>
                               </li>
                             ))}
@@ -490,7 +482,7 @@ export default ({ modalName }) => {
                                 className={`delete-btn ${
                                   selectedPaymentAmount ? "" : "active"
                                 }`}
-                                onClick={() => setSelectedPaymentAmount(0)}
+                                onClick={() => setSelectedPaymentAmount("0")}
                                 // style={{
                                 //   maskImage:
                                 //     "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-cross-type09.svg?v=1745315543147)",

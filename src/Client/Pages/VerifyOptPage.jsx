@@ -5,18 +5,16 @@ import { useAuth } from "../Component/AuthContext";
 import "../Component/SideBar.css";
 
 export default function VerificationModal({ modalName }) {
-  const { activeModal } = useModal();
+  const { activeModal, openModal, closeModal } = useModal();
   const { userId } = useAuth(); // Ensure userId is defined
   const phone = "+8801335432023"; // Set your dynamic phone number here
 
-
-
   const [code, setCode] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(180); // 4:31 in seconds
-  const [success, setSuccess] = useState(false);
+  const [ShowSuccess, setShowSuccess] = useState(false);
   const [resendActive, setResendActive] = useState(false);
   const inputsRef = useRef([]);
-  
+
   // Timer countdown effect
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,22 +48,22 @@ export default function VerificationModal({ modalName }) {
     }
   };
 
-  
   const handleVerify = async () => {
     console.log(code.join(""));
     try {
-      const response = await UserOptVerify(
-        {phone:userId.phone[0].number,
-        userId:userId,
-        code:code.join("")}
-      );
+      const response = await UserOptVerify({
+        phone: userId.phone[0].number,
+        userId: userId,
+        code: code.join(""),
+      });
+      setShowSuccess(true);
       console.log("API Response:", response.data);
-  
-      if (response.data.success) {
-        setSuccess(true);
-      } else {
-        alert(response.data.message || "Invalid code");
-      }
+
+      setTimeout(() => {
+        setShowSuccess(false);
+        closeModal();
+        openModal("MyProfileModel");
+      }, 3000);
     } catch (err) {
       alert("Verification failed");
     }
@@ -74,7 +72,7 @@ export default function VerificationModal({ modalName }) {
   const handleResend = () => {
     setCode(["", "", "", ""]);
     setTimer(300);
-    setSuccess(false);
+    setShowSuccess(false);
     setResendActive(false);
     inputsRef.current[0]?.focus();
   };
@@ -114,9 +112,7 @@ export default function VerificationModal({ modalName }) {
                         pattern="[0-9]*"
                         maxLength="1"
                         value={code[i]}
-                        onChange={(e) =>
-                          handleInputChange(i, e.target.value)
-                        }
+                        onChange={(e) => handleInputChange(i, e.target.value)}
                         ref={(el) => (inputsRef.current[i] = el)}
                         onInput={(e) => {
                           if (e.target.value.length > 1)
@@ -136,15 +132,18 @@ export default function VerificationModal({ modalName }) {
                   onClick={resendActive ? handleResend : undefined}
                 >
                   Resend{" "}
-                  
                 </a>
-                <span className={`time ${resendActive ? "active" : ""}`}>{formatTime(timer)}</span>
+                <span className={`time ${resendActive ? "active" : ""}`}>
+                  {formatTime(timer)}
+                </span>
               </p>
             </div>
           </div>
 
-          {success && (
-            <div className="pop-wrap pop-success">
+          {ShowSuccess && (
+            <div
+              className={`pop-wrap pop-success ${ShowSuccess ? "show" : ""}`}
+            >
               <div className="register-success-wrap">
                 <div className="register-success-cont">
                   <div className="register-success-txt top-inner">

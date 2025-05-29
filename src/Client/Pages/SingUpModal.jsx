@@ -115,8 +115,7 @@ export default ({ modalName }) => {
   const handleClearphoneNumber = () => setPhoneNumber("");
 
   const toggleDropdown = () => setIsOpen(!isOpen);
-  const { isAuthenticated, loginUser, logoutUser, userRegistar } =
-    useAuth();
+  const { isAuthenticated, loginUser, logoutUser, userRegistar } = useAuth();
   const validateUsername = (userId) => {
     return userId.length >= 4 && userId.length <= 15;
   };
@@ -130,10 +129,6 @@ export default ({ modalName }) => {
       setErrorPassword("Password minimum length is 6");
     } else if (value.length > maxLength) {
       setErrorPassword("Password maximum length is 20");
-    } else if (!validatePassword(value)) {
-      setErrorPassword(
-        "Password must be 6-20 characters long and include at least one lowercase letter, one uppercase letter, one digit, and one special character."
-      );
     } else if (value.length <= 6 && value.length >= 20) {
       setErrorPassword("Password must be 6-20 characters long.");
     } else {
@@ -269,36 +264,36 @@ export default ({ modalName }) => {
               <div className="entry-outlet">
                 <form className="ng-invalid ng-dirty ng-touched">
                   <div className="menu-box">
-                    <div className="input-group third-party-input-group-title">
-                      <label>Referral Code</label>
+                    {/* <div className="input-group third-party-input-group-title">
+                <label>Referral Code</label>
 
-                      <input
-                        type="text"
-                        className="input ng-dirty ng-valid ng-touched"
-                        placeholder={referralCode}
-                        value={referralCode}
-                        style={{
-                          cursor: "not-allowed",
-                          color: "white",
-                          display: "block",
-                          opacity: "1",
-                          background: "blue",
-                        }}
-                      />
-                      {userId && (
-                        <input
-                          className="clear active"
-                          onClick={() => handleClearUsername("")}
-                        />
-                      )}
-                    </div>
+                <input
+                  type="text"
+                  className="input ng-dirty ng-valid ng-touched"
+                  placeholder={referralCode}
+                  value={referralCode}
+                  style={{
+                    cursor: "not-allowed",
+                    color: "white",
+                    display: "block",
+                    opacity: "1",
+                    background: "blue",
+                  }}
+                />
+                {userId && (
+                  <input
+                    className="clear active"
+                    onClick={() => handleClearUsername("")}
+                  />
+                )}
+              </div> */}
                     <div className="input-group third-party-input-group-title">
                       <label>ব্যবহারকারীর নাম</label>
                       <input
                         type="text"
                         className="input ng-dirty ng-valid ng-touched"
                         placeholder="৪-১৫ অক্ষর নাম্বার এলাউ"
-                        value={userId}
+                        value={userId.toLocaleLowerCase()}
                         onChange={handleUsername}
                       />
                       {userId && (
@@ -306,6 +301,11 @@ export default ({ modalName }) => {
                           className="clear active"
                           onClick={() => handleClearUsername("")}
                         />
+                      )}
+                      {error && (
+                        <div className="error-message">
+                          <span>{error}</span>
+                        </div>
                       )}
                     </div>
 
@@ -327,6 +327,11 @@ export default ({ modalName }) => {
                           className="clear active"
                           onClick={() => handleClearPassword("")}
                         />
+                      )}
+                      {errorPassword && (
+                        <div className="error-message">
+                          <span>{errorPassword}</span>
+                        </div>
                       )}
                     </div>
 
@@ -378,6 +383,11 @@ export default ({ modalName }) => {
                           />
                         )}
                       </div>
+                      {errorNum && (
+                        <div className="error-message">
+                          <span>{errorNum}</span>
+                        </div>
+                      )}
                     </div>
 
                     <div id="turnstile-container">
@@ -387,23 +397,21 @@ export default ({ modalName }) => {
                     </div>
                   </div>
                 </form>
-
-                <div
-                  className={`button ${
-                    userId && password && phoneNumber?.length === 10
-                      ? ""
-                      : "btn-disabled"
-                  } `}
-                  type="submit"
-                  onClick={() => handleSubmit()}
-                >
-                  <a>সাবমিট</a>
-                </div>
               </div>
-
+              <div
+                className={`button ${
+                  userId && password && phoneNumber?.length === 10
+                    ? ""
+                    : "btn-disabled"
+                } `}
+                type="submit"
+                onClick={() => handleSubmit()}
+              >
+                <Link>সাবমিট</Link>
+              </div>
               <p className="button-tips">
                 <span>ইতোমধ্যে একজন সদস্য ? </span>
-                <a>প্রবেশ করুন</a>
+                <Link>প্রবেশ করুন</Link>
               </p>
 
               <p className="footer-tips">
@@ -411,7 +419,7 @@ export default ({ modalName }) => {
                   নিবন্ধন করার অর্থ হল আপনার বয়স 18 বছরের বেশি, আপনি পড়েছেন
                   এবং এতে সম্মত হয়েছেন{" "}
                 </span>
-                <a>শর্তাবলী </a>
+                <Link>শর্তাবলী </Link>
                 <span>.</span>
               </p>
             </div>

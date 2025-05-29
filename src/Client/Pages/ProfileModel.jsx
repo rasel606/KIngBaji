@@ -83,18 +83,18 @@ export default ({ modalName }) => {
 
   console.log("userDeatilsSet", userDeatilsSet);
   console.log("userDeatils", userDeatils);
-  const UserSocialLink = async () => {
-    const result = await getUserSocialLinks(userDeatilsSet);
-    setSocialLinksUserfacebook(result?.data?.socialLinks?.facebook);
-    setSocialLinksUserTelegram(result?.data?.socialLinks?.telegram);
-    setSocialLinksUserEmail(result?.data?.socialLinks?.email);
+  // const UserSocialLink = async () => {
+  //   const result = await getUserSocialLinks(userDeatilsSet);
+  //   setSocialLinksUserfacebook(result?.data?.socialLinks?.facebook);
+  //   setSocialLinksUserTelegram(result?.data?.socialLinks?.telegram);
+  //   setSocialLinksUserEmail(result?.data?.socialLinks?.email);
 
-    // const socialLink = result.data.user.socialLink;
-  };
+  //   // const socialLink = result.data.user.socialLink;
+  // };
 
-  useEffect(() => {
-    UserSocialLink();
-  }, [userDeatils?.userId]);
+  // useEffect(() => {
+  //   UserSocialLink();
+  // }, [userDeatils?.userId]);
 
   console.log(
     socialLinksUserfacebook,
@@ -183,12 +183,12 @@ export default ({ modalName }) => {
         {
           name: "Personal Info",
           icon: "icon-profile.png",
-          modalName: "modal2",
+          modalName: "MyProfileModel",
         },
         {
           name: "Reset Password",
           icon: "icon-resetpasswords.png",
-          modalName: "ResetmypasswordModal",
+          modalName: "ResetPasswordPopup",
         },
         { name: "Inbox", icon: "icon-inbox.png", modalName: "InboxModel" },
         {
@@ -228,17 +228,17 @@ export default ({ modalName }) => {
       {
         name: "Telegram",
         icon: "icon-telegram.png",
-        link: socialLinksUserTelegram,
+        // link: socialLinksUserTelegram,
       },
       {
         name: "Support Email",
         icon: "icon-email.png",
-        link: socialLinksUserEmail,
+        // link: socialLinksUserEmail,
       },
       {
         name: "Facebook",
         icon: "icon-facebook-messenger.png",
-        link: socialLinksUserfacebook,
+        // link: socialLinksUserfacebook,
       },
     ],
   };

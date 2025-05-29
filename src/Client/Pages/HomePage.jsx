@@ -57,7 +57,7 @@ export default (props) => {
     loginUser,
     logoutUser,
     Token,
-    
+    isLoginNotify, setIsLoginNotify,
     token,
     userDeatils,
 
@@ -190,15 +190,17 @@ const [loading,
 
         const data = await response.json();
 
-        console.log(data);
-        if (data.errMsg === "Success" && userId) {
+      if (data.errMsg === "Success" && userId) {
           console.log(data);
           setPlayGameData(data);
           setShowPopup(true);
         }
+      }else{
+         setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
       }
     } catch (error) {
       console.error("Error launching game:", error);
+       setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
     } finally {
       setIsPlaying(false);
       setLoading(false);

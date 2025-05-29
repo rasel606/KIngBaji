@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useModal } from './ModelContext';
 export default ({
@@ -10,7 +10,8 @@ export default ({
       loginUser,
       logoutUser,
       Token,
-
+      userDetails,
+setIsLoginNotify,
       token,
       userDeatils,
       userId,
@@ -18,19 +19,17 @@ export default ({
       setLoading,
     } = useAuth();
     const { activeModal,openModal, closeModal } = useModal();
-  // const {  activeModal, openModal, closeModal  } = useModal();
-  const [showPopup, setShowPopup] = useState(false);
 
- if (loading) {
-    return <div>Loading...</div>; // Show loading state
-  }
 
-  if (!isAuthenticated && !loading) {
-    openModal('login');
-    return <Navigate to="/" />;
-  }
-  
+  // const { userDetails, setIsLoginNotify } = useAuth();
+  const location = useLocation();
 
-  return children;
+  useEffect(() => {
+    if (!userDetails) {
+       setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
+    }
+  }, [userDetails, setIsLoginNotify]);
+
+  return userDetails ? children : <Navigate to="/" state={{ from: location }} replace />;
 };
 

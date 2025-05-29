@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } */
+/* body {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #183859;
+    font-family: Helvetica Neue,Helvetica,Tahoma,PingFang SC,Hiragino Sans GB,Heiti SC,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
+}
+html, body, #root {
+    height: 100%;
+} */

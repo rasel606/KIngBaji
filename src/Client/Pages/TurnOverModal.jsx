@@ -53,18 +53,18 @@ export default ({ modalName }) => {
                     transform: `translate(${activeTab === 'active' ? 0 : 100}%, 0px)`
                   }}
                 ></div>
-                <button
+                <div
                   className={`btn ${activeTab === 'active' ? 'active' : ''}`}
                   onClick={() => setActiveTab('active')}
                 >
                   <div className="text">Active</div>
-                </button>
-                <button
+                </div>
+                <div
                   className={`btn ${activeTab === 'completed' ? 'active' : ''}`}
                   onClick={() => setActiveTab('completed')}
                 >
                   <div className="text">Completed</div>
-                </button>
+                </div>
               </div>
             </div>
 

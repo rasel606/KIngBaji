@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../Component/AuthContext';
 // import './FeaturedGames.css';
 
 const FeaturedGames = () => {
 //   const [games, setGames] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
-
+    const {
+      isAuthenticated,
+      loginUser,
+      logoutUser,
+      Token,
+      isLoginNotify, setIsLoginNotify,
+      token,
+      userDeatils,
+  
+      // loading,
+      // setLoading,
+    } = useAuth();
+   const newNotrify = () => {
+       setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
+    }
 
   const games = [
     {
@@ -90,7 +105,7 @@ const FeaturedGames = () => {
       <div className="recommend-bg games">
         <div className="recommend-main games-main">
           {games.map(game => (
-            <div key={game._id} className="games-box">
+            <div key={game._id} className="games-box" >
               <div className="pic">
                 <a href="#">
                   <img alt={game.title} src={game.imageUrl} loading="lazy" />

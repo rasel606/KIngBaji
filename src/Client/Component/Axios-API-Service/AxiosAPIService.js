@@ -5,7 +5,7 @@ const API = axios.create({ baseURL: "https://api.kingbaji.live/api/v1" });
 // Interceptor to attach token to all requests
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem('authToken')
-console.log(token)
+// console.log(token)
   if (token) {
     req.headers.Authorization = `Bearer ${token}`; // Use Bearer token standard
   }

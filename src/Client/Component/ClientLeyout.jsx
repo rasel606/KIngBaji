@@ -24,7 +24,7 @@ import MyProfilemodal from "../Pages/MyProfilemodal";
 import AddNameModel from "../Pages/AddNameModel";
 import AddBirthdayModal from "../Pages/AddBirthdayModal";
 import AddEmailModel from "../Pages/AddEmailModel";
-import ResetmypasswordModal from "../Pages/ResetmypasswordModal";
+
 import RefferBonusModel from "../Pages/RefferBonusModel";
 import TurnOverModal from "../Pages/TurnOverModal";
 import TransactionRecordModal from "../Pages/TransactionRecordModal";
@@ -36,10 +36,9 @@ import SendEmailOtp from "../Pages/SendEmailOtp";
 import VerifyOptPageEmail from "../Pages/VerifyOptPageemail";
 import CurrencyLanguageSelector from "./CurrencyLanguageSelector";
 import GiftPointsModel from "../Pages/GiftPointsModel";
-import VipGiftPointsPopupModel from "../Pages/VipGiftPointsPopupModel";
+
 import SideNavPopUp from "../Pages/SideNavPopUp";
 import InboxModal from "../Pages/InboxModal";
-
 
 import HeaderGroup from "./HeaderGroup";
 import BkashModal from "../Pages/BkashModal";
@@ -48,12 +47,16 @@ import RocketModal from "../Pages/RocketModal";
 import UpayModal from "../Pages/UpayModal";
 import BettingRecordModal from "../Pages/BettingRecordModal";
 import AddMobileNumberModel from "../Pages/AddMobileNumberModel";
-
-
+import McdTopAlert from "./McdTopAlart";
+import { usePayNow } from "../PaymentContext/PaymenyContext";
+import ErrorNotifyPopUps from "./ErrorNotifyPopUps";
+import NotificationMiniPopUp from "./NotificationMiniPopUp";
+import { useWidthrowNow } from "../PaymentContext/WidthrawPaymentContext";
+import ForgetPasswordModal from "../Pages/ForgetPasswordModal";
+import ResetPasswordPopup from "../Pages/ResetPasswordPopup";
+import LaunchGamePopup from "../LaunchGamePopup";
 
 export default () => {
-
-
   // const [isOpen, setIsOpen] = useState(false);
   // const [isOpenProfile, setIsOpenProfile] = useState(false);
   // const [selectedCurrency, setSelectedCurrency] = useState(currencyList[0]);
@@ -69,17 +72,24 @@ export default () => {
   const { activeModal, openModal, closeModal } = useModal();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
-  const {isAuthenticated, loginUser, logoutUser } = useAuth();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [activeCategory, setActiveCategory] = useState("");
-    const [showSecondMenu, setShowSecondMenu] = useState(true);
+  const {
+    isLoginNotify, setIsLoginNotify,
+    isAuthenticated,
+    loginUser,
+    logoutUser,
+    isAmountAlertError,
+    setIsAmountAlertError,
+    isPasswordresetNotify, setIsPasswordresetNotifyNotify
+  } = useAuth();
+  const { showAmountLimit, setShowAmountLimit } = usePayNow();
+  const { showAmountLimitw, setShowAmountLimitw } = useWidthrowNow();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("");
+  const [showSecondMenu, setShowSecondMenu] = useState(true);
 
-  // useEffect(() => {
-  //   verifyUser();
-  // }, [verifyUser]);
+ 
 
   const location = useLocation();
-  
 
   useEffect(() => {
     // Get the query parameters
@@ -92,15 +102,8 @@ export default () => {
     }
   }, []);
 
-  //  useEffect(() => {
-  //   if (isSignedUp) {
-  //     closeModal("SignUpModal");
-  //   }
-  // }, [isSignedUp, closeModal]);
 
-  const onLogout = () => {
-    // removeSessions();
-  };
+
 
 
   const toggleMenu = () => {
@@ -111,158 +114,143 @@ export default () => {
       setShowSecondMenu(true);
     }
   };
+
   return (
     <>
+      <div className="main-router-wrapper">
+        <HeaderGroup
+          toggleMenu={toggleMenu}
+          isMenuOpen={isMenuOpen}
+        ></HeaderGroup>
+      </div>
+      <div style={{ marginTop: "45px" }}>
+        <Outlet />
+      </div>
+      <div className="toolbar">
+        {isAuthenticated ? (
+          <>
+            <ul>
+              <li className="home active">
+                <Link to={"/"}>
+                  <img
+                    className="item-icon"
+                    style={{
+                      display: "flex",
+                    }}
+                    src={
+                      "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-home.svg?v=1736240945415"
+                    }
+                    alt=""
+                  />
 
+                  <p>Home</p>
+                </Link>
+              </li>
 
+              <li className="home">
+                <Link>
+                  <img
+                    className="item-icon"
+                    style={{
+                      display: "flex",
+                    }}
+                    src={
+                      "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-promotion.svg?v=1736849889723"
+                    }
+                    alt=""
+                  />
 
+                  <p>Promotions</p>
+                </Link>
+              </li>
+              <li className="home" onClick={() => openModal("DepositModel")}>
+                <Link>
+                  <img
+                    className="item-icon"
+                    style={{
+                      display: "flex",
+                    }}
+                    src={
+                      "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-deposit.svg?v=1736849889723"
+                    }
+                    alt=""
+                  />
 
+                  <p>Deposit</p>
+                </Link>
+              </li>
+              <li className="home" onClick={() => openModal("ProfileModel")}>
+                <Link>
+                  <span
+                    className="item-icon"
+                    style={{
+                      display: "block",
+                      backgroundImage: `url("https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-mine.svg?v=1736240945415")`,
+                      opacity: "1",
+                    }}
+                    alt=""
+                  />
 
-      {isMobile ? (
-        <div >
-         
-         
-         <div className="toolbar">
-         <HeaderGroup toggleMenu={toggleMenu} isMenuOpen={isMenuOpen}  ></HeaderGroup>
-         <ProfileModel modalName="ProfileModel"></ProfileModel>
-          {isAuthenticated ? (
-            <>
-              
-            
-              <ul>
-                <li className="home active">
-                  <Link to={"/"}>
-                    <img
-                      className="item-icon"
-                      style={{
-                        display: "flex",
-                      }}
-                      src={
-                        "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-home.svg?v=1736240945415"
-                      }
-                      alt=""
-                    />
-
-                    <p>Home</p>
-                  </Link>
-                </li>
-
-                <li className="home active">
-                  <Link>
-                    <img
-                      className="item-icon"
-                      style={{
-                        display: "flex",
-                      }}
-                      src={
-                        "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-promotion.svg?v=1736849889723"
-                      }
-                      alt=""
-                    />
-
-                    <p>Promotions</p>
-                  </Link>
-                </li>
-                <li
-                  className="home active"
-                  onClick={() => openModal("DepositModel")}
-                >
-                  <Link>
-                    <img
-                      className="item-icon"
-                      style={{
-                        display: "flex",
-                      }}
-                      src={
-                        "https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-deposit.svg?v=1736849889723"
-                      }
-                      alt=""
-                    />
-
-                    <p>Deposit</p>
-                  </Link>
-                </li>
-                <li className="home active" onClick={() => openModal("ProfileModel")}>
-                  <Link>
-                    <span
-                      className="item-icon"
-                      style={{
-                        display: "block",
-                        backgroundImage: `url("https://img.c88rx.com/cx/h5/assets/images/icon-set/toolbar-icon/toolbar-icon-mine.svg?v=1736240945415")`,
-                        opacity: "1",
-                      }}
-                      alt=""
-                    />
-
-                    <p>Account</p>
-                  </Link>
-                </li>
-              </ul>
-            </>
-          ) : (
-
-            
-            <div className="beforelogin havelanguage" >
-              <div className="language-select" onClick={() => openModal("CurrencyLanguageSelector")}>
-                <img
-                  src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1736240945415&source=mcdsrc"
-                  alt=""
-                />
-                <div>
-                  <p>ENGLISH</p>
-                  <p>বাংলা</p>
-                </div>
-              </div>
-              <div
-                className="register-button"
-                onClick={() => openModal("SingUpModal")}
-              >
-                <p>Sign Up</p>
-              </div>
-              <div
-                className="login-button"
-                onClick={() => openModal("LoginModel")}
-              >
-                <p>Login</p>
+                  <p>Account</p>
+                </Link>
+              </li>
+            </ul>
+          </>
+        ) : (
+          <div className="beforelogin havelanguage">
+            <div
+              className="language-select"
+              onClick={() => openModal("CurrencyLanguageSelector")}
+            >
+              <img
+                src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1736240945415&source=mcdsrc"
+                alt=""
+              />
+              <div>
+                <p>ENGLISH</p>
+                <p>বাংলা</p>
               </div>
             </div>
-          )}
+            <div
+              className="register-button"
+              onClick={() => openModal("SingUpModal")}
+            >
+              <p>Sign Up</p>
+            </div>
+            <div
+              className="login-button"
+              onClick={() => openModal("LoginModel")}
+            >
+              <p>Login</p>
+            </div>
+          </div>
+        )}
 
-          {/* ========================================= */}
-        <MyProfilemodal modalName="modal2"></MyProfilemodal>
         {/* ========================================= */}
-        </div>
-        </div>
-      ) : (
-        <div>This is the desktop version</div>
-      )}
 
-
-      
-      
-      <div style={{ marginTop: "40px" }}>
-        <Outlet />
-        
+        {/* ========================================= */}
       </div>
-      <div className="fixed-bottom px-0">
+      <div>
+        <LaunchGamePopup modalName="LaunchGamePopup"></LaunchGamePopup>
         <TransactionRecordModal modalName="TransactionRecordModal"></TransactionRecordModal>
         <BettingRecordModal modalName="BettingRecordModal"></BettingRecordModal>
-
+        <MyProfilemodal modalName="MyProfileModel"></MyProfilemodal>
+        <ProfileModel modalName="ProfileModel"></ProfileModel>
         {/* ========================================= */}
-  <BkashModal modalName="Bkash"></BkashModal>
+        <BkashModal modalName="Bkash"></BkashModal>
         {/* ========================================= */}
-  <NagadModal modalName="Nagad"></NagadModal>
+        <NagadModal modalName="Nagad"></NagadModal>
         {/* ========================================= */}
-<RocketModal modalName="Rocket"></RocketModal>
+        <RocketModal modalName="Rocket"></RocketModal>
         {/* ========================================= */}
-<UpayModal modalName="Upay"></UpayModal>
+        <UpayModal modalName="Upay"></UpayModal>
         {/* ========================================= */}
         <TurnOverModal modalName="TurnOverModal"></TurnOverModal>
-
         {/* ========================================= */}
         <RefferBonusModel modalName="RefferBonusModel"></RefferBonusModel>
         {/* ========================================= */}
-        <ResetmypasswordModal modalName="ResetmypasswordModal"></ResetmypasswordModal>
+        <ForgetPasswordModal modalName="ForgetPasswordModal"></ForgetPasswordModal>
+        <ResetPasswordPopup modalName="ResetPasswordPopup"></ResetPasswordPopup>
         {/* ========================================= */}
         <AddEmailModel modalName="AddEmailModel"></AddEmailModel>
         <AddMobileNumberModel modalName="AddMobileNumberModel"></AddMobileNumberModel>
@@ -271,42 +259,60 @@ export default () => {
         {/* ========================================= */}
         <AddNameModel modalName="AddNameModel"></AddNameModel>
         {/* ========================================= */}
-
         <InboxModal modalName="InboxModel"></InboxModal>
         {/* ========================================= */}
-        
         <SendEmailOtp modalName="SendEmailOtp"></SendEmailOtp>
         {/* ========================================= */}
         <VerifyOptPageEmail modalName="VerifyOptPageEmail"></VerifyOptPageEmail>
         {/* ========================================= */}
-
         <VerifyOptPage modalName="VerifyOptPage"></VerifyOptPage>
         {/* ========================================= */}
-
         <WidthrawModel modalName="WidthrawModel"></WidthrawModel>
         {/* ========================================= */}
-        
-        {/* ========================================= */}
-          <GiftPointsModel modalName="GiftPointsModel"></GiftPointsModel>
-        {/* ========================================= */}  
-        <VipGiftPointsPopupModel modalName="VipGiftPointsPopupModel" ></VipGiftPointsPopupModel>
-
-
+        <GiftPointsModel modalName="GiftPointsModel"></GiftPointsModel>
         {/* ========================================= */}
         <LoginModel modalName="LoginModel"></LoginModel>
-
-        
-     
         <SingUpModal modalName="SingUpModal"></SingUpModal>
-
         <DepositModel modalName="DepositModel"></DepositModel>
-
         <CurrencyLanguageSelector modalName="CurrencyLanguageSelector"></CurrencyLanguageSelector>
-
         <SideNavPopUp modalName="SideNavPopUp"></SideNavPopUp>
       </div>
 
-      
+      {isAmountAlertError && (
+        <McdTopAlert
+          isAmountAlertError={isAmountAlertError}
+          setIsAmountAlertError={setIsAmountAlertError}
+          title={`{${isAmountAlertError ? "Notification" : ""}`}
+        />
+      )}
+      {showAmountLimit && (
+        <NotificationMiniPopUp
+          showAmountLimit={showAmountLimit}
+          setShowAmountLimit={setShowAmountLimit}
+          title={`${showAmountLimit ? "Notification" : ""}`}
+        />
+      )}
+      {showAmountLimitw && (
+        <NotificationMiniPopUp
+          showAmountLimit={showAmountLimitw}
+          setShowAmountLimit={setShowAmountLimitw}
+          title={`${showAmountLimitw ? "Notification" : ""}`}
+        />
+      )}
+      {isLoginNotify && (
+        <NotificationMiniPopUp
+          showAmountLimit={isLoginNotify}
+          setShowAmountLimit={setIsLoginNotify}
+          title={`${showAmountLimit ? "Notification" : ""}`}
+        />
+      )}
+      {isPasswordresetNotify && (
+        <NotificationMiniPopUp
+          showAmountLimit={isLoginNotify}
+          setShowAmountLimit={setIsLoginNotify}
+          title={`${isPasswordresetNotify ? "Notification" : ""}`}
+        />
+      )}
     </>
   );
 };

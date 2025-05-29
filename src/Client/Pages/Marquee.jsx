@@ -8,7 +8,7 @@ export default () => {
   const announcements = [
     {
       id: 1,
-      content: ` মাত্র ৳১০০ দিয়ে 
+      content: ` মাত্র ৳ ২০০ দিয়ে 
                         
                           KingBaji
                           
@@ -32,7 +32,7 @@ export default () => {
     const animate = () => {
       position -= speed;
       if (position <= -ul.children[0].offsetWidth) {
-        position = 0;
+        position = 250;
       }
       ul.style.transform = `translateX(${position}px)`;
       requestAnimationFrame(animate);

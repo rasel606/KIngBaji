@@ -45,6 +45,9 @@ const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
   const handleAddMobile = () => {
     openModal("AddMobileNumberModel");
   };
+  const handleGiftPoints = () => {
+    openModal("VipSystem")
+  };
 
   
     // useEffect(() => {
@@ -160,7 +163,7 @@ console.log(userDeatils)
                     <div className="right-box">
                       <a
                         className="goto-myvip"
-                        onClick={() => openModal("MyVipModal")}
+                        onClick={handleGiftPoints}
                       >
                         <div className="myvip-text">
                           <span>My VIP</span>

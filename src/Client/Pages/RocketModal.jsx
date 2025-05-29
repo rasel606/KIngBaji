@@ -18,8 +18,16 @@ export default ({ modalName }) => {
 
   const userId = userDeatils?.userId || "";
 
-  const { gateway_name, gateway_Number, payment_type, newAmount, Payment } =
-    usePayNow();
+  const {
+    gateway_name,
+    gateway_Number,
+    payment_type,
+    newAmount,
+    Payment,
+    setNewAmountPay,
+    setGateway_name,
+    setGateway_Number,
+  } = usePayNow();
 
   const [timeRemaining, setTimeRemaining] = useState(900);
   const [transactionID, setTransactionID] = useState("");
@@ -44,7 +52,7 @@ export default ({ modalName }) => {
   const type = 0;
 
   const [gateways, setGateways] = useState();
-  const [ShowSuccess, setShowSuccess] = useState(false);
+  const [ShowSuccess, setShowSuccess] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const handleTransactionIDChange = (e) => {
@@ -73,6 +81,15 @@ export default ({ modalName }) => {
 
   console.log("1", amountnew);
 
+  const handleCopyAmount = () => {
+    navigator.clipboard.writeText(amountnew);
+    alert("Invitation code copied!");
+  };
+  const handleCopyGatewayNumber = () => {
+    navigator.clipboard.writeText(amountnew);
+    alert("Invitation code copied!");
+  };
+
   const handlePayment = async (e) => {
     e.preventDefault();
     try {
@@ -98,24 +115,26 @@ export default ({ modalName }) => {
 
       setGateways(response.data.paymentMethods);
       console.log(response.data);
-
+      setShowSuccess(false);
       if (response.data.success === true) {
         console.log(response.data.success);
         setTimeout(() => {
-          setShowSuccess(false);
           closeModal(); // Optionally close the modal after showing success
           navigate("/"); // or your success redirect
           window.location.reload(); // If you want to reload after redirect
-        }, 2000);
+        }, 3000);
       }
       if (response.data.success === false) {
         console.log(response.data.success);
         setTransactionID("");
         setIsTransactionValid(false);
+        setNewAmountPay();
+        setGateway_name();
+        setGateway_Number();
         navigate("/failds"); // Redirect to success page
         setTimeout(() => {
           window.location.reload(); // Reload the page after navigation
-        }, 500);
+        }, 300);
       }
     } catch (error) {
       console.error("Error making payment:", error);
@@ -142,163 +161,153 @@ export default ({ modalName }) => {
               <div className="custom-fullscreen-bg">
                 <div className="custom-row">
                   <div className="custom-col-md-6">
+                        {ShowSuccess ? (
                     <div className="custom-center-content">
                       <div className="custom-text-center">
-                        <div className="custom-content-lg">
-                          <div
-                            className="custom-timer-container"
-                            style={{ background: "#000080" }}
-                          >
-                            <h1 className="custom-timer-display" style={{ color: "white" }}>
-                              {formatTime(timeRemaining)}
-                            </h1>
-                            <span className="custom-timer-label">
-                              Time Remaining
-                            </span>
-                          </div>
-                          <div className="custom-form-container">
-                            <div className="custom-form-header">
-                              <div className="custom-logo-container">
+                          <div className="custom-content-lg">
+                            <div className="custom-timer-container" style={{ background: "#000080" }}>
+                              <h1 className="custom-timer-display">
+                                {formatTime(timeRemaining)}
+                              </h1>
+                              <span className="custom-timer-label">
+                                Time Remaining
+                              </span>
+                            </div>
+                            <div className="custom-form-container">
+                              <div className="custom-form-header">
+                                <div className="custom-logo-container">
+                                  <div className="custom-logo-container">
                                 <img
                                   style={{ width: "100px" }}
                                   alt="logo"
                                   src="https://d1rkzpcrq2qmwv.cloudfront.net/banks/rocket.png"
                                 />
+                                </div>
                               </div>
-                            </div>
-                            <form className="custom-payment-form">
-                              <p className="custom-instruction-text">
-                                {Payment?.payment_type} to the account below and
-                                fill in the required information
-                                <br />
-                              </p>
-                              {/* <span className="custom-instruction-subtext">
+                              <form className="custom-payment-form">
+                                <p className="custom-instruction-text">
+                                  {Payment?.payment_type} to the account below
+                                  and fill in the required information
+                                  <br />
+                                </p>
+                                {/* <span className="custom-instruction-subtext">
                                 নীচের অ্যাকাউন্টে অর্থ {payment_type} করুন এবং প্রয়োজনীয় তথ্য পূরণ করুন।
                               </span> */}
 
-                              <div className="custom-form-group">
-                                <label className="custom-form-label">
-                                  Amount
-                                </label>
-                                <div className="custom-input-container">
-                                  <input
-                                    type="text"
-                                    disabled
-                                    className="custom-form-input"
-                                    placeholder={newAmount}
-                                    value={newAmount}
-                                  />
-                                  <ImCopy className="custom-input-icon" />
+                                <div className="custom-form-group">
+                                  <label className="custom-form-label">
+                                    Amount
+                                  </label>
+                                  <div className="custom-input-container">
+                                    <input
+                                      type="text"
+                                      disabled
+                                      className="custom-form-input"
+                                      placeholder={newAmount}
+                                      value={newAmount}
+                                    />
+                                    <ImCopy
+                                      className="custom-input-icon"
+                                      onClick={handleCopyAmount}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="custom-form-group">
-                                <label className="custom-form-label">
-                                  Your Process system
-                                </label>
-                                <div className="custom-input-container">
-                                  <input
-                                    type="text"
-                                    disabled
-                                    className="custom-form-input"
-                                    placeholder={Payment?.payment_type}
-                                    value={Payment?.payment_type}
-                                  />
-                                  <ImCopy className="custom-input-icon" />
+                                <div className="custom-form-group">
+                                  <label className="custom-form-label">
+                                    Your Process system
+                                  </label>
+                                  <div className="custom-input-container">
+                                    <input
+                                      type="text"
+                                      disabled
+                                      className="custom-form-input"
+                                      placeholder={Payment?.payment_type}
+                                      value={Payment?.payment_type}
+                                    />
+                                    <ImCopy
+                                      className="custom-input-icon"
+                                      onClick={handleCopyGatewayNumber}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div className="custom-form-group">
-                                <label className="custom-form-label">
-                                  Bkash {payment_type}
-                                </label>
-                                <div className="custom-input-container">
-                                  <input
-                                    type="text"
-                                    disabled
-                                    className="custom-form-input"
-                                    placeholder={"0" + gateway_Number}
-                                    value={"0" + gateway_Number}
-                                  />
-                                  <ImCopy className="custom-input-icon" />
+                                <div className="custom-form-group">
+                                  <label className="custom-form-label">
+                                    Bkash {payment_type}
+                                  </label>
+                                  <div className="custom-input-container">
+                                    <input
+                                      type="text"
+                                      disabled
+                                      className="custom-form-input"
+                                      placeholder={"0" + gateway_Number}
+                                      value={"0" + gateway_Number}
+                                    />
+                                    <ImCopy className="custom-input-icon" />
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div className="custom-form-group">
-                                <label className="custom-form-label">
-                                  Transaction ID
-                                </label>
-                                <div className="custom-input-container">
-                                  <input
-                                    type="text"
-                                    required
-                                    className="custom-form-input"
-                                    style={{ appearance: "auto" }}
-                                    value={transactionID}
-                                    placeholder={transactionID}
-                                    onChange={handleTransactionIDChange}
-                                    maxLength="10"
-                                    minLength="10"
-                                  />
-                                  <FaQuestionCircle className="custom-input-icon" />
+                                <div className="custom-form-group">
+                                  <label className="custom-form-label">
+                                    Transaction ID
+                                  </label>
+                                  <div className="custom-input-container">
+                                    <input
+                                      type="text"
+                                      required
+                                      className="custom-form-input"
+                                      style={{ appearance: "auto" }}
+                                      value={transactionID}
+                                      placeholder={transactionID}
+                                      onChange={handleTransactionIDChange}
+                                      maxLength="10"
+                                      minLength="10"
+                                    />
+                                    <FaQuestionCircle className="custom-input-icon" />
+                                  </div>
                                 </div>
-                              </div>
 
-                              <button
-                                type="button"
-                                className="custom-submit-btn"
-                                onClick={handlePayment}
-                              >
-                                Submit
-                              </button>
-                            </form>
+                                <button
+                                  type="button"
+                                  className="custom-submit-btn"
+                                  onClick={handlePayment}
+                                >
+                                  Submit
+                                </button>
+                              </form>
+                            </div>
                           </div>
                         </div>
+                      </div>
+                      </div>
+                        ) : (
+                          <div className="gateway-name-main-container">
+                            <div className="gateway-name-check-icon"></div>
+                            <div className="gateway-name-content">
+                              <div className=" gateway-name-heading">
+                                সফলভাবে জমা দেওয়া হয়েছে
+                              </div>
+                              <div className="gateway-name-paragraph">
+                                লেনদেন সফলভাবে জমা দেওয়া হয়েছে।
+                                <br />
+                                লেনদেন অনুমোদিত হওয়ার জন্য অনুগ্রহ করে কয়েক
+                                মিনিট অপেক্ষা করুন।
+                                <br />
+                                আপনি এখন এই পপ আপ ব্রাউজারটি বন্ধ করে মূল সাইটে
+                                ফিরে যেতে পারেন।
+                              </div>
+                              {/* <button class="gateway-name-button">বন্ধ</button> */}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            {ShowSuccess === true ? (
-              <div className="pop-wrap pop-success">
-                <div className="register-success-wrap">
-                  <div className="register-success-cont">
-                    <div className="register-success-txt top-inner">
-                      <div className="success-checkmark">
-                        <div className="check-icon">
-                          <span className="icon-line line-tip"></span>
-                          <span className="icon-line line-long"></span>
-                          <div className="icon-circle"></div>
-                          <div className="icon-fix"></div>
-                        </div>
-                      </div>
-                      <h4>Success</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="pop-wrap pop-success">
-                <div className="register-success-wrap">
-                  <div className="register-success-cont">
-                    <div className="register-success-txt top-inner">
-                      <div className="success-checkmark">
-                        <div className="check-icon">
-                          <span className="icon-line line-tip"></span>
-                          <span className="icon-line line-long"></span>
-                          <div className="icon-circle"></div>
-                          <div className="icon-fix"></div>
-                        </div>
-                      </div>
-                      <h4>Success</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
-        </div>
-      </div>
-    </div>
+         </div>
+  
   );
 };

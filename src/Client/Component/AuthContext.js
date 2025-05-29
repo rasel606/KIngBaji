@@ -17,9 +17,12 @@ const AuthContextProvider = ({ children }) => {
   const [userId, setUserId] = useState(null || "");
   const [userDeatils, setUserDeatils] = useState(null || "");
   const [loading, setLoading] = useState(false);
-
-  const [email, setEmail] = useState(null || "");
   const [showPopup, setShowPopup] = useState(false);
+  const [isLoginNotify, setIsLoginNotify] = useState(false);
+  const [isPasswordresetNotify, setIsPasswordresetNotifyNotify] = useState(false);
+  const [isAmountAlertError,setIsAmountAlertError] = useState(false);
+  const [email, setEmail] = useState(null || "");
+
 
 
   console.log("isAuthenticated", userDeatils, userId, token);
@@ -80,7 +83,7 @@ const AuthContextProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [token,loading]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
+  }, [token]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
 
   // Login function
 
@@ -165,7 +168,7 @@ const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, userRegistar, token, userId, userDeatils, loading, setLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, userRegistar, token, userId, userDeatils, loading, setLoading,isAmountAlertError,setIsAmountAlertError,isLoginNotify, setIsLoginNotify,isPasswordresetNotify, setIsPasswordresetNotifyNotify }}>
       {children}
 
     </AuthContext.Provider>

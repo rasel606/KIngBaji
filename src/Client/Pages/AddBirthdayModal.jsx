@@ -52,10 +52,12 @@ export default ({ modalName }) => {
       const response = await UpdateBirthDate(formData);
       console.log(response);
       setMessage(response.data.message);
+      setShowSuccess(true);
+     
       setTimeout(() => {
         setShowSuccess(false);
-        openModal('MyProfilemodal');
-      }, 1000)
+         openModal('MyProfileModel');
+      }, 3000)
     } catch (error) {
       setMessage(error.response?.data?.message || "An error occurred.");
     }
@@ -108,24 +110,28 @@ export default ({ modalName }) => {
                   <i>গ্রাহক পরিষেবাতে</i> যোগাযোগ করুন।
                 </p>
                 {ShowSuccess && (
-                  <div className="pop-wrap pop-success">
-                    <div className="register-success-wrap">
-                      <div className="register-success-cont">
-                        <div className="register-success-txt top-inner">
-                          <div className="success-checkmark">
-                            <div className="check-icon">
-                              <span className="icon-line line-tip"></span>
-                              <span className="icon-line line-long"></span>
-                              <div className="icon-circle"></div>
-                              <div className="icon-fix"></div>
+                    <div
+                      className={`pop-wrap pop-success ${
+                        ShowSuccess ? "show" : ""
+                      }`}
+                    >
+                      <div className="register-success-wrap">
+                        <div className="register-success-cont">
+                          <div className="register-success-txt top-inner">
+                            <div className="success-checkmark">
+                              <div className="check-icon">
+                                <span className="icon-line line-tip"></span>
+                                <span className="icon-line line-long"></span>
+                                <div className="icon-circle"></div>
+                                <div className="icon-fix"></div>
+                              </div>
                             </div>
+                            <h4>Success</h4>
                           </div>
-                          <h4>Success</h4>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             </div>
           </div>

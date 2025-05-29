@@ -10,7 +10,7 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, login, logoutUser } = useAuth();
+  const { isAuthenticated, login, logoutUser,isAmountAlertError,setIsAmountAlertError } = useAuth();
 
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState("");
@@ -75,7 +75,7 @@ export default ({ modalName }) => {
     // Add your login logic here (API calls, etc.)
     const newLocal = await login(userId, password);
     console.log(newLocal);
-    closeModal();
+   
   };
 
   return (
@@ -121,9 +121,7 @@ export default ({ modalName }) => {
                           onClick={() => handleClearUsername("userId")}
                         />
                       )}
-                      {setError && (
-                        <div className="member-error-box">{setError}</div>
-                      )}
+                      {error && <div className="error-message">{error}</div>}
                     </div>
 
                     <div className="input-group password third-party-input-group-title">
@@ -149,31 +147,25 @@ export default ({ modalName }) => {
                         />
                       )}
                       {errorPassword && (
-                        <div className="member-error-box">{errorPassword}</div>
+                        <div className="error-message">{errorPassword}</div>
                       )}
                     </div>
 
                     <div className="login-info-box">
-                      <div className="forgetpassword-buttn">
-                        <a onClick={() => openModal("ResetmypasswordModal")}>
-                          Forgot password?
-                        </a>
+                      <div className="forgetpassword-buttn" onClick={()=>openModal("ForgetPasswordModal")}>
+                        <a>Forgot password?</a>
                       </div>
                     </div>
                   </div>
 
                   <div className="button" onClick={() => handleLogin()}>
                     <a>Login</a>
-                    
                   </div>
                 </form>
 
-                <p
-                  className="button-tips"
-                  
-                >
-                  <span onClick={() => openModal("SingUpModal")}>Do not have an account? </span>
-                  <a href="/register">Sign Up</a>
+                <p className="button-tips">
+                  <span>Do not have an account? </span>
+                  <a href="">Sign Up</a>
                 </p>
               </div>
             </div>
