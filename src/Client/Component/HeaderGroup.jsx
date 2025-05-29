@@ -159,14 +159,14 @@ export default (props) => {
                                   "url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-home.png?v=1725363175075)",
                               }}
                             ></span>
-                            <Link to="/" className="">
+                            <Link to="/" className="" onClick={toggleMenu}>
                               হোম
                             </Link>
                           </li>
                         </ul>
 
                         <ul className="vendor">
-                          {categories?.map((category, index) => (
+                          {data?.map((category, index) => (
                             <li
                               key={category.id}
                               className={activeIndex === index ? "active" : ""}
@@ -177,7 +177,7 @@ export default (props) => {
                             >
                               {console.log(
                                 "category",
-                                category?.image
+                                category.category?.image
                               )}
                               <span
                                 className="item-icon"
