@@ -2,15 +2,11 @@ import React, { useEffect, useRef } from 'react';
 
 export default () => {
   const images = [
-    "https://img.s628b.com/upload/h5Announcement/image_218846.jpg",
-    "https://img.s628b.com/upload/h5Announcement/image_231401.jpg",
-    "https://img.s628b.com/upload/h5Announcement/image_218523.jpg",
-    "https://img.s628b.com/upload/h5Announcement/image_221809.jpg",
-    "https://img.s628b.com/upload/h5Announcement/image_227293.jpg",
-    "https://img.s628b.com/upload/h5Announcement/image_236835.png",
-    "https://img.s628b.com/upload/h5Announcement/image_211169.jpg",
-    "https://img.s628b.com/upload/h5Announcement/image_241498.jpg",
-    "https://img.s628b.com/upload/h5Announcement/image_216168.jpg",
+ "https://i.ibb.co.com/DChN5S5/img-1.jpg",
+    "https://i.ibb.co.com/VqtD7Tq/img-2.jpg",
+    "https://i.ibb.co.com/7Kkr63k/img-3.jpg",
+    "https://i.ibb.co.com/LQB0VW7/img-4.jpg",
+    "https://i.ibb.co.com/gdQVX9d/image-5.jpg",
   ];
 
   const marqueeRef = useRef(null);
