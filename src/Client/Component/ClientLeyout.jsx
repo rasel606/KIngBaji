@@ -123,7 +123,7 @@ export default () => {
           isMenuOpen={isMenuOpen}
         ></HeaderGroup>
       </div>
-      <div style={{ marginTop: "45px" }}>
+      <div >
         <Outlet />
       </div>
       <div className="toolbar">

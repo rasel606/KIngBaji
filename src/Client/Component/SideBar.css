@@ -25703,27 +25703,27 @@ html.is-desktop .vip-content .card-top .vip-lv-area .lv-text .text {
   padding: 0;
 }
 
-.vip-content .cash {
+.vip-content .cash-card .cash {
   width: 75%;
   padding: 1.3333333333vw 2.6666666667vw;
 }
 
-.vip-content .cash.detail-title {
+.vip-content .cash-card .detail-title {
   position: relative;
   margin: 2.6666666667vw 0;
   color: #ffffffb3;
   font-size: 3.4666666667vw;
 }
 
-.vip-content .cash.detail-title .text {
+.vip-content .cash-card .detail-title .text {
   float: right;
 }
 
-.vip-content .cash.detail-title .text span {
+.vip-content .cash-card .detail-title .text span {
   margin-left: 1.3333333333vw;
 }
 
-.vip-content .cash.cash-input input[type="number"] {
+.vip-content .cash-card .cash-input input[type="number"] {
   box-sizing: border-box;
   width: 100%;
   margin-bottom: 0;
@@ -25738,17 +25738,17 @@ html.is-desktop .vip-content .card-top .vip-lv-area .lv-text .text {
   box-shadow: 0 0 0.8vw #0003 inset;
 }
 
-.vip-content .cash.cash-input input[type="number"]::placeholder {
+.vip-content .cash-card .cash-input input[type="number"]::placeholder {
   color: #ffffff4d;
 }
 
-.vip-content .cash.cash-input.error input[type="number"] {
+.vip-content .cash-card .cash-input.error input[type="number"] {
   animation: shake-horizontal 0.5s cubic-bezier(0.455, 0.3, 0.515, 0.955) both;
   color: #ff5252;
   border: 0.2666666667vw solid #ff5252;
 }
 
-.vip-content .cash.conversion {
+.vip-content .cash-card .conversion {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -25759,22 +25759,22 @@ html.is-desktop .vip-content .card-top .vip-lv-area .lv-text .text {
   font-size: 3.2vw;
 }
 
-.vip-content .cash.conversion .ratio {
+.vip-content .cash-card .conversion .ratio {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
 }
 
-.vip-content .cash.conversion .ratio .text {
+.vip-content .cash-card .conversion .ratio .text {
   margin-left: 2.6666666667vw;
   color: #90b4ef;
 }
 
-.vip-content .cash.conversion .ratio.hide {
+.vip-content .cash-card .conversion .ratio.hide {
   display: none;
 }
 
-.vip-content .cash.conversion .error-tip {
+.vip-content .cash-card .conversion .error-tip {
   display: -webkit-inline-box;
   flex-flow: row nowrap;
   align-content: flex-start;
@@ -25782,7 +25782,7 @@ html.is-desktop .vip-content .card-top .vip-lv-area .lv-text .text {
   height: 100%;
 }
 
-.vip-content .cash.conversion .error-tip:before {
+.vip-content .cash-card .conversion .error-tip:before {
   content: "!";
   display: inline-block;
   width: 3.7333333333vw;
@@ -25794,16 +25794,16 @@ html.is-desktop .vip-content .card-top .vip-lv-area .lv-text .text {
   text-align: center;
 }
 
-.vip-content .cash.conversion .error-tip .text {
+.vip-content .cash-card .conversion .error-tip .text {
   margin-left: 2.1333333333vw;
   color: #ff5252;
 }
 
-.vip-content .cash.conversion .error-tip.hide {
+.vip-content .cash-card .conversion .error-tip.hide {
   display: none;
 }
 
-.vip-content .convert-icon {
+.vip-content .cash-card .convert-icon {
   display: flex;
   position: absolute;
   top: 25.3333333333vw;
@@ -25811,7 +25811,7 @@ html.is-desktop .vip-content .card-top .vip-lv-area .lv-text .text {
   width: 100%;
 }
 
-.vip-content .convert-icon .chevron {
+.vip-content .cash-card .convert-icon .chevron {
   position: absolute;
   width: 5.3333333333vw;
   height: 0.8vw;
@@ -25819,16 +25819,16 @@ html.is-desktop .vip-content .card-top .vip-lv-area .lv-text .text {
   opacity: 0;
 }
 
-.vip-content .convert-icon .chevron:first-child {
+.vip-content .cash-card .convert-icon .chevron:first-child {
   animation: move-chevron 2.8s ease-out infinite;
 }
 
-.vip-content .convert-icon .chevron:first-child:before,
-.vip-content .convert-icon .chevron:first-child:after {
+.vip-content .cash-card .convert-icon .chevron:first-child:before,
+.vip-content .cash-card .convert-icon .chevron:first-child:after {
   background: #90b4ef;
 }
 
-.vip-content .convert-icon .chevron:nth-child(2) {
+.vip-content .cash-card .convert-icon .chevron:nth-child(2) {
   animation: move-chevron 2.8s ease-out 1s infinite;
 }
 
@@ -28901,7 +28901,7 @@ header .logo {
 }
 
 .footer-top .safe img {
-  opacity: 1;
+  opacity: 0.7;
 }
 
 .footer-top .sponsor-ambassadors .official-partner {

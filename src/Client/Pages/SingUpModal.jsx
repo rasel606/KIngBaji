@@ -165,7 +165,7 @@ export default ({ modalName }) => {
   };
 
   let referredBy = referralCode;
-
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(true);
   // const referralCode = localStorage.getItem("referralCode");
   // referredBy += referralCode;
   // console.log(referralCode);
@@ -186,7 +186,8 @@ export default ({ modalName }) => {
 
     try {
       await userRegistar(userData);
-      alert("Registration successful");
+      setIsRegistrationSuccess(false)
+      // alert("Registration successful");
       handleClearUsername();
       handleClearPassword();
       handleClearphoneNumber();
@@ -260,6 +261,14 @@ export default ({ modalName }) => {
 
                 <div className="menu-box"></div>
               </div>
+
+
+ 
+
+              {isRegistrationSuccess ? (
+                <>
+
+
 
               <div className="entry-outlet">
                 <form className="ng-invalid ng-dirty ng-touched">
@@ -422,6 +431,33 @@ export default ({ modalName }) => {
                 <Link>শর্তাবলী </Link>
                 <span>.</span>
               </p>
+              </>)
+              :
+              
+                (
+                <div className="register-success-wrap">
+                  <div className="register-success-cont">
+                    <div className="register-success-txt top-inner">
+                      <div className="success-checkmark">
+                        <div className="check-icon">
+                          <span className="icon-line line-tip"></span>
+                          <span className="icon-line line-long"></span>
+                          <div className="icon-circle"></div>
+                          <div className="icon-fix"></div>
+                        </div>
+                      </div>
+                      <h3>Congratulations on being a SuperBaji member!</h3>
+                      <p>Congratulations on your successful registration.</p>
+                    </div>
+                    <div className="register-success-btn" onClick={() => openModal("DepositModel")}>
+                      <Link className="button btn-default" >
+                        Deposit now
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
             </div>
           </div>
         </div>
@@ -430,225 +466,3 @@ export default ({ modalName }) => {
   );
 };
 
-{
-  /* <mcd-popup-page className="popup-page-wrapper active">
-      <div className="popup-page popup-page--active popup-page--align-top">
-    <div className="" onClick={closeModal}>
-      <div onClick={(e) => e.stopPropagation()}>
-        <div className="popup-page__main popup-page-main popup-page-main--show">
-          <div className="popup-page-main__header new-login-tab">
-            <div className="popup-page-main__title"> SignUp </div>
-            <div className="popup-page-main__close" onClick={closeModal}></div>
-          </div>
-          <div className="popup-page-main__container">
-            <div className="content member-content new-login third-party-login">
-              <div className="register-entry ">
-                <div
-                  className="logo-box"
-                  style={{
-                    backgroundImage: `url(https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png)`,
-                  }}
-                >
-                  {/* <img 
-                      src=""
-                      alt=""
-                    /> */
-}
-// </div>
-
-// <div>
-//   <div className="menu-box">
-//     <Carousel images={images}></Carousel>
-//     {/* <SingupSlider></SingupSlider> */}
-//     <div className="input-group currency-number third-party-input-group-title">
-//       <label>Choose currency</label>
-//       <div className="input-wrap currency-wrap">
-//         <div className="currency-area-code">
-//           <div className="lang-select">
-//             <div
-//               className="button btn-select currency-list-area"
-//               onClick={() => setIsOpen(!isOpen)}
-//             >
-//               <li>
-//                 <img
-//                   alt={selectedCurrency.flag}
-//                   src={`https://img.c88rx.com/cx/h5/assets/images/flag/${selectedCurrency.flag}.png?v=1737700422219&source=mcdsrc`}
-//                   loading="lazy"
-//                 />
-//                 <span>{selectedCurrency.Currency}</span>
-//               </li>
-//             </div>
-//             <div
-//               className="currency-code-list-group"
-//               style={{ display: isOpen ? "block" : "none" }}
-//             >
-//               <ul className="currency-code-list currency-list-area">
-//                 {currencies.map((currency, index) => (
-//                   <li
-//                     key={index}
-//                     onClick={() =>
-//                       setSelectedCurrency(currency.code)
-//                     }
-//                   >
-//                     <img
-//                       alt={currency.code}
-//                       src={`https://img.c88rx.com/cx/h5/assets/images/flag/${currency.flag}.png?v=1737700422219&source=mcdsrc`}
-//                       loading="lazy"
-//                     />
-//                     <span>{currency.code}</span>
-//                   </li>
-//                 ))}
-//               </ul>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//     <div className=""></div>
-//   </div>
-
-//   <div className="entry_outlet">
-//     <form novalidate="" className="">
-//       <div className="menu-box">
-//         <div className="input-group">
-//           <label htmlFor="userId">Username</label>
-//           <input
-//             type="text"
-//             id="userId"
-//             name="userId"
-//             placeholder="4-15 char, allow numbers, no space"
-//             value={userId}
-//             onChange={handleUsername}
-//             className="input"
-//           />
-//           {userId && (
-//             <input
-//               type="button"
-//               className={`clear ${userId ? "active" : ""}`}
-//               onClick={handleClearUsername}
-//             />
-//           )}
-//         </div>
-//         {error && (
-//           <div className="error-message">
-//             <span>{error}</span>
-//           </div>
-//         )}
-
-//         <div className="input-group password">
-//           <div
-//             type="button"
-//             className={`eyes ${password ? "active" : "not"}`}
-//             onClick={togglePasswordVisibility}
-//           ></div>
-//           <label htmlFor="password">Password</label>
-//           <input
-//             type={isPasswordVisible ? "text" : "password"}
-//             id="password"
-//             name="password"
-//             placeholder="6-20 Characters and Numbers"
-//             value={password}
-//             onChange={handlePassword}
-//             className="input"
-//           />
-//           {password && (
-//             <input
-//               type="button"
-//               className={`clear ${password ? "active" : ""}`}
-//               onClick={handleClearPassword}
-//             />
-//           )}
-//         </div>
-//         {errorPassword && (
-//           <div className="error-message">
-//             <label>{errorPassword}</label>
-//           </div>
-//         )}
-
-//         <div className="input-group phone-number third-party-input-group-title">
-//           <label>Phone Number</label>
-//           <div className="input-wrap phone-wrap">
-//             <div className="phone-area-code">
-//               <div className="lang-select">
-//                 <button className="btn-select only">
-//                   <li>
-//                     <img
-//                       alt="BD"
-//                       src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1737700422219&source=mcdsrc"
-//                       loading="lazy"
-//                     />
-//                     <span>+880</span>
-//                   </li>
-//                 </button>
-//               </div>
-//             </div>
-//             <input
-//               type="tel"
-//               inputMode="tel"
-//               className="input invalid"
-//               placeholder="Phone Number"
-//               value={phoneNumber}
-//               onChange={handlePhoneNumberChange}
-//             />
-//             {phoneNumber && (
-//               <input
-//                 type="button"
-//                 className={`clear ${
-//                   phoneNumber ? "active" : ""
-//                 }`}
-//                 onClick={handleClearphoneNumber}
-//               />
-//             )}
-//             {/* <input className="clear" /> */}
-//           </div>
-//         </div>
-//         {errorNum && (
-//           <div className="error-message">
-//             <label>{errorNum}</label>
-//           </div>
-//         )}
-//         <div
-//           className={`button ${
-//             userId && password && phoneNumber > 1234567591
-//               ? "active"
-//               : "btn-disabled"
-//           }`}
-//           type="submit"
-//           onClick={() => handleSubmit()}
-//         >
-//           Sign Up
-//         </div>
-//       </div>
-//     </form>
-
-//     <p className="button-tips">
-//       <span className="">Already a member ?</span>
-//       <Link
-//         className=""
-//         onClick={() => openModal("LoginModel")}
-//       >
-//         Log in
-//       </Link>
-//     </p>
-//     <div className="ng-star-inserted">
-//       <p className="footer-tips ng-star-inserted">
-//         <span>
-//           Registering means you are over 18 years old, have
-//           read and agree to the
-//           <Link className="footer-tips ">
-//             Terms &amp; Conditions.
-//           </Link>
-//         </span>
-//       </p>
-//     </div>
-//   </div>
-// </div>
-
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   </div>
-// </div>
-// </div>
-// </mcd-popup-page>

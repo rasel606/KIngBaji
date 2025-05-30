@@ -188,7 +188,7 @@ setNewAmountPay(selectedPaymentAmount);
    if (selectedPaymentAmount > 199 && selectedPaymentAmount < 25001) {
     openModal(`${gateway_name}`);; // Call the modal open function here
   } else {
-    setShowAmountLimit("Sorry! your amount Invalid. Please enter amount between ৳ 300 and ৳ 25,000."); // Show limit modal if outside the valid range
+    setShowAmountLimit("Sorry! your amount Invalid. Please enter amount between ৳ 200 and ৳ 25,000."); // Show limit modal if outside the valid range
   }
   };
 

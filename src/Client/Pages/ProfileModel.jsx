@@ -277,12 +277,12 @@ export default ({ modalName }) => {
                           src="https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg"
                           alt=""
                         /> */}
-                  <span className="item-icon arrow-icon">
-                    <img
+                  <span className="item-icon arrow-icon" style={{ maskImage:`url("https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg")` }}>
+                    {/* <img
                       style={{ background: "#ffffff" }}
                       src="https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg"
                       alt=""
-                    />
+                    /> */}
                   </span>
                 </Link>
               </div>

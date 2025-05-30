@@ -73,7 +73,7 @@ export default () => {
             <div className="item-left">
               <div className="item-wrap">
                 {[...images, ...images].map((url, idx) => (
-                  <div key={idx} className="item" style={{ width: "167.6px" }}>
+                  <div key={idx} className="item" >
                     <div
                       className="item-pic"
                       style={{ backgroundImage: `url("${url}")` }}

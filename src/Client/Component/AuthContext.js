@@ -125,7 +125,7 @@ const AuthContextProvider = ({ children }) => {
     try {
       console.log(data)
       const response = await CreateUser(data);
-      console.log(response)
+      console.log(response.data)
       const token = response.data.token;
       const userData = response.data.user;
       localStorage.setItem('authToken', response.data.token);
@@ -142,8 +142,8 @@ const AuthContextProvider = ({ children }) => {
         referralCode: userData.referralCode,
         // ... include other necessary fields ...
       });
-
-      closeModal();
+// setIsRegistrationSuccess(false)
+   
       return response;
 
       // return response
