@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useModal } from "./ModelContext";
 import { Link, useNavigate } from "react-router-dom";
+import { UserAllDetails } from "./Axios-API-Service/AxiosAPIService";
 
 export default (props) => {
   // const { activeModal, openModal, closeModal } = useModal();
@@ -16,11 +17,11 @@ export default (props) => {
     data[0]?.category.uniqueProviders
   );
   console.log(data);
-  const handleItemClick = (index, item) => {
-    setActiveIndex(index);
-    setActive(item);
-    // console.log(item);
-  };
+  // const handleItemClick = (index, item) => {
+  //   setActiveIndex(index);
+  //   setActive(item);
+  //   // console.log(item);
+  // };
   const categories = [
     { id: "sport", name: "স্পোর্ট", icon: "sport.png" },
     { id: "casino", name: "ক্যাসিনো", icon: "casino.png" },
@@ -98,8 +99,8 @@ export default (props) => {
       // setLoading,
     } = useAuth();
   
-  const [loading,
-      setLoading] = useState(true);
+  // const [loading,
+  //     setLoading] = useState(true);
   
       const userId = userDeatils?.userId;
     // const referredBy = userDeatils?.referredBy || "";
@@ -112,10 +113,10 @@ export default (props) => {
   
     const userBalance =userDeatils ? userDeatils.balance : ""
   
-    const [active, setActive] = useState(data[0]?.category);
-    const [activeIndex, setActiveIndex] = useState(
-      data[0]?.category.uniqueProviders
-    );
+    // const [active, setActive] = useState(data[0]?.category);
+    // const [activeIndex, setActiveIndex] = useState(
+    //   data[0]?.category.uniqueProviders
+    // );
   
     const referralCode = localStorage.getItem("referralCode");
     console.log(localStorage.getItem("referralCode"));
@@ -190,7 +191,7 @@ export default (props) => {
         clearTimeout(scrollTimeout);
       };
     }, []);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
   
     const handleOpenModal1 = () => {
       navigate("/modal1");
