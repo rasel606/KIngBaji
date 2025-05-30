@@ -87,6 +87,18 @@ export default () => {
   const [activeCategory, setActiveCategory] = useState("");
   const [showSecondMenu, setShowSecondMenu] = useState(true);
 
+
+
+
+
+
+
+
+
+
+
+
+  
  
 
   const location = useLocation();
@@ -101,6 +113,11 @@ export default () => {
       localStorage.setItem("referralCode", referralCode);
     }
   }, []);
+
+
+
+
+
 
 
 

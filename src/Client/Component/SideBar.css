@@ -31151,7 +31151,7 @@ header {
 
 /* Custom Grid System */
 .custom-row {
-  display: inline-block;
+  /* display: inline-block; */
   flex-wrap: wrap;
   margin: -15px;
 }
@@ -31352,7 +31352,7 @@ header {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  width:320px;
+  min-width:100%;
   text-align: center;
   flex-direction: column;
 }
@@ -31369,7 +31369,7 @@ header {
 .gateway-name-content::after {
   content: "";
   position: absolute;
-  top: 27%;
+  top: 25%;
   left: 45%;
   width: 25px;
   height: 45px;

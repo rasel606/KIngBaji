@@ -124,7 +124,7 @@ export default ({ modalName }) => {
           closeModal(); // Optionally close the modal after showing success
           navigate("/"); // or your success redirect
           window.location.reload(); // If you want to reload after redirect
-        }, 3000);
+        }, 200000);
       }
       if (response.data.success === false) {
         console.log(response.data.success);
@@ -153,7 +153,7 @@ export default ({ modalName }) => {
         }
         return prev - 1;
       });
-    }, 1000);
+    }, 200000);
 
     return () => clearInterval(interval);
   }
