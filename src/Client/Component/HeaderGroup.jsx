@@ -85,6 +85,204 @@ export default (props) => {
       });
   }, []);
 
+    const {
+      isAuthenticated,
+      loginUser,
+      logoutUser,
+      Token,
+      isLoginNotify, setIsLoginNotify,
+      token,
+      userDeatils,
+  
+      // loading,
+      // setLoading,
+    } = useAuth();
+  
+  const [loading,
+      setLoading] = useState(true);
+  
+      const userId = userDeatils?.userId;
+    // const referredBy = userDeatils?.referredBy || "";
+  
+  
+    // const userdata = {
+    //   userId: userId
+    // };
+  
+  
+    const userBalance =userDeatils ? userDeatils.balance : ""
+  
+    const [active, setActive] = useState(data[0]?.category);
+    const [activeIndex, setActiveIndex] = useState(
+      data[0]?.category.uniqueProviders
+    );
+  
+    const referralCode = localStorage.getItem("referralCode");
+    console.log(localStorage.getItem("referralCode"));
+    console.log(referralCode);
+  
+    const [balance, setBalance] = useState(userBalance);
+    const [refreshing, setRefreshing] = useState(false);
+    const [userData, setUserData] = useState(userId);
+  
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [playGameData, setPlayGameData] = useState(null);
+    const [gameData, setGameData] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
+  
+    useEffect(() => {
+      if (data.length > 0) {
+        setActive(data[0]?.category);
+        setActiveIndex(0); // Reset index when data changes
+      }
+    }, [data]);
+    console.log(data[0]?.category.uniqueProviders);
+    console.log("active", active);
+    const handleItemClick = (index, item) => {
+      setActiveIndex(index);
+      setActive(item ? item : data[0]?.category?.uniqueProviders);
+      console.log(item);
+    };
+  
+    const [isFixed, setIsFixed] = useState(false);
+    const [isClicked, setIsClicked] = useState(false);
+    const [gameWindow, setGameWindow] = useState(null);
+    const [scrollStopped, setScrollStopped] = useState(false);
+    let scrollTimeout;
+  
+    useEffect(() => {
+      handleRefresh();
+      setLoading(true);
+      const url = "https://api.kingbaji.live/api/v1/New-table-categories";
+      const response = fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mood: "no-cors",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setLoading(false);
+          setData(data);
+          console.log(data);
+        });
+    }, []);
+  
+    useEffect(() => {
+      const handleScroll = () => {
+        setIsFixed(window.scrollY >= 150);
+  
+        // Clear the previous timeout
+        clearTimeout(scrollTimeout);
+  
+        // Reset `scrollStopped` and debounce logic
+        setScrollStopped(false);
+        scrollTimeout = setTimeout(() => {
+          setScrollStopped(true);
+        }, 200); // Adjust debounce delay as needed
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+  
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        clearTimeout(scrollTimeout);
+      };
+    }, []);
+    const navigate = useNavigate();
+  
+    const handleOpenModal1 = () => {
+      navigate("/modal1");
+    };
+  
+    const handlePlay = async (game) => {
+      if (isPlaying) return;
+  
+      setIsPlaying(true);
+      setLoading(true);
+  
+      try {
+        if (userId) {
+          const response = await fetch(
+            "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({
+                userId,
+                game_id: "0",
+                g_type: game.g_type,
+                p_code: game.providercode,
+              }),
+            }
+          );
+  
+          const data = await response.json();
+  
+        if (data.errMsg === "Success" && userId) {
+            console.log(data);
+            setPlayGameData(data);
+            setShowPopup(true);
+          }
+        }else{
+           setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
+        }
+      } catch (error) {
+        console.error("Error launching game:", error);
+         setIsLoginNotify("আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!");
+      } finally {
+        setIsPlaying(false);
+        setLoading(false);
+      }
+    };
+  
+    useEffect(() => {
+      return () => {
+        if (gameWindow && !gameWindow.closed) {
+          gameWindow.close();
+        }
+      };
+    }, [gameWindow]);
+  
+    /** 🚀 Refresh Balance */
+    const handleRefresh = async (userId) => {
+      try {
+        await handelUserDetails(userId);
+        // if(userId){
+        const response = await axios.post(
+          "https://api.kingbaji.live/api/v1/user_balance",
+          { userId }
+        );
+        setBalance(response.data.balance);
+        console.log("Balance Data:", response.data);
+        // }
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+      }
+    };
+  
+    /** 🚀 Fetch User Details */
+    const handelUserDetails = async (userId) => {
+      const result = await UserAllDetails(userId);
+      setBalance(result.data.user.balance);
+    };
+  
+    /** 🚀 Handle Popup Close */
+    const handleClosePopup = () => {
+      setShowPopup(false);
+      handleRefresh(userId);
+    };
+  
+    useEffect(() => {
+      if (!showPopup && userId) {
+        handleRefresh(userId);
+      }
+    }, [showPopup, userId]);
+
   console.log("activeCat", active);
 
   return (
