@@ -446,7 +446,7 @@ export default ({ modalName }) => {
                           <div className="icon-fix"></div>
                         </div>
                       </div>
-                      <h3>Congratulations on being a SuperBaji member!</h3>
+                      <h3>Congratulations on being a KingBaji member!</h3>
                       <p>Congratulations on your successful registration.</p>
                     </div>
                     <div className="register-success-btn" onClick={() => openModal("DepositModel")}>
