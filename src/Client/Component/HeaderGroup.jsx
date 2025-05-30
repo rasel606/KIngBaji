@@ -116,7 +116,7 @@ export default (props) => {
             "url(https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png)",
         }}
       ></div>
-        <div className="header-right-btn-group">
+      <div className="header-right-btn-group">
         <Link className="app-download">
           <span className="item-icon"></span>
           <p>App</p>
@@ -148,7 +148,7 @@ export default (props) => {
                       style={{ display: isMenuOpen ? "block" : "none" }}
                       onClick={() => setIsMenuOpen(false)}
                     ></div>
-                    <div className={`menu ${isMenuOpen ? "active" :""}`} >
+                    <div className={`menu ${isMenuOpen ? "active" : ""}`}>
                       <div className="menu-first">
                         <ul className="home">
                           <li data-category="home">
@@ -166,29 +166,43 @@ export default (props) => {
                         </ul>
 
                         <ul className="vendor">
-                          {data?.map((category, index) => (
-                            <li
-                              key={category.id}
-                              className={activeIndex === index ? "active" : ""}
-                              data-category={category.id}
-                              onClick={() =>
-                                handleItemClick(index, category?.category)
-                              }
-                            >
-                              {console.log(
-                                "category",
-                                category.category?.image
-                              )}
-                              <span
-                                className="item-icon"
-                                style={{
-                                  backgroundImage: `url(${category.category?.image})`,
-                                  display: "block",
-                                }}
-                              ></span>
-                              <a>{category.name || category.category?.name}</a>
-                            </li>
-                          ))}
+                          {active?.uniqueProviders?.map((item, index) => {
+                            // যদি প্রথম ২ ক্যাটাগরি হয়, তাহলে লিঙ্ক না দিয়ে সরাসরি গেম প্লে কল দিন
+                            if (activeIndex < 2) {
+                              // প্রথম ২ ক্যাটাগরি
+                              return (
+                                <li key={index}>
+                                  <Link onClick={() => handlePlay(item)}>
+                                    <img
+                                      src={item.image_url}
+                                      alt={item.company}
+                                    />
+                                    <p>{item.company}</p>
+                                  </Link>
+                                </li>
+                              );
+                            } else {
+                              // বাকি ক্যাটাগরি লিঙ্ক সহ
+                              return (
+                                <li key={index}>
+                                  {console.log(active)}
+                                  <Link
+                                    to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
+                                      active.name
+                                    )}/${encodeURIComponent(
+                                      item.providercode
+                                    )}`}
+                                  >
+                                    <img
+                                      src={item.image_url}
+                                      alt={item.company}
+                                    />
+                                    <p>{item.company}</p>
+                                  </Link>
+                                </li>
+                              );
+                            }
+                          })}
                         </ul>
 
                         <ul className="promotion-block">
@@ -237,7 +251,11 @@ export default (props) => {
                       </div>
 
                       {showSecondMenu && active && (
-                        <div className={`menu-second ${active !== null ? "active" : ""}`}>
+                        <div
+                          className={`menu-second ${
+                            active !== null ? "active" : ""
+                          }`}
+                        >
                           <div className="menu-second-header">
                             <button
                               className="back-button"
@@ -252,7 +270,11 @@ export default (props) => {
                                   ?.category?.name}
                             </h3>
                           </div>
-                          <ul className={`menu-second ${active !== null ? "active" : ""}`}>
+                          <ul
+                            className={`menu-second ${
+                              active !== null ? "active" : ""
+                            }`}
+                          >
                             {active?.uniqueProviders.map((provider) => (
                               <li key={provider.id}>
                                 <Link
@@ -285,6 +307,5 @@ export default (props) => {
         </div>
       )}
     </header>
-    
   );
 };

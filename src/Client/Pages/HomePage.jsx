@@ -120,7 +120,7 @@ const [loading,
   useEffect(() => {
     handleRefresh();
     setLoading(true);
-    const url = "http://localhost:5000/api/v1/New-table-categories";
+    const url = "https://api.kingbaji.live/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -172,7 +172,7 @@ const [loading,
     try {
       if (userId) {
         const response = await fetch(
-          "http://localhost:5000/api/v1/launch_gamePlayer",
+          "https://api.kingbaji.live/api/v1/launch_gamePlayer",
           {
             method: "POST",
             headers: {
@@ -221,7 +221,7 @@ const [loading,
       await handelUserDetails(userId);
       // if(userId){
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user_balance",
+        "https://api.kingbaji.live/api/v1/user_balance",
         { userId }
       );
       setBalance(response.data.balance);
