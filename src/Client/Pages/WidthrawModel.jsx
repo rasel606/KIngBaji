@@ -79,17 +79,15 @@ export default ({ modalName }) => {
     isAuthenticated,
     loginUser,
     logoutUser,
-    Token,
-
     token,
     userDeatils,
-    userId,
+
   } = useAuth();
 
-  const data = {
-    userId: userDeatils.userId,
+/*   const data = {
+    userId: userDeatils?.userId,
   };
-
+ */
   const {
     paymentMethods,
     setpaymentMethods,
@@ -108,9 +106,7 @@ export default ({ modalName }) => {
     setShowAmountLimitw,
   } = useWidthrowNow();
 
-  // const [paymentMethods, setpaymentMethods] = useState([]);
-  // const [payment_type, setPayments_type] = useState(paymentMethods[0]?.payment_type);
-  // const [activeTab, setActiveTab] = useState("deposit");
+
 
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [ShowSuccess, setShowSuccess] = useState(true);
@@ -119,8 +115,7 @@ export default ({ modalName }) => {
   const [isVerified, setIsVerified] = useState(true);
   const [selectedPaymentAmount, setSelectedPaymentAmount] = useState("0");
   const [redirectCountdown, setRedirectCountdown] = useState(5);
-  // const [updatedAmount, setUpdatedAmount] = useState(0);
-  // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
+
   console.log(Payment);
 
   console.log(selectedPaymentAmount);
@@ -231,25 +226,25 @@ export default ({ modalName }) => {
   console.log(paymentMethods);
   console.log(Payment);
 
-  useEffect(() => {
-    const fetchGateways = async () => {
-      console.log(data);
-      try {
-        const response = await GatWaySystemWidthrow(data);
-        setpaymentMethods(response?.data?.paymentMethods);
-        // setGatewaysCount(response.data.Getwaycount);
-        console.log(response.data.paymentMethods);
-        if (response.data.paymentMethods.length > 0) {
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching gateways:", error);
-        // setError(error);
-      }
-    };
-    fetchGateways();
-  }, []);
-  const [selectedOption, setSelectedOption] = useState(options[0]);
+  // useEffect(() => {
+  //   const fetchGateways = async () => {
+  //     console.log(data);
+  //     try {
+  //       const response = await GatWaySystemWidthrow(data);
+  //       setpaymentMethods(response?.data?.paymentMethods);
+  //       // setGatewaysCount(response.data.Getwaycount);
+  //       console.log(response.data.paymentMethods);
+  //       if (response.data.paymentMethods.length > 0) {
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching gateways:", error);
+  //       // setError(error);
+  //     }
+  //   };
+  //   fetchGateways();
+  // }, []);
+  // const [selectedOption, setSelectedOption] = useState(options[0]);
 
   // const inputRef = useRef(null);
 
@@ -281,26 +276,23 @@ export default ({ modalName }) => {
     Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
   );
 
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
 
   const handlePayment = async () => {
     // alert("Please fill in all required fields.");
-
+      if(!userDeatils) return null || ""
     try {
       if (selectedPaymentAmount > 499 && selectedPaymentAmount < 25001) {
         // console.log(userId, selectedPaymentAmount,gateway_name,userDeatils.referredBy,userDeatils.phone[0].number);
         const response = await axios.post(
           `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
           {
-            userId: userId,
+            userId: userDeatils?.userId,
             gateway_name:
               Payment === null
                 ? paymentMethods[0]?.gateway_name
                 : Payment?.gateway_name,
-            referredBy: userDeatils.referredBy,
-            mobile: userDeatils.phone[0].number,
+            referredBy: userDeatils?.referredBy,
+            mobile: userDeatils?.phone[0].number,
             type: parseInt(1),
             amount: newWidthrowAmount,
           },

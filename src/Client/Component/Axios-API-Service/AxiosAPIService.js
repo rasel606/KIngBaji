@@ -23,6 +23,7 @@ export const verify = async () => {
 };
 
 export const CreateUser = (data) => API.post("/createUser", data);
+export const NewTableCategories = () => API.get("/New-table-categories");
 export const LoginUser =async (userId, password) => await API.post("/login_user", { userId, password });
 export const UserAllDetails =async (userId) => await API.post("/user_details",{userId});
 export const UpdateName = (name, userId) => API.post("/update-name", { name, userId });
@@ -34,7 +35,8 @@ export const searchTransactionsbyUserId = (data) => API.post("/searchTransaction
 export const UserHistory = (data) => API.post("/user-history", data);
 export const getUserSocialLinks = (data) => API.post("/get_user_social_links", data);
 export const getReferredUsers = (data) => API.post("/get_referred_users", data);
-
+export const getNewChatList = (senderId) => API.get(`/contacts/${senderId}`);
+export const getNewChatHistory = (senderId,receiverId) => API.get(`/history/${senderId}/${receiverId}`);
 export const verifyEmail = (formData) => API.post("/verify-email", formData);
 export const Emailsend = (formData) => API.post("/send-otp", formData);
 

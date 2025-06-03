@@ -14,8 +14,9 @@ export default ({ modalName }) => {
     userDeatils,
     setLoading,
     loading,
+    name, setName
   } = useAuth();
-  const [name, setName] = useState("");
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [ShowSuccess, setShowSuccess] = useState(false);
 
@@ -42,6 +43,7 @@ export default ({ modalName }) => {
         setShowSuccess(true);
         setTimeout(() => {
           setShowSuccess(false);
+          setName(response.data.name)
           closeModal();
           openModal("MyProfileModel");
         }, 3000);

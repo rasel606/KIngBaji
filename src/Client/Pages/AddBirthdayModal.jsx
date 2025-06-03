@@ -8,7 +8,7 @@ export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
 
-  const { isAuthenticated, loginUser, logoutUser ,userDeatils} =
+  const { isAuthenticated, loginUser, logoutUser ,userDeatils,birthday, setBirthday} =
     useAuth();
 
    const userId = userDeatils ? userDeatils?.userId : "";
@@ -53,7 +53,7 @@ export default ({ modalName }) => {
       console.log(response);
       setMessage(response.data.message);
       setShowSuccess(true);
-     
+ setBirthday(response.data.updatedUser)
       setTimeout(() => {
         setShowSuccess(false);
          openModal('MyProfileModel');

@@ -179,7 +179,7 @@ export default ({ modalName }) => {
     const userData = {
       userId,
       password,
-      countryCode: "+088",
+      countryCode: "+880",
       phone: phoneNumber,
       referredBy: referralCode,
     };
@@ -220,7 +220,7 @@ export default ({ modalName }) => {
                   }}
                 ></div>
 
-                <div className="banner banner-v1">
+                {/* <div className="banner banner-v1">
                   <div className="carousel-wrap style-init siblings">
                     <div className="cdk-drag item-drag">
                       <div className="item-left">
@@ -257,7 +257,9 @@ export default ({ modalName }) => {
                       ))}
                     </ul>
                   </div>
-                </div>
+                </div> */}
+
+                <Carousel></Carousel>
 
                 <div className="menu-box"></div>
               </div>

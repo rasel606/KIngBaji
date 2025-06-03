@@ -3,6 +3,7 @@ import { useModal } from "../Component/ModelContext";
 import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
 import AddMobileNumberModel from "./AddMobileNumberModel";
+import { UserAllDetails } from "../Component/Axios-API-Service/AxiosAPIService";
 
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
@@ -54,29 +55,21 @@ const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
     //   if (userDeatils.length > 0) {
     //     setIsPhoneVerified(userDeatils?.isVerified?.phone);
     //   }
-    // }, [userDeatils,modalName]);
+    // }, [userDeatils]);
 
-  // const handleSendVerificationCode = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const response = await axios.post(
-  //       "/api/user/send-verification-code",
-  //       {},
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     // Show success message or proceed to verification
-  //     openModal("VerifyOptPage");
-  //   } catch (error) {
-  //     console.error("Error sending verification code:", error);
-  //     // Handle error
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const handleUserAllDetails = async () => {
+    try {
+      setLoading(true);
+      const response = await UserAllDetails(userDeatils?.userId)
+      // Show success message or proceed to verification
+
+    } catch (error) {
+      console.error("Error sending verification code:", error);
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
 

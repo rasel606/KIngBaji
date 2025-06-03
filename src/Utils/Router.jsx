@@ -17,14 +17,17 @@ import AuthContextProvider, { useAuth } from "../Client/Component/AuthContext";
 import GameContextProvider from "../Client/Component/GameContext";
 import PaymenyContextProvider from "../Client/PaymentContext/PaymenyContext";
 import WidthrawPaymentContext from "../Client/PaymentContext/WidthrawPaymentContext";
+import { ChatProvider} from "../Client/Component/ChatContext";
 
 export default () => {
+      const token = localStorage.getItem('authSubAdminToken');
   const router = createBrowserRouter([...Client]);
 
   return (
     <ModalProvider>
       <GameContextProvider>
         <AuthContextProvider>
+           {/* <ChatProvider> */}
           <WidthrawPaymentContext>
             <PaymenyContextProvider>
               <Suspense
@@ -45,6 +48,7 @@ export default () => {
               </Suspense>
             </PaymenyContextProvider>
           </WidthrawPaymentContext>
+          {/* </ChatProvider> */}
         </AuthContextProvider>
       </GameContextProvider>
     </ModalProvider>

@@ -61,7 +61,7 @@ export default ({ modalName }) => {
     setIsTransactionValid(/^[a-zA-Z0-9]{10}$/.test(value));
   };
 
-  const [redirectCountdown, setRedirectCountdown] = useState(3);
+  const [redirectCountdown, setRedirectCountdown] = useState(5);
   const params = {
     userId: userDeatils.userId,
     gateway_name: gateway_name,
@@ -124,7 +124,7 @@ export default ({ modalName }) => {
           closeModal(); // Optionally close the modal after showing success
           navigate("/"); // or your success redirect
           window.location.reload(); // If you want to reload after redirect
-        }, 200000);
+        }, 5000);
       }
       if (response.data.success === false) {
         console.log(response.data.success);
@@ -153,7 +153,7 @@ export default ({ modalName }) => {
         }
         return prev - 1;
       });
-    }, 200000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }

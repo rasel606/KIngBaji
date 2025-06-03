@@ -78,7 +78,7 @@ export default ({ modalName }) => {
   console.log(mainAmount);
   console.log(PayType);
   const [amountnew, setAmountNew] = useState(newAmount);
-
+  const [redirectCountdown, setRedirectCountdown] = useState(5);
   console.log("1", amountnew);
 
   const handleCopyAmount = () => {
@@ -122,7 +122,7 @@ export default ({ modalName }) => {
           closeModal(); // Optionally close the modal after showing success
           navigate("/"); // or your success redirect
           window.location.reload(); // If you want to reload after redirect
-        },3000);
+        },5000);
       }
       if (response.data.success === false) {
         console.log(response.data.success);
@@ -146,6 +146,23 @@ export default ({ modalName }) => {
       closeModal(); // Close if amount is invalid
     }
   }, [newAmount]);
+
+  
+  useEffect(() => {
+  if (!ShowSuccess) {
+    const interval = setInterval(() => {
+      setRedirectCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          window.location.reload();
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }
+}, [ShowSuccess]);
 
   return (
     <div
@@ -294,7 +311,14 @@ export default ({ modalName }) => {
                                 আপনি এখন এই পপ আপ ব্রাউজারটি বন্ধ করে মূল সাইটে
                                 ফিরে যেতে পারেন।
                               </div>
-                              {/* <button class="gateway-name-button">বন্ধ</button> */}
+                                 <strong
+                              style={{
+                                fontSize: "20px",
+                                color: "#fff",
+                                fontWeight: "bold",
+                              }}
+                              
+                              >{redirectCountdown} সেকেন্ড পরে রিডাইরেক্ট হবে...</strong>
                             </div>
                           </div>
                         )}

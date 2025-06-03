@@ -43,13 +43,14 @@ const [showAmountLimitw, setShowAmountLimitw] = useState(false);
     setpaymentMethodsdeglaration(paymentMethods[0])
   }, [paymentMethods]);
   console.log(paymentMethodDeglaration)
-  useEffect(() => {
+
     // Fetch gateway list from backend on component mount
     const fetchGateways = async () => {
+      if(!isAuthenticated) return null
 console.log(data)
       try {
         if (isAuthenticated) {
-          const response = await GatWaySystem(data);
+          const response = await GatWaySystem(userDeatils?.userId || "");
           setpaymentMethods(response?.data?.paymentMethods);
           // setGatewaysCount(response.data.Getwaycount);
           console.log(response.data.paymentMethods);
@@ -63,11 +64,11 @@ console.log(data)
     };
 
 
-
+  useEffect(() => {
 
     fetchGateways();
 
-  }, []);
+  }, [isAuthenticated, token]);
 
 
 

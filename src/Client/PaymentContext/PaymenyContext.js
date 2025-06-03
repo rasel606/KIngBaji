@@ -38,9 +38,10 @@ const PaymenyContextProvider = ({ children }) => {
     setpaymentMethodsdeglaration(paymentMethods[0])
   }, [paymentMethods]);
   console.log(paymentMethodDeglaration)
-  useEffect(() => {
+ 
     // Fetch gateway list from backend on component mount
     const fetchGateways = async () => {
+      if(!isAuthenticated) return null
 
       try {
         if (isAuthenticated) {
@@ -58,7 +59,7 @@ const PaymenyContextProvider = ({ children }) => {
     };
 
 
-
+ useEffect(() => {
 
     fetchGateways();
 

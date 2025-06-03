@@ -79,7 +79,8 @@ export default () => {
     logoutUser,
     isAmountAlertError,
     setIsAmountAlertError,
-    isPasswordresetNotify, setIsPasswordresetNotifyNotify
+    isPasswordresetNotify, setIsPasswordresetNotifyNotify,
+    chat, setChat
   } = useAuth();
   const { showAmountLimit, setShowAmountLimit } = usePayNow();
   const { showAmountLimitw, setShowAmountLimitw } = useWidthrowNow();

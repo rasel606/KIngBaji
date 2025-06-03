@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default () => {
   const images = [
- "https://i.ibb.co.com/DChN5S5/img-1.jpg",
+    "https://i.ibb.co.com/DChN5S5/img-1.jpg",
     "https://i.ibb.co.com/VqtD7Tq/img-2.jpg",
     "https://i.ibb.co.com/7Kkr63k/img-3.jpg",
     "https://i.ibb.co.com/LQB0VW7/img-4.jpg",
@@ -13,6 +13,7 @@ export default () => {
   const intervalRef = useRef(null);
   const positionRef = useRef(0);
   const itemWidthRef = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const marquee = marqueeRef.current;
@@ -22,34 +23,30 @@ export default () => {
     const firstItem = wrapper.querySelector('.item');
     if (!firstItem) return;
 
-    // Get initial item width
     itemWidthRef.current = firstItem.offsetWidth;
     
     const moveSlider = () => {
       positionRef.current -= itemWidthRef.current;
       
-      // Reset position when we've scrolled through all original images
       if (Math.abs(positionRef.current) >= itemWidthRef.current * images.length) {
         positionRef.current = 0;
-        // Remove transition for instant reset
         wrapper.style.transition = 'none';
         wrapper.style.transform = `translateX(${positionRef.current}px)`;
-        
-        // Force reflow before adding transition back
-        void wrapper.offsetWidth;
+        void wrapper.offsetWidth; // Force reflow
       }
       
-      // Apply smooth transition
       wrapper.style.transition = 'transform 1s ease-in-out';
       wrapper.style.transform = `translateX(${positionRef.current}px)`;
+      
+      // Calculate new active index
+      const step = Math.abs(positionRef.current) / itemWidthRef.current;
+      const newIndex = Math.floor(step) % images.length;
+      setActiveIndex(newIndex);
     };
 
-    // Start the auto-slide interval (5 seconds)
     intervalRef.current = setInterval(moveSlider, 5000);
 
-    // Handle window resize
     const handleResize = () => {
-      // Update item width on resize
       itemWidthRef.current = firstItem.offsetWidth;
     };
 
@@ -69,7 +66,7 @@ export default () => {
             <div className="item-left">
               <div className="item-wrap">
                 {[...images, ...images].map((url, idx) => (
-                  <div key={idx} className="item" >
+                  <div key={idx} className="item">
                     <div
                       className="item-pic"
                       style={{ backgroundImage: `url("${url}")` }}
@@ -81,9 +78,13 @@ export default () => {
           </div>
           <ul className="dot-group style-bar">
             {images.map((_, idx) => (
-              <li key={idx}>
-                <span className={`dot-progress ${idx === 0 ? "active" : ""}`} 
-                      style={{ animationDuration: "5000ms" }}></span>
+              <li key={idx} className={`${idx === activeIndex ? "active" : ""}`}>
+                {/* Key forces animation restart when active */}
+                <span 
+                  key={activeIndex} 
+                  className={"dot-progress"}
+                  style={{ animationDuration: "5000ms" }}
+                ></span>
               </li>
             ))}
           </ul>

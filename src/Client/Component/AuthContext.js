@@ -14,7 +14,7 @@ const AuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthenticatedAdmin, setIsAuthenticatedAdmin] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('authToken'));
-  const [userId, setUserId] = useState(null || "");
+  const [userId, setUserId] = useState("");
   const [userDeatils, setUserDeatils] = useState(null || "");
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -22,6 +22,8 @@ const AuthContextProvider = ({ children }) => {
   const [isPasswordresetNotify, setIsPasswordresetNotifyNotify] = useState(false);
   const [isAmountAlertError,setIsAmountAlertError] = useState(false);
   const [email, setEmail] = useState(null || "");
+    const [name, setName] = useState("");
+    const [birthday, setBirthday] = useState("");
 
 
 
@@ -49,7 +51,7 @@ const AuthContextProvider = ({ children }) => {
   };
   
   verifyUser();
-}, [loading]);
+}, [loading,name,birthday]);
 
   const Token = async (token) => {
     if (!token) {
@@ -83,7 +85,7 @@ const AuthContextProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [token]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
+  }, [token,name,birthday]); // Fix: Depend on token // Empty dependency array ensures this runs only once on mount
 
   // Login function
 
@@ -168,7 +170,9 @@ const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, userRegistar, token, userId, userDeatils, loading, setLoading,isAmountAlertError,setIsAmountAlertError,isLoginNotify, setIsLoginNotify,isPasswordresetNotify, setIsPasswordresetNotifyNotify }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, userRegistar, token, userId, userDeatils, loading, setLoading,isAmountAlertError,setIsAmountAlertError,isLoginNotify, setIsLoginNotify,isPasswordresetNotify, setIsPasswordresetNotifyNotify,name, setName ,birthday, setBirthday
+
+    }}>
       {children}
 
     </AuthContext.Provider>
