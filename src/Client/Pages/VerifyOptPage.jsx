@@ -7,8 +7,8 @@ import "../Component/SideBar.css";
 export default function VerificationModal({ modalName }) {
   const { activeModal, openModal, closeModal } = useModal();
   const { userId, userDeatils } = useAuth(); // Ensure userId is defined
-  const phone = userDeatils?.phone[0].number; // Set your dynamic phone number here
-
+  const phone = userDeatils?.length !== null ? userDeatils?.phone[0]?.number : ""; // Set your dynamic phone number here
+console.log(userDeatils?.phone[0].number)
   const [code, setCode] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(180); // 4:31 in seconds
   const [ShowSuccess, setShowSuccess] = useState(false);
@@ -96,7 +96,7 @@ export default function VerificationModal({ modalName }) {
             <div className="verification-txt">
               <p>
                 Please enter the 4-digit code sent to{" "}
-                <span className="player">+880{phone}</span>
+                <span className="player">+880{phone ? phone : "0000000000"}</span>
               </p>
             </div>
             <div className="verification-content">
