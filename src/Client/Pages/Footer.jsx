@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useModal } from "../Component/ModelContext";
 
 const Footer = () => {
+    const { activeModal, openModal, closeModal } = useModal();
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -112,7 +114,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-logo-wrap">
-        <div className="link-wrap">
+        <div className="link-wrap" onClick={()=>openModal("TermsAndConditions")}>
           <ul>
             <li>
               <Link>

@@ -284,7 +284,7 @@ export default ({ modalName }) => {
       if (selectedPaymentAmount > 499 && selectedPaymentAmount < 25001) {
         // console.log(userId, selectedPaymentAmount,gateway_name,userDeatils.referredBy,userDeatils.phone[0].number);
         const response = await axios.post(
-          `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
+          `http://localhost:5000/api/v1/widthdraw_with_transaction`,
           {
             userId: userDeatils?.userId,
             gateway_name:

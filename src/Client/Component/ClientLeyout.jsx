@@ -55,6 +55,8 @@ import { useWidthrowNow } from "../PaymentContext/WidthrawPaymentContext";
 import ForgetPasswordModal from "../Pages/ForgetPasswordModal";
 import ResetPasswordPopup from "../Pages/ResetPasswordPopup";
 import LaunchGamePopup from "../LaunchGamePopup";
+import TermsAndConditions from "../Pages/TermsAndConditions";
+import Promotions from "../Pages/Promotions";
 
 export default () => {
   // const [isOpen, setIsOpen] = useState(false);
@@ -165,7 +167,7 @@ export default () => {
                 </Link>
               </li>
 
-              <li className="home">
+              <li className="home" onClick={() => openModal("Promotions")}>
                 <Link>
                   <img
                     className="item-icon"
@@ -288,6 +290,8 @@ export default () => {
         <WidthrawModel modalName="WidthrawModel"></WidthrawModel>
         {/* ========================================= */}
         <GiftPointsModel modalName="GiftPointsModel"></GiftPointsModel>
+        <TermsAndConditions modalName="TermsAndConditions"></TermsAndConditions>
+        <Promotions modalName="Promotions"></Promotions>
         {/* ========================================= */}
         <LoginModel modalName="LoginModel"></LoginModel>
         <SingUpModal modalName="SingUpModal"></SingUpModal>
