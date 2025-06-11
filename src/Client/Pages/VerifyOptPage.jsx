@@ -7,7 +7,7 @@ import "../Component/SideBar.css";
 export default function VerificationModal({ modalName }) {
   const { activeModal, openModal, closeModal } = useModal();
   const { userId, userDeatils } = useAuth(); // Ensure userId is defined
-  const phone = userDeatils.phone[0].number; // Set your dynamic phone number here
+  const phone = userDeatils?.phone[0].number; // Set your dynamic phone number here
 
   const [code, setCode] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(180); // 4:31 in seconds
