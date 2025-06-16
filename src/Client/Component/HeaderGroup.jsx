@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useModal } from "./ModelContext";
 import { Link, useNavigate } from "react-router-dom";
 
-export default (props) => {
+export default ({ handlePlay }) => {
+
+  console.log(handlePlay);
   // const { activeModal, openModal, closeModal } = useModal();
   // if (activeModal !== modalName) return null;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -69,7 +71,7 @@ export default (props) => {
 
   useEffect(() => {
     setLoading(true);
-    const url = "https://api.kingbaji.live/api/v1/New-table-categories";
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -116,7 +118,7 @@ export default (props) => {
             "url(https://i.ibb.co.com/KLDFxr7/Whats-App-Image-2025-01-06-at-11-56-01-74a47a32-removebg-preview.png)",
         }}
       ></div>
-        <div className="header-right-btn-group">
+      <div className="header-right-btn-group">
         <Link className="app-download">
           <span className="item-icon"></span>
           <p>App</p>
@@ -148,7 +150,7 @@ export default (props) => {
                       style={{ display: isMenuOpen ? "block" : "none" }}
                       onClick={() => setIsMenuOpen(false)}
                     ></div>
-                    <div className={`menu ${isMenuOpen ? "active" :""}`} >
+                    <div className={`menu ${isMenuOpen ? "active" : ""}`}>
                       <div className="menu-first">
                         <ul className="home">
                           <li data-category="home">
@@ -237,7 +239,11 @@ export default (props) => {
                       </div>
 
                       {showSecondMenu && active && (
-                        <div className={`menu-second ${active !== null ? "active" : ""}`}>
+                        <div
+                          className={`menu-second ${
+                            active !== null ? "active" : ""
+                          }`}
+                        >
                           <div className="menu-second-header">
                             <button
                               className="back-button"
@@ -252,27 +258,48 @@ export default (props) => {
                                   ?.category?.name}
                             </h3>
                           </div>
-                          <ul className={`menu-second ${active !== null ? "active" : ""}`}>
-                            {active?.uniqueProviders.map((provider) => (
-                              <li key={provider.id}>
-                                <Link
-                                  onClick={toggleMenu}
-                                  to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
-                                    active.name
-                                  )}/${encodeURIComponent(
-                                    provider.providercode
-                                  )}`}
-                                >
-                                  {console.log("provider", provider)}
-                                  <img
-                                    alt={`provider-${provider.id}`}
-                                    src={provider.image_url}
-                                    loading="lazy"
-                                  />
-                                  <p>{provider.company}</p>
-                                </Link>
-                              </li>
-                            ))}
+                          <ul
+                            className={`menu-second ${
+                              active !== null ? "active" : ""
+                            }`}
+                          >
+                            {active?.uniqueProviders?.map((item, index) => {
+                              // যদি প্রথম ২ ক্যাটাগরি হয়, তাহলে লিঙ্ক না দিয়ে সরাসরি গেম প্লে কল দিন
+                              if (activeIndex < 2) {
+                                // প্রথম ২ ক্যাটাগরি
+                                return (
+                                  <li key={index}>
+                                    <Link onClick={() => handlePlay(item)}>
+                                      <img
+                                        src={item.image_url}
+                                        alt={item.company}
+                                      />
+                                      <p>{item.company}</p>
+                                    </Link>
+                                  </li>
+                                );
+                              } else {
+                                // বাকি ক্যাটাগরি লিঙ্ক সহ
+                                return (
+                                  <li key={index}>
+                                    {console.log(active)}
+                                    <Link
+                                      to={`/gamesProvidersPageWithCategory/${encodeURIComponent(
+                                        active.name
+                                      )}/${encodeURIComponent(
+                                        item.providercode
+                                      )}`}
+                                    >
+                                      <img
+                                        src={item.image_url}
+                                        alt={item.company}
+                                      />
+                                      <p>{item.company}</p>
+                                    </Link>
+                                  </li>
+                                );
+                              }
+                            })}
                           </ul>
                         </div>
                       )}
@@ -285,6 +312,5 @@ export default (props) => {
         </div>
       )}
     </header>
-    
   );
 };

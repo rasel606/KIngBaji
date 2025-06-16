@@ -12,8 +12,6 @@ import { ImCopy } from "react-icons/im";
 import { FaQuestionCircle } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
 
-
-
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
@@ -31,6 +29,8 @@ export default ({ modalName }) => {
     setNewAmountPay,
     setGateway_name,
     setGateway_Number,
+    selectedOption,
+    setSelectedOption,
   } = usePayNow();
 
   const [timeRemaining, setTimeRemaining] = useState(900);
@@ -98,7 +98,7 @@ export default ({ modalName }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/submitTransaction`,
+        `http://localhost:5000/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
@@ -109,6 +109,7 @@ export default ({ modalName }) => {
           transactionID,
           mobile: userDeatils.phone[0].number,
           type: parseInt(0),
+          bonusCode: selectedOption,
         },
         {
           headers: {
@@ -151,22 +152,21 @@ export default ({ modalName }) => {
     }
   }, [newAmount]);
 
-  
   useEffect(() => {
-  if (!ShowSuccess) {
-    const interval = setInterval(() => {
-      setRedirectCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          window.location.reload();
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    if (!ShowSuccess) {
+      const interval = setInterval(() => {
+        setRedirectCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            window.location.reload();
+          }
+          return prev - 1;
+        });
+      }, 1000);
 
-    return () => clearInterval(interval);
-  }
-}, [ShowSuccess]);
+      return () => clearInterval(interval);
+    }
+  }, [ShowSuccess]);
 
   return (
     <div
@@ -182,11 +182,14 @@ export default ({ modalName }) => {
               <div className="custom-fullscreen-bg">
                 <div className="custom-row">
                   <div className="custom-col-md-6">
-                        {ShowSuccess ? (
-                    <div className="custom-center-content">
-                      <div className="custom-text-center">
+                    {ShowSuccess ? (
+                      <div className="custom-center-content">
+                        <div className="custom-text-center">
                           <div className="custom-content-lg">
-                            <div className="custom-timer-container" style={{ background: "#000080" }}>
+                            <div
+                              className="custom-timer-container"
+                              style={{ background: "#000080" }}
+                            >
                               <h1 className="custom-timer-display">
                                 {formatTime(timeRemaining)}
                               </h1>
@@ -198,147 +201,149 @@ export default ({ modalName }) => {
                               <div className="custom-form-header">
                                 <div className="custom-logo-container">
                                   <div className="custom-logo-container">
-                                <img
-                                  style={{ width: "100px" }}
-                                  alt="logo"
-                                  src="https://d1rkzpcrq2qmwv.cloudfront.net/banks/rocket.png"
-                                />
+                                    <img
+                                      style={{ width: "100px" }}
+                                      alt="logo"
+                                      src="https://d1rkzpcrq2qmwv.cloudfront.net/banks/rocket.png"
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                              <form className="custom-payment-form">
-                                <p className="custom-instruction-text">
-                                  {Payment?.payment_type} to the account below
-                                  and fill in the required information
-                                  <br />
-                                </p>
-                                {/* <span className="custom-instruction-subtext">
+                                <form className="custom-payment-form">
+                                  <p className="custom-instruction-text">
+                                    {Payment?.payment_type} to the account below
+                                    and fill in the required information
+                                    <br />
+                                  </p>
+                                  {/* <span className="custom-instruction-subtext">
                                 নীচের অ্যাকাউন্টে অর্থ {payment_type} করুন এবং প্রয়োজনীয় তথ্য পূরণ করুন।
                               </span> */}
 
-                                <div className="custom-form-group">
-                                  <label className="custom-form-label">
-                                    Amount
-                                  </label>
-                                  <div className="custom-input-container">
-                                    <input
-                                      type="text"
-                                      disabled
-                                      className="custom-form-input"
-                                      placeholder={newAmount}
-                                      value={newAmount}
-                                    />
-                                    <ImCopy
-                                      className="custom-input-icon"
-                                      onClick={handleCopyAmount}
-                                    />
+                                  <div className="custom-form-group">
+                                    <label className="custom-form-label">
+                                      Amount
+                                    </label>
+                                    <div className="custom-input-container">
+                                      <input
+                                        type="text"
+                                        disabled
+                                        className="custom-form-input"
+                                        placeholder={newAmount}
+                                        value={newAmount}
+                                      />
+                                      <ImCopy
+                                        className="custom-input-icon"
+                                        onClick={handleCopyAmount}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="custom-form-group">
-                                  <label className="custom-form-label">
-                                    Your Process system
-                                  </label>
-                                  <div className="custom-input-container">
-                                    <input
-                                      type="text"
-                                      disabled
-                                      className="custom-form-input"
-                                      placeholder={Payment?.payment_type}
-                                      value={Payment?.payment_type}
-                                    />
-                                    <ImCopy
-                                      className="custom-input-icon"
-                                      onClick={handleCopyGatewayNumber}
-                                    />
+                                  <div className="custom-form-group">
+                                    <label className="custom-form-label">
+                                      Your Process system
+                                    </label>
+                                    <div className="custom-input-container">
+                                      <input
+                                        type="text"
+                                        disabled
+                                        className="custom-form-input"
+                                        placeholder={Payment?.payment_type}
+                                        value={Payment?.payment_type}
+                                      />
+                                      <ImCopy
+                                        className="custom-input-icon"
+                                        onClick={handleCopyGatewayNumber}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
 
-                                <div className="custom-form-group">
-                                  <label className="custom-form-label">
-                                    Rocket {payment_type}
-                                  </label>
-                                  <div className="custom-input-container">
-                                    <input
-                                      type="text"
-                                      disabled
-                                      className="custom-form-input"
-                                      placeholder={"0" + gateway_Number}
-                                      value={"0" + gateway_Number}
-                                    />
-                                    <ImCopy className="custom-input-icon" />
+                                  <div className="custom-form-group">
+                                    <label className="custom-form-label">
+                                      Rocket {payment_type}
+                                    </label>
+                                    <div className="custom-input-container">
+                                      <input
+                                        type="text"
+                                        disabled
+                                        className="custom-form-input"
+                                        placeholder={"0" + gateway_Number}
+                                        value={"0" + gateway_Number}
+                                      />
+                                      <ImCopy className="custom-input-icon" />
+                                    </div>
                                   </div>
-                                </div>
 
-                                <div className="custom-form-group">
-                                  <label className="custom-form-label">
-                                    Transaction ID
-                                  </label>
-                                  <div className="custom-input-container">
-                                    <input
-                                      type="text"
-                                      required
-                                      className="custom-form-input"
-                                      style={{ appearance: "auto" }}
-                                      value={transactionID}
-                                      placeholder={transactionID}
-                                      onChange={handleTransactionIDChange}
-                                      maxLength="10"
-                                      minLength="10"
-                                    />
-                                    <FaQuestionCircle className="custom-input-icon" />
+                                  <div className="custom-form-group">
+                                    <label className="custom-form-label">
+                                      Transaction ID
+                                    </label>
+                                    <div className="custom-input-container">
+                                      <input
+                                        type="text"
+                                        required
+                                        className="custom-form-input"
+                                        style={{ appearance: "auto" }}
+                                        value={transactionID}
+                                        placeholder={transactionID}
+                                        onChange={handleTransactionIDChange}
+                                        maxLength="10"
+                                        minLength="10"
+                                      />
+                                      <FaQuestionCircle className="custom-input-icon" />
+                                    </div>
                                   </div>
-                                </div>
 
-                                <button
-                                  type="button"
-                                  className="custom-submit-btn"
-                                  onClick={handlePayment}
-                                >
-                                  Submit
-                                </button>
-                              </form>
+                                  <button
+                                    type="button"
+                                    className="custom-submit-btn"
+                                    onClick={handlePayment}
+                                  >
+                                    Submit
+                                  </button>
+                                </form>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      </div>
-                        ) : (
-                          <div className="gateway-name-main-container">
-                            <div className="gateway-name-check-icon">
-                              <FaCheckCircle style={{height:"80px",width:"80px"}} />
-                            </div>
+                    ) : (
+                      <div className="gateway-name-main-container">
+                        <div className="gateway-name-check-icon">
+                          <FaCheckCircle
+                            style={{ height: "80px", width: "80px" }}
+                          />
+                        </div>
 
-                            <div className="gateway-name-content">
-                              <div className=" gateway-name-heading">
-                                সফলভাবে জমা দেওয়া হয়েছে
-                              </div>
-                              <div className="gateway-name-paragraph">
-                                লেনদেন সফলভাবে জমা দেওয়া হয়েছে।
-                                <br />
-                                লেনদেন অনুমোদিত হওয়ার জন্য অনুগ্রহ করে কয়েক
-                                মিনিট অপেক্ষা করুন।
-                                <br />
-                                আপনি এখন এই পপ আপ ব্রাউজারটি বন্ধ করে মূল সাইটে
-                                ফিরে যেতে পারেন।
-                              </div>
-                                 <strong
-                              style={{
-                                fontSize: "20px",
-                                color: "#fff",
-                                fontWeight: "bold",
-                              }}
-                              
-                              >{redirectCountdown} সেকেন্ড পরে রিডাইরেক্ট হবে...</strong>
-                            </div>
+                        <div className="gateway-name-content">
+                          <div className=" gateway-name-heading">
+                            সফলভাবে জমা দেওয়া হয়েছে
                           </div>
-                        )}
+                          <div className="gateway-name-paragraph">
+                            লেনদেন সফলভাবে জমা দেওয়া হয়েছে।
+                            <br />
+                            লেনদেন অনুমোদিত হওয়ার জন্য অনুগ্রহ করে কয়েক মিনিট
+                            অপেক্ষা করুন।
+                            <br />
+                            আপনি এখন এই পপ আপ ব্রাউজারটি বন্ধ করে মূল সাইটে ফিরে
+                            যেতে পারেন।
+                          </div>
+                          <strong
+                            style={{
+                              fontSize: "20px",
+                              color: "#fff",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {redirectCountdown} সেকেন্ড পরে রিডাইরেক্ট হবে...
+                          </strong>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-         </div>
-  
+        </div>
+      </div>
+    </div>
   );
 };

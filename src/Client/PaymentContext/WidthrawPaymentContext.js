@@ -32,7 +32,7 @@ const WidthrawPaymentContext = ({ children }) => {
   };
     
 const [paymentMethodDeglaration, setpaymentMethodsdeglaration] = useState(paymentMethods[0]);
-
+const [showEligibilityCheck, setShowEligibilityCheck] = useState(false);
 useEffect(() => {
    setpaymentMethodsdeglaration(paymentMethods[0])
 },[paymentMethods]);
@@ -127,7 +127,7 @@ console.log(data)
       setGateway_Number,
       setPayment_type,
       Payment, setPayment,
-
+showEligibilityCheck, setShowEligibilityCheck,
 showAmountLimitw, setShowAmountLimitw
 
 

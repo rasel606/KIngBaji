@@ -52,7 +52,7 @@ export default ({ modalName }) => {
       handelUserDetails(userId);
 
       const response = await axios.post(
-        "https://api.kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         { userId }
       );
       console.log(response);
@@ -120,7 +120,7 @@ export default ({ modalName }) => {
   //    setRefreshing(true);
 
   //    try {
-  //      const response = await axios.post("https://api.kingbaji.live/api/v1/user_balance", {userId});
+  //      const response = await axios.post("http://localhost:5000/api/v1/user_balance", {userId});
   //      setBalance(response.data.balance);
 
   //      if (response.data.hasOwnProperty("balance")) {
@@ -277,7 +277,7 @@ export default ({ modalName }) => {
                           src="https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg"
                           alt=""
                         /> */}
-                  <span className="item-icon arrow-icon" style={{ maskImage:`url("https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg")` }}>
+                  <span className="item-icon arrow-icon" style={{ maskImage:`url("https://i.ibb.co/Pv1XP4R1/main-large.png")` }}>
                     {/* <img
                       style={{ background: "#ffffff" }}
                       src="https://cxwelcome.com/assets/images/icon-set/player/vip/icon-arrow.svg"

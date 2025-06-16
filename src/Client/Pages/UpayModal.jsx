@@ -12,10 +12,6 @@ import { ImCopy } from "react-icons/im";
 import { FaQuestionCircle } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
 
-
-
-
-
 export default ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
   if (activeModal !== modalName) return null;
@@ -33,6 +29,8 @@ export default ({ modalName }) => {
     setNewAmountPay,
     setGateway_name,
     setGateway_Number,
+    selectedOption,
+    setSelectedOption,
   } = usePayNow();
 
   const [timeRemaining, setTimeRemaining] = useState(900);
@@ -100,7 +98,7 @@ export default ({ modalName }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/submitTransaction`,
+        `http://localhost:5000/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
@@ -111,6 +109,7 @@ export default ({ modalName }) => {
           transactionID,
           mobile: userDeatils.phone[0].number,
           type: parseInt(0),
+          bonusCode: selectedOption,
         },
         {
           headers: {
@@ -128,7 +127,7 @@ export default ({ modalName }) => {
           closeModal(); // Optionally close the modal after showing success
           navigate("/"); // or your success redirect
           window.location.reload(); // If you want to reload after redirect
-        },5000);
+        }, 5000);
       }
       if (response.data.success === false) {
         console.log(response.data.success);
@@ -153,22 +152,21 @@ export default ({ modalName }) => {
     }
   }, [newAmount]);
 
-  
   useEffect(() => {
-  if (!ShowSuccess) {
-    const interval = setInterval(() => {
-      setRedirectCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          window.location.reload();
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    if (!ShowSuccess) {
+      const interval = setInterval(() => {
+        setRedirectCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            window.location.reload();
+          }
+          return prev - 1;
+        });
+      }, 1000);
 
-    return () => clearInterval(interval);
-  }
-}, [ShowSuccess]);
+      return () => clearInterval(interval);
+    }
+  }, [ShowSuccess]);
 
   return (
     <div
@@ -184,11 +182,14 @@ export default ({ modalName }) => {
               <div className="custom-fullscreen-bg">
                 <div className="custom-row">
                   <div className="custom-col-md-6">
-                        {ShowSuccess ? (
-                    <div className="custom-center-content">
-                      <div className="custom-text-center">
+                    {ShowSuccess ? (
+                      <div className="custom-center-content">
+                        <div className="custom-text-center">
                           <div className="custom-content-lg">
-                            <div className="custom-timer-container"    style={{ background: "#F7941D" }}>
+                            <div
+                              className="custom-timer-container"
+                              style={{ background: "#F7941D" }}
+                            >
                               <h1 className="custom-timer-display">
                                 {formatTime(timeRemaining)}
                               </h1>
@@ -200,10 +201,10 @@ export default ({ modalName }) => {
                               <div className="custom-form-header">
                                 <div className="custom-logo-container">
                                   <img
-                                  style={{ width: "100px" }}
-                                  alt="logo"
-                                  src="https://d1rkzpcrq2qmwv.cloudfront.net/banks/UPAY_BDT.png"
-                                />
+                                    style={{ width: "100px" }}
+                                    alt="logo"
+                                    src="https://d1rkzpcrq2qmwv.cloudfront.net/banks/UPAY_BDT.png"
+                                  />
                                 </div>
                               </div>
                               <form className="custom-payment-form">
@@ -299,45 +300,47 @@ export default ({ modalName }) => {
                               </form>
                             </div>
                           </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="gateway-name-main-container">
-                            <div className="gateway-name-check-icon" >
-                              <FaCheckCircle style={{height:"80px",width:"80px"}} />
-                            </div>
-                            <div className="gateway-name-content">
-                              <div className=" gateway-name-heading">
-                                সফলভাবে জমা দেওয়া হয়েছে
-                              </div>
-                              <div className="gateway-name-paragraph">
-                                লেনদেন সফলভাবে জমা দেওয়া হয়েছে।
-                                <br />
-                                লেনদেন অনুমোদিত হওয়ার জন্য অনুগ্রহ করে কয়েক
-                                মিনিট অপেক্ষা করুন।
-                                <br />
-                                আপনি এখন এই পপ আপ ব্রাউজারটি বন্ধ করে মূল সাইটে
-                                ফিরে যেতে পারেন।
-                              </div>
-                                 <strong
-                              style={{
-                                fontSize: "20px",
-                                color: "#fff",
-                                fontWeight: "bold",
-                              }}
-                              
-                              >{redirectCountdown} সেকেন্ড পরে রিডাইরেক্ট হবে...</strong>
-                            </div>
-                          </div>
-                        )}
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="gateway-name-main-container">
+                        <div className="gateway-name-check-icon">
+                          <FaCheckCircle
+                            style={{ height: "80px", width: "80px" }}
+                          />
+                        </div>
+                        <div className="gateway-name-content">
+                          <div className=" gateway-name-heading">
+                            সফলভাবে জমা দেওয়া হয়েছে
+                          </div>
+                          <div className="gateway-name-paragraph">
+                            লেনদেন সফলভাবে জমা দেওয়া হয়েছে।
+                            <br />
+                            লেনদেন অনুমোদিত হওয়ার জন্য অনুগ্রহ করে কয়েক মিনিট
+                            অপেক্ষা করুন।
+                            <br />
+                            আপনি এখন এই পপ আপ ব্রাউজারটি বন্ধ করে মূল সাইটে ফিরে
+                            যেতে পারেন।
+                          </div>
+                          <strong
+                            style={{
+                              fontSize: "20px",
+                              color: "#fff",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {redirectCountdown} সেকেন্ড পরে রিডাইরেক্ট হবে...
+                          </strong>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-  
+      </div>
+    </div>
   );
 };

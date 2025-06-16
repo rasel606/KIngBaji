@@ -66,7 +66,7 @@ const PaymenyContextProvider = ({ children }) => {
   }, [isAuthenticated, token]);
 
 
-
+const [selectedOption, setSelectedOption] = useState();
   const [Payment, setPayment] = useState(paymentMethods[0])
   console.log(Payment);
   const [newAmount, setNewAmountPay] = useState(0);
@@ -78,6 +78,7 @@ const PaymenyContextProvider = ({ children }) => {
   // const [showVerification, setShowVerification] = useState(false);
   const [loading, setLoading] = useState(true)
 
+  console.log(selectedOption);
 
   // const paydata = {
   //   userId: userId,
@@ -107,7 +108,8 @@ const PaymenyContextProvider = ({ children }) => {
       setGateway_name,
       setGateway_Number,
       setPayment_type,
-      setPayment
+      setPayment,
+      selectedOption, setSelectedOption
     }}>
       {children}
     </PaymentContext.Provider>

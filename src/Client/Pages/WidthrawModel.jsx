@@ -5,6 +5,7 @@ import { useAuth } from "../Component/AuthContext";
 import {
   GatWaySystem,
   GatWaySystemWidthrow,
+  GetCheckTurnoverEligibility,
 } from "../Component/Axios-API-Service/AxiosAPIService";
 import { usePayNow } from "../PaymentContext/PaymenyContext";
 import axios from "axios";
@@ -61,7 +62,7 @@ export default ({ modalName }) => {
     { id: "4", value: 20000, label: "20,000" },
     { id: "5", value: 25000, label: "25,000" },
     { id: "6", value: 1000, label: "1,000" },
-    { id: "7", value: 500, label: "500" },
+    { id: "7", value: 300, label: "300" },
   ];
 
   const promotions = [
@@ -75,16 +76,10 @@ export default ({ modalName }) => {
 
   // const paymentTypes = [{ _id: "0", name: "Send Money" },{ _id: "1", name: "Cash Out" },{ id: "2", name: "Payment" }];
 
-  const {
-    isAuthenticated,
-    loginUser,
-    logoutUser,
-    token,
-    userDeatils,
+  const { isAuthenticated, loginUser, logoutUser, token, userDeatils } =
+    useAuth();
 
-  } = useAuth();
-
-/*   const data = {
+  /*   const data = {
     userId: userDeatils?.userId,
   };
  */
@@ -101,12 +96,10 @@ export default ({ modalName }) => {
     setPayment_type,
     Payment,
     setPayment,
-
+showEligibilityCheck, setShowEligibilityCheck,
     showAmountLimitw,
     setShowAmountLimitw,
   } = useWidthrowNow();
-
-
 
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [ShowSuccess, setShowSuccess] = useState(true);
@@ -115,6 +108,11 @@ export default ({ modalName }) => {
   const [isVerified, setIsVerified] = useState(true);
   const [selectedPaymentAmount, setSelectedPaymentAmount] = useState("0");
   const [redirectCountdown, setRedirectCountdown] = useState(5);
+  const [eligibility, setEligibility] = useState(null);
+  const [isChecking, setIsChecking] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+
 
   console.log(Payment);
 
@@ -138,40 +136,13 @@ export default ({ modalName }) => {
 
   console.log(payment_type);
 
-  // useEffect(() => {
-  //   // Fetch gateway list from backend on component mount
-  //   const fetchGateways = async () => {
-  //     console.log(data);
-  //     try {
-  //       const response = await GatWaySystem(data);
-  //       setpaymentMethods(response?.data?.paymentMethods);
-  //       // setGatewaysCount(response.data.Getwaycount);
-  //       console.log(response.data.paymentMethods);
-  //       if (response.data.paymentMethods.length > 0) {
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching gateways:", error);
-  //     }
-  //   };
-
-  //   if (activeModal === modalName) {
-  //     fetchGateways();
-  //   }
-  // }, [userDeatils.userId, token, modalName]);
-  // const [selectedOption, setSelectedOption] = useState(options[0]);
+ 
 
   const handleChangeAmount = (e) => {
     selectedPaymentAmount = e.target.value;
     setSelectedPaymentAmount(selectedPaymentAmount);
   };
-  // const handleChange = (event) => {
-  //   setSelectedOption(event.target.value);
-  // };
 
-  // userId: userId,
-
-  // console.log(newAmount);
 
   setGateway_name(
     Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
@@ -216,44 +187,14 @@ export default ({ modalName }) => {
   console.log(gateway_name);
   console.log(payment_type);
 
-  // const handlePaymentAmount = async () => {
-  //   // Force context update before opening modal
-  //   setNewAmountPay(selectedPaymentAmount);
-  // };
+
 
   const userVarifayed = false;
 
   console.log(paymentMethods);
   console.log(Payment);
 
-  // useEffect(() => {
-  //   const fetchGateways = async () => {
-  //     console.log(data);
-  //     try {
-  //       const response = await GatWaySystemWidthrow(data);
-  //       setpaymentMethods(response?.data?.paymentMethods);
-  //       // setGatewaysCount(response.data.Getwaycount);
-  //       console.log(response.data.paymentMethods);
-  //       if (response.data.paymentMethods.length > 0) {
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching gateways:", error);
-  //       // setError(error);
-  //     }
-  //   };
-  //   fetchGateways();
-  // }, []);
-  // const [selectedOption, setSelectedOption] = useState(options[0]);
-
-  // const inputRef = useRef(null);
-
-  // const handleChangeAmount = (e) => {
-  //   selectedPaymentAmount = e.target.value;
-  //   setSelectedPaymentAmount(selectedPaymentAmount);
-  // };
-
-  // // userId: userId,
+  
   setNewWidthrowAmountPay(selectedPaymentAmount);
   useEffect(() => {
     if (paymentMethods.length > 0) {
@@ -277,14 +218,41 @@ export default ({ modalName }) => {
   );
 
 
-  const handlePayment = async () => {
-    // alert("Please fill in all required fields.");
-      if(!userDeatils) return null || ""
+
+ const checkEligibility = async () => {
     try {
-      if (selectedPaymentAmount > 499 && selectedPaymentAmount < 25001) {
+      setIsChecking(true);
+      const response = await GetCheckTurnoverEligibility({ userId: userDeatils.userId });
+      console.log(response);
+      setEligibility(response.data);
+      return response.data.eligible;
+    } catch (error) {
+      // console.error("Eligibility check error:", error);
+      console.log(error.response);
+      setShowAmountLimitw(error.response?.data?.message || 'Error checking eligibility');
+      return false;
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  const handlePayment = async () => {
+    if (!userDeatils) return;
+    
+    try {
+      // First check eligibility
+      const isEligible = await checkEligibility();
+      if (!isEligible) {
+        console.log("User is not eligible for withdrawal.", isEligible);
+        setShowEligibilityCheck("User is not eligible for withdrawal. Turnover Incomplete", isEligible);
+        return;
+      }
+
+      // Proceed with withdrawal if eligible
+      if (selectedPaymentAmount > 299 && selectedPaymentAmount < 25001) {
         // console.log(userId, selectedPaymentAmount,gateway_name,userDeatils.referredBy,userDeatils.phone[0].number);
         const response = await axios.post(
-          `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
+          `http://localhost:5000/api/v1/widthdraw_with_transaction`,
           {
             userId: userDeatils?.userId,
             gateway_name:
@@ -306,7 +274,7 @@ export default ({ modalName }) => {
         setShowSuccess(false);
         if (response.data.transactionID.length > 0) {
           console.log(response.data.transactionID);
-          
+
           setTimeout(() => {
             // closeModal(); // Optionally close the modal after showing success
             navigate("/"); // or your success redirect
@@ -525,7 +493,7 @@ export default ({ modalName }) => {
                           <div className="title">
                             <h2>
                               <span>Amount</span>
-                              <i>৳ 500.00 - ৳ 25,000.00</i>
+                              <i>৳ 300.00 - ৳ 25,000.00</i>
                             </h2>
                           </div>
                           <div className="select-group style-add-amount">
@@ -662,14 +630,11 @@ export default ({ modalName }) => {
         </div>
       ) : (
         <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
-          <div className="popup-page__backdrop" ></div>
+          <div className="popup-page__backdrop"></div>
           <div className="popup-page__main popup-page-main popup-page-main--show">
             <div className="popup-page-main__header wallet-header">
               <div className="popup-page-main__title">Funds</div>
-              <div
-                className="popup-page-main__close"
-                
-              ></div>
+              <div className="popup-page-main__close"></div>
             </div>
             <div className="popup-page-main__container">
               <div className="content mcd-style fixed-tab player-content"></div>

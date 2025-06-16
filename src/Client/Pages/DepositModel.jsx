@@ -4,6 +4,7 @@ import { useModal } from "../Component/ModelContext";
 import { useAuth } from "../Component/AuthContext";
 import {
   GatWaySystem,
+  GetAllBonuses,
   GetPaymentMethodsUser,
 } from "../Component/Axios-API-Service/AxiosAPIService";
 import { usePayNow } from "../PaymentContext/PaymenyContext";
@@ -24,11 +25,11 @@ export default ({ modalName }) => {
     },
   ];
 
-  const options = [
-    "৩.২৫% আনলিমিটেড ডিপোজিট বোনাস",
-    "অন্য বিকল্প",
-    "আরও একটি বিকল্প",
-  ];
+  // const options = [
+  //   "৩.২৫% আনলিমিটেড ডিপোজিট বোনাস",
+  //   "অন্য বিকল্প",
+  //   "আরও একটি বিকল্প",
+  // ];
 
   const Amount = [
     { id: "0", value: 2000, label: "2,000" },
@@ -57,7 +58,7 @@ export default ({ modalName }) => {
     loginUser,
     logoutUser,
     Token,
-    
+
     token,
     userDeatils,
     userId,
@@ -73,12 +74,15 @@ export default ({ modalName }) => {
     payment_type,
     newAmount,
     setNewAmountPay,
-    showAmountLimit, setShowAmountLimit,
+    showAmountLimit,
+    setShowAmountLimit,
     setGateway_name,
     setGateway_Number,
     setPayment_type,
     Payment,
     setPayment,
+    selectedOption,
+    setSelectedOption,
   } = usePayNow();
 
   const [paymentMethods, setpaymentMethods] = useState([]);
@@ -96,13 +100,35 @@ export default ({ modalName }) => {
   console.log(selectedPaymentAmount);
   const handelAmount = (blance) => {
     // let = updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
-    let updatedAmount = 0
-     updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
+    let updatedAmount = 0;
+    updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
 
     setSelectedPaymentAmount(updatedAmount);
   };
 
   console.log(payment_type);
+
+  const [options, setOptions] = useState([]);
+
+  const fetchGetAllBonuses = async () => {
+    try {
+      const response = await GetAllBonuses();
+      setOptions(response?.data?.data);
+      // setGatewaysCount(response.data.Getwaycount);
+      console.log(response.data.data);
+      // if (response.data.paymentMethods.length > 0) {
+      //   setLoading(false);
+      // }
+    } catch (error) {
+      console.error("Error fetching gateways:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (activeModal === modalName) {
+    fetchGetAllBonuses();
+    }
+  }, [userId, token, modalName, activeModal]);
 
   useEffect(() => {
     // Fetch gateway list from backend on component mount
@@ -125,19 +151,30 @@ export default ({ modalName }) => {
       fetchGateways();
     }
   }, [userDeatils.userId, token, modalName]);
-  const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const handleChangeAmount = (e) => {
     selectedPaymentAmount = e.target.value;
     setSelectedPaymentAmount(selectedPaymentAmount);
   };
   const handleChange = (event) => {
+    console.log(event.target.value);
     setSelectedOption(event.target.value);
   };
 
-  // userId: userId,
 
-  
+
+
+    useEffect(() => {
+    if (options.length > 0) {
+      if (activeModal === modalName) {
+        setSelectedOption(options[0]?._id);
+      }
+    }
+  }, [options]);
+  console.log(selectedOption);
+  console.log(options);
+
+  // userId: userId,
 
   console.log(newAmount);
 
@@ -153,9 +190,10 @@ export default ({ modalName }) => {
     Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
   );
   // referredbyCode: userDeatils.referredbyCode
+
+
   useEffect(() => {
     if (paymentMethods.length > 0) {
-      // setPayment(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
       if (activeModal === modalName) {
         setGateway_name(paymentMethods[0]?.gateway_name);
       }
@@ -183,13 +221,15 @@ export default ({ modalName }) => {
   const navigate = useNavigate();
   console.log(gateway_name);
   console.log(payment_type);
-setNewAmountPay(selectedPaymentAmount);
+  setNewAmountPay(selectedPaymentAmount);
   const handlePaymentSubmit = () => {
-   if (selectedPaymentAmount > 199 && selectedPaymentAmount < 25001) {
-    openModal(`${gateway_name}`);; // Call the modal open function here
-  } else {
-    setShowAmountLimit("Sorry! your amount Invalid. Please enter amount between ৳ 200 and ৳ 25,000."); // Show limit modal if outside the valid range
-  }
+    if (selectedPaymentAmount > 199 && selectedPaymentAmount < 25001) {
+      openModal(`${gateway_name}`); // Call the modal open function here
+    } else {
+      setShowAmountLimit(
+        "Sorry! your amount Invalid. Please enter amount between ৳ 200 and ৳ 25,000."
+      ); // Show limit modal if outside the valid range
+    }
   };
 
   // const handlePaymentAmount = async () => {
@@ -268,8 +308,8 @@ setNewAmountPay(selectedPaymentAmount);
                         </label>
                         <select value={selectedOption} onChange={handleChange}>
                           {options.map((option, index) => (
-                            <option key={index} value={option}>
-                              {option}
+                            <option key={index} value={option._id}>
+                              {option.name}
                             </option>
                           ))}
                         </select>
@@ -345,16 +385,20 @@ setNewAmountPay(selectedPaymentAmount);
 
                                   <div className="tag-rebate-money ng-star-inserted">
                                     <p>
-                                      <span>+</span>3<span>%</span>
+                                      <span>+</span>3.5<span>%</span>
                                     </p>
                                   </div>
                                   <span
-                                className={`${Payment === paymentMethod?"item-icon":""}`}
-                                style={{
-                                  maskImage:
-                                    'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
-                                }}
-                              ></span>
+                                    className={`${
+                                      Payment === paymentMethod
+                                        ? "item-icon"
+                                        : ""
+                                    }`}
+                                    style={{
+                                      maskImage:
+                                        'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
+                                    }}
+                                  ></span>
                                 </label>
                               </li>
                             ))}

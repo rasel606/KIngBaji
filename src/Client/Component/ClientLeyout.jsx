@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 // import { Accordion, Container, Navbar } from "react-bootstrap";
+import axios from "axios";
 import {
   Link,
   NavLink,
@@ -57,6 +58,8 @@ import ResetPasswordPopup from "../Pages/ResetPasswordPopup";
 import LaunchGamePopup from "../LaunchGamePopup";
 import TermsAndConditions from "../Pages/TermsAndConditions";
 import Promotions from "../Pages/Promotions";
+import TurnOverPopUp from "./TurnOverPopUp";
+import { UserAllDetails } from "./Axios-API-Service/AxiosAPIService";
 
 export default () => {
   // const [isOpen, setIsOpen] = useState(false);
@@ -75,34 +78,127 @@ export default () => {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const {
-    isLoginNotify, setIsLoginNotify,
+    isLoginNotify,
+    setIsLoginNotify,
     isAuthenticated,
     loginUser,
     logoutUser,
     isAmountAlertError,
     setIsAmountAlertError,
-    isPasswordresetNotify, setIsPasswordresetNotifyNotify,
-    chat, setChat
+    isPasswordresetNotify,
+    setIsPasswordresetNotifyNotify,
+    chat,
+    userDeatils,
+    setChat,
   } = useAuth();
   const { showAmountLimit, setShowAmountLimit } = usePayNow();
-  const { showAmountLimitw, setShowAmountLimitw } = useWidthrowNow();
+  const {
+    showAmountLimitw,
+    setShowAmountLimitw,
+    showEligibilityCheck,
+    setShowEligibilityCheck,
+  } = useWidthrowNow();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("");
   const [showSecondMenu, setShowSecondMenu] = useState(true);
 
+  const [loading, setLoading] = useState(true);
+  const userBalance = userDeatils ? userDeatils.balance : "";
+  const userId = userDeatils?.userId;
+  const [balance, setBalance] = useState(userBalance);
+  const [refreshing, setRefreshing] = useState(false);
+  const [userData, setUserData] = useState(userId);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playGameData, setPlayGameData] = useState(null);
+  const [gameData, setGameData] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
 
+  const handlePlay = async (game) => {
+    console.log(game);
+    if (!userDeatils) return;
+    if (isPlaying) return;
 
+    setIsPlaying(true);
+    setLoading(true);
 
+    try {
+      if (userId) {
+        const response = await fetch(
+          "http://localhost:5000/api/v1/launch_gamePlayer",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+              game_id: "0",
+              g_type: game.g_type,
+              p_code: game.providercode,
+            }),
+          }
+        );
 
+        const data = await response.json();
 
+        if (data.errMsg === "Success" && userId) {
+          console.log(data);
+          setPlayGameData(data);
+          setShowPopup(true);
+        }
+      } else {
+        setIsLoginNotify(
+          "আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!"
+        );
+      }
+    } catch (error) {
+      console.error("Error launching game:", error);
+      setIsLoginNotify(
+        "আপনাকে লগইন করতে হবে খেলার জন্য যদি এখনো আপনার একাউন্ট না থাকে আমাদের সাথে। শুধু সাইন আপ করুন আমাদের সাথে। এটা একেবারেই ফ্রী!"
+      );
+    } finally {
+      setIsPlaying(false);
+      setLoading(false);
+    }
+  };
 
+  /** 🚀 Refresh Balance */
+  const handleRefresh = async (userId) => {
+    try {
+      if (!userDeatils) return;
+      await handelUserDetails(userId);
+      // if(userId){
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/user_balance",
+        { userId }
+      );
+      setBalance(response.data.balance);
+      console.log("Balance Data:", response.data);
+      // }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  };
 
+  /** 🚀 Fetch User Details */
+  const handelUserDetails = async (userId) => {
+    if (!userDeatils) return;
+    const result = await UserAllDetails(userId);
+    setBalance(result.data.user.balance);
+  };
 
+  /** 🚀 Handle Popup Close */
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    handleRefresh(userId);
+  };
 
-
-
-  
- 
+  useEffect(() => {
+    if (!showPopup && userId) {
+      handleRefresh(userId);
+    }
+  }, [showPopup, userId]);
 
   const location = useLocation();
 
@@ -117,15 +213,6 @@ export default () => {
     }
   }, []);
 
-
-
-
-
-
-
-
-
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     // Reset menu states when closing
@@ -139,12 +226,40 @@ export default () => {
     <>
       <div className="main-router-wrapper">
         <HeaderGroup
+          handlePlay={handlePlay}
           toggleMenu={toggleMenu}
           isMenuOpen={isMenuOpen}
         ></HeaderGroup>
       </div>
-      <div >
+      <div>
         <Outlet />
+        {showPopup && playGameData?.gameUrl && (
+          <div className="popup-page-wrapper active" onClick={handleClosePopup}>
+            <div
+              className="popup-page show-toolbar popup-page--active popup-page--align-top"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="popup-page__main popup-page-main popup-page-main--show">
+                <div className="popup-page-main__header new-login-tab">
+                  <div className="popup-page-main__title">KingBaji</div>
+                  <div
+                    className="popup-page-main__close"
+                    onClick={handleClosePopup}
+                  ></div>
+                </div>
+                <div className="popup-page-main__container">
+                  <iframe
+                    src={playGameData.gameUrl}
+                    title="Game"
+                    width="100%"
+                    height="100%"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <div className="toolbar">
         {isAuthenticated ? (
@@ -312,6 +427,13 @@ export default () => {
           showAmountLimit={showAmountLimit}
           setShowAmountLimit={setShowAmountLimit}
           title={`${showAmountLimit ? "Notification" : ""}`}
+        />
+      )}
+      {showEligibilityCheck && (
+        <NotificationMiniPopUp
+          showAmountLimit={showEligibilityCheck}
+          setShowAmountLimit={setShowEligibilityCheck}
+          title={`${showEligibilityCheck ? "Notification" : ""}`}
         />
       )}
       {showAmountLimitw && (

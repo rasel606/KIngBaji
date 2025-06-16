@@ -431,7 +431,15 @@ const BettingRecordModal = ({ modalName }) => {
                           </React.Fragment>
                         ))
                       ) : (
-                        <div className="no-data-message">No records found</div>
+                        <div className="no-result">
+                          <div className="pic">
+                            <img
+                              src="https://img.c88rx.com/cx/h5/assets/images/no-data.png?v=1742895464610"
+                              alt="no-data"
+                            />
+                          </div>
+                          <div className="text">No Data Available</div>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -558,14 +566,12 @@ const BettingRecordModal = ({ modalName }) => {
                           >
                             <i
                               style={{
-                                color:
-                                  betTxnRecord.payout
-                                    ? "green"
-                                    : "red",
+                                color: betTxnRecord.payout ? "green" : "red",
                               }}
                             >
-                              {(
-                                betTxnRecord.payout ? betTxnRecord.payout : betTxnRecord.bet
+                              {(betTxnRecord.payout
+                                ? betTxnRecord.payout
+                                : betTxnRecord.bet
                               )?.toFixed(2) || "0.00"}
                             </i>
                           </div>

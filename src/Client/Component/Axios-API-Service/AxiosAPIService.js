@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://api.kingbaji.live/api/v1" });
+const API = axios.create({ baseURL: "http://localhost:5000/api/v1" });
 
 // Interceptor to attach token to all requests
 API.interceptors.request.use((req) => {
@@ -48,10 +48,13 @@ export const GatWaySystemWidthrow = (data) => API.post("/subadmin_getway_widthra
 
 
 export const GetBettingHistoryByMember = (data) => API.post("/bettingHistory-member-summary", data);
+export const GetCheckTurnoverEligibilityActive = (data) => API.post("/checkWithdrawalEligibility/active",data);
+export const GetCheckTurnoverEligibilityComplate= (data) => API.post("/checkWithdrawalEligibility/complate",data);
+export const GetCheckTurnoverEligibility= (data) => API.post("/checkWithdrawalEligibility",data);
 export const GetBettingHistoryByMemberDetails = ({params}) =>  API.get("/get-betting-history-detailed", {params});
 
 
-
+export const GetVipInfo = (data) => API.post("/vip_info",data);
 export const GetPaymentMethodsUser = (paydata) => API.post("/deposit_with_bonus", paydata);
 
 
@@ -59,4 +62,6 @@ export const GetPaymentMethodsUser = (paydata) => API.post("/deposit_with_bonus"
 
 export const GetGameProvider = () => API.get("/get_all_providers");
 export const GetGameCategory= () => API.get("/get_all_category");
+export const GetAllBonuses= () => API.get("/bonuses");
+
 export const GetMessages= (userId) => API.get(`/get_notifications/${userId}`);
