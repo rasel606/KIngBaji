@@ -47,7 +47,7 @@ const userPhoneNumber =userDeatils ? userDeatils?.phone[0]?.number : ""
     openModal("AddMobileNumberModel");
   };
   const handleGiftPoints = () => {
-    openModal("VipSystem")
+    openModal("GiftPointsModel")
   };
 
   
