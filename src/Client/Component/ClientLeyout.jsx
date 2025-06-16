@@ -124,7 +124,7 @@ export default () => {
     try {
       if (userId) {
         const response = await fetch(
-          "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+          "http://localhost:5000/api/v1/launch_gamePlayer",
           {
             method: "POST",
             headers: {
@@ -170,7 +170,7 @@ export default () => {
       await handelUserDetails(userId);
       // if(userId){
       const response = await axios.post(
-        "https://api.kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         { userId }
       );
       setBalance(response.data.balance);

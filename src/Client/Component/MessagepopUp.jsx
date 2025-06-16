@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { useAuth } from "./AuthContext";
 
-const socket = io("https://api.kingbaji.live/api/v1"); // Consider using process.env.REACT_APP_SOCKET_URL
+const socket = io("http://localhost:5000/api/v1"); // Consider using process.env.REACT_APP_SOCKET_URL
 
 export default ({ chat, setChat, title }) => {
   const { userDeatils } = useAuth();
