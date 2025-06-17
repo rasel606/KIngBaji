@@ -38,7 +38,7 @@ const GameContextProvider = ({ children }) => {
   //   try {
   //     if (userId) {
   //       const response = await fetch(
-  //         "http://localhost:5000/api/v1/launch_gamePlayer",
+  //         "https://api.kingbaji.live/api/v1/launch_gamePlayer",
   //         {
   //           method: "POST",
   //           headers: {
@@ -89,7 +89,7 @@ const GameContextProvider = ({ children }) => {
   //     await handelUserDetails(userId);
   //     // if(userId){
   //     const response = await axios.post(
-  //       "http://localhost:5000/api/v1/user_balance",
+  //       "https://api.kingbaji.live/api/v1/user_balance",
   //       { userId }
   //     );
   //     setBalance(response.data.balance);

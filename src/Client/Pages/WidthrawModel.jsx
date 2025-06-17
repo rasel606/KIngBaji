@@ -209,7 +209,7 @@ showEligibilityCheck, setShowEligibilityCheck,
       if (selectedPaymentAmount > 299 && selectedPaymentAmount < 25001) {
   
         const response = await axios.post(
-          `http://localhost:5000/api/v1/widthdraw_with_transaction`,
+          `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
           {
             userId: userDeatils?.userId,
             gateway_name:
