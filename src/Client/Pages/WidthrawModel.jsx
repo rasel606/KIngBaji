@@ -22,37 +22,7 @@ export default ({ modalName }) => {
     },
   ];
 
-  const options = [
-    "৩.২৫% আনলিমিটেড ডিপোজিট বোনাস",
-    "অন্য বিকল্প",
-    "আরও একটি বিকল্প",
-  ];
-
-  // const PaymentMathod = [
-  //   {
-  //     id: "depositSetting_3253",
-  //     name: "depositSetting",
-  //     value: "EXPAY",
-  //   },
-  //   {
-  //     id: "depositSetting_1768",
-  //     name: "depositSetting",
-  //     value: "JustPay",
-  //     tag: "Recommended",
-  //     tagIconUrl:
-  //       "https://img.m2911p.com/mp/h5/assets/images/icon-set/icon-recommond.svg?v=1736240166505",
-  //   },
-  //   {
-  //     id: "depositSetting_3177",
-  //     name: "depositSetting",
-  //     value: "Autopay",
-  //   },
-  //   {
-  //     id: "depositSetting_2959",
-  //     name: "depositSetting",
-  //     value: "সেন্ড মানি",
-  //   },
-  // ];
+  
 
   const Amount = [
     { id: "0", value: 2000, label: "2,000" },
@@ -65,16 +35,6 @@ export default ({ modalName }) => {
     { id: "7", value: 300, label: "300" },
   ];
 
-  const promotions = [
-    { id: 0, name: "৪% সীমাহীন বোনাস+ফ্রি স্পিন" },
-    { id: 1, name: "২০০% HEYVIP বোনাস" },
-    { id: 2, name: "৩০০% IPL দৈনিক স্পোর্টস বোনাস" },
-    { id: 3, name: "১০৮০% স্লটস সাপ্তাহিক বোনাস" },
-    { id: 4, name: "৫৭০% সাপ্তাহিক ক্যাসিনো বোনাস" },
-    { id: 5, name: "নরমাল ডিপোজিট" },
-  ];
-
-  // const paymentTypes = [{ _id: "0", name: "Send Money" },{ _id: "1", name: "Cash Out" },{ id: "2", name: "Payment" }];
 
   const { isAuthenticated, loginUser, logoutUser, token, userDeatils } =
     useAuth();
@@ -123,16 +83,11 @@ showEligibilityCheck, setShowEligibilityCheck,
 
     setSelectedPaymentAmount(updatedAmount);
   };
-  // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
+
   console.log(Payment);
 
   console.log(selectedPaymentAmount);
-  // const handelAmount = (blance) => {
-  //   // let = updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
-  //   const updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
 
-  //   setSelectedPaymentAmount(updatedAmount);
-  // };
 
   console.log(payment_type);
 
@@ -155,10 +110,10 @@ showEligibilityCheck, setShowEligibilityCheck,
   setPayment_type(
     Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
   );
-  // referredbyCode: userDeatils.referredbyCode
+
   useEffect(() => {
     if (paymentMethods.length > 0) {
-      // setPayment(Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name);
+
       if (activeModal === modalName) {
         setGateway_name(paymentMethods[0]?.gateway_name);
       }
@@ -223,11 +178,12 @@ showEligibilityCheck, setShowEligibilityCheck,
     try {
       setIsChecking(true);
       const response = await GetCheckTurnoverEligibility({ userId: userDeatils.userId });
-      console.log(response);
+      console.log("checkEligibility -------------------------- 1",response);
       setEligibility(response.data);
+      console.log(response);
       return response.data.eligible;
     } catch (error) {
-      // console.error("Eligibility check error:", error);
+  
       console.log(error.response);
       setShowAmountLimitw(error.response?.data?.message || 'Error checking eligibility');
       return false;
@@ -238,21 +194,22 @@ showEligibilityCheck, setShowEligibilityCheck,
 
   const handlePayment = async () => {
     if (!userDeatils) return;
-    
-    try {
-      // First check eligibility
-      const isEligible = await checkEligibility();
+     const isEligible = await checkEligibility();
+      console.log(isEligible);
       if (!isEligible) {
         console.log("User is not eligible for withdrawal.", isEligible);
         setShowEligibilityCheck("User is not eligible for withdrawal. Turnover Incomplete", isEligible);
         return;
       }
+    try {
+
+     
 
       // Proceed with withdrawal if eligible
       if (selectedPaymentAmount > 299 && selectedPaymentAmount < 25001) {
-        // console.log(userId, selectedPaymentAmount,gateway_name,userDeatils.referredBy,userDeatils.phone[0].number);
+  
         const response = await axios.post(
-          `https://api.kingbaji.live/api/v1/widthdraw_with_transaction`,
+          `http://localhost:5000/api/v1/widthdraw_with_transaction`,
           {
             userId: userDeatils?.userId,
             gateway_name:

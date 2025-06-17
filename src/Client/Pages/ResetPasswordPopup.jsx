@@ -118,7 +118,7 @@ console.log(newErrors )
     try {
       const token = localStorage.getItem('authToken');
       const response = await axios.post(
-        'https://api.kingbaji.live/api/v1/reset_and_update_password',
+        'http://localhost:5000/api/v1/reset_and_update_password',
         {
           currentPassword: formData.currentPassword,
           newPassword: formData.newPassword,
@@ -156,7 +156,7 @@ console.log(response);
 //        formData.currentPassword,
 //        formData.newPassword)
 //  if (isValid) {
-//    axios.post('https://api.kingbaji.live/api/v1/reset_password', {
+//    axios.post('http://localhost:5000/api/v1/reset_password', {
 //     method: 'POST',
 //     headers: { 'Content-Type': 'application/json' },
 //     body: JSON.stringify({

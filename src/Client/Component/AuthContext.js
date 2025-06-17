@@ -24,7 +24,7 @@ const AuthContextProvider = ({ children }) => {
   const [email, setEmail] = useState(null || "");
     const [name, setName] = useState("");
     const [birthday, setBirthday] = useState("");
-
+  const [showPromoDetails, setShowPromoDetails] = useState(null);
 
 
   console.log("isAuthenticated", userDeatils, userId, token);
@@ -62,7 +62,7 @@ const AuthContextProvider = ({ children }) => {
     }
 
     setLoading(true);
-    axios.get('https://api.kingbaji.live/api/v1/verify', {
+    axios.get('http://localhost:5000/api/v1/verify', {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     })
       .then((response) => {
@@ -170,8 +170,8 @@ const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, userRegistar, token, userId, userDeatils, loading, setLoading,isAmountAlertError,setIsAmountAlertError,isLoginNotify, setIsLoginNotify,isPasswordresetNotify, setIsPasswordresetNotifyNotify,name, setName ,birthday, setBirthday
-
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, userRegistar, token, userId, userDeatils, loading, setLoading,isAmountAlertError,setIsAmountAlertError,isLoginNotify, setIsLoginNotify,isPasswordresetNotify, setIsPasswordresetNotifyNotify,name, setName ,birthday, setBirthday,
+showPromoDetails, setShowPromoDetails
     }}>
       {children}
 

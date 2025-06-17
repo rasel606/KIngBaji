@@ -87,6 +87,7 @@ console.log(data)
 
   useEffect(() => {
     const fetchGateways = async () => {
+      if(!isAuthenticated) return null
       console.log(data);
       try {
         const response = await GatWaySystemWidthrow(data);

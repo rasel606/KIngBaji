@@ -104,7 +104,7 @@ export default ({ modalName }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://api.kingbaji.live/api/v1/submitTransaction`,
+        `http://localhost:5000/api/v1/submitTransaction`,
         {
           userId: userDeatils.userId,
           gateway_name: gateway_name,
@@ -115,7 +115,7 @@ export default ({ modalName }) => {
           transactionID,
           mobile: userDeatils.phone[0].number,
           type: parseInt(0),
-          bonusCode:selectedOption
+          bonusCode:selectedOption._id
         },
         {
           headers: {

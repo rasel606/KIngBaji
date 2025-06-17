@@ -3,7 +3,7 @@ import { useModal } from "./ModelContext";
 import { Link, useNavigate } from "react-router-dom";
 
 export default ({ handlePlay }) => {
-
+  const { activeModal, openModal, closeModal } = useModal();
   console.log(handlePlay);
   // const { activeModal, openModal, closeModal } = useModal();
   // if (activeModal !== modalName) return null;
@@ -71,7 +71,7 @@ export default ({ handlePlay }) => {
 
   useEffect(() => {
     setLoading(true);
-    const url = "https://api.kingbaji.live/api/v1/New-table-categories";
+    const url = "http://localhost:5000/api/v1/New-table-categories";
     const response = fetch(url, {
       method: "GET",
       headers: {
@@ -194,7 +194,7 @@ export default ({ handlePlay }) => {
                         </ul>
 
                         <ul className="promotion-block">
-                          <li data-category="promotion">
+                          <li data-category="promotion" onClick={()=>openModal("Promotions") }>
                             <span
                               className="item-icon"
                               style={{
@@ -202,7 +202,7 @@ export default ({ handlePlay }) => {
                                   "url(https://img.r24b.xyz/hb/h5/assets/images/icon-set/theme-icon/icon-promotion.png?v=1725363175075)",
                               }}
                             ></span>
-                            <a href="/bd/bn/promotion">প্রমোশন</a>
+                            <a >প্রমোশন</a>
                           </li>
                         </ul>
 

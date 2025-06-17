@@ -1,73 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
 import { useAuth } from "../Component/AuthContext";
 import {
   GatWaySystem,
   GetAllBonuses,
-  GetPaymentMethodsUser,
 } from "../Component/Axios-API-Service/AxiosAPIService";
 import { usePayNow } from "../PaymentContext/PaymenyContext";
 
-export default ({ modalName }) => {
+const DepositModal = ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
-  if (activeModal !== modalName) return null;
-  const Depositdata = [
-    {
-      id: 1,
-      DepositTitle: "Deposit",
-      DepositDATA: "",
-    },
-    {
-      id: 1,
-      DepositTitle: "Deposit",
-      DepositDATA: "",
-    },
-  ];
-
-  // const options = [
-  //   "৩.২৫% আনলিমিটেড ডিপোজিট বোনাস",
-  //   "অন্য বিকল্প",
-  //   "আরও একটি বিকল্প",
-  // ];
-
-  const Amount = [
-    { id: "0", value: 2000, label: "2,000" },
-    { id: "1", value: 5000, label: "5,000" },
-    { id: "2", value: 10000, label: "10,000" },
-    { id: "3", value: 15000, label: "15,000" },
-    { id: "4", value: 20000, label: "20,000" },
-    { id: "5", value: 25000, label: "25,000" },
-    { id: "6", value: 1000, label: "1,000" },
-    { id: "7", value: 200, label: "200" },
-  ];
-
-  const promotions = [
-    { id: 0, name: "৪% সীমাহীন বোনাস+ফ্রি স্পিন" },
-    { id: 1, name: "২০০% HEYVIP বোনাস" },
-    { id: 2, name: "৩০০% IPL দৈনিক স্পোর্টস বোনাস" },
-    { id: 3, name: "১০৮০% স্লটস সাপ্তাহিক বোনাস" },
-    { id: 4, name: "৫৭০% সাপ্তাহিক ক্যাসিনো বোনাস" },
-    { id: 5, name: "নরমাল ডিপোজিট" },
-  ];
-
-  // const paymentTypes = [{ _id: "0", name: "Send Money" },{ _id: "1", name: "Cash Out" },{ id: "2", name: "Payment" }];
-
   const {
-    isAuthenticated,
-    loginUser,
-    logoutUser,
-    Token,
-
-    token,
     userDeatils,
-    userId,
+    token,
   } = useAuth();
-
-  const data = {
-    userId: userDeatils.userId,
-  };
-
   const {
     gateway_name,
     gateway_Number,
@@ -85,173 +31,120 @@ export default ({ modalName }) => {
     setSelectedOption,
   } = usePayNow();
 
-  const [paymentMethods, setpaymentMethods] = useState([]);
-  // const [payment_type, setPayments_type] = useState(paymentMethods[0]?.payment_type);
-  const [activeTab, setActiveTab] = useState("deposit");
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [showVerification, setShowVerification] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [isVerified, setIsVerified] = useState(true);
-  const [selectedPaymentAmount, setSelectedPaymentAmount] = useState("0");
-  // const [updatedAmount, setUpdatedAmount] = useState(0);
-  // const [Payment, setPayment] = useState(paymentMethods[0]); //paymentMethods[0]
-  console.log(Payment);
+  // State management
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [bonuses, setBonuses] = useState([]);
+  const [selectedPaymentAmount, setSelectedPaymentAmount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isVerified] = useState(true);
+  
+  // Default amounts for quick selection
 
-  console.log(selectedPaymentAmount);
-  const handelAmount = (blance) => {
-    // let = updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
-    let updatedAmount = 0;
-    updatedAmount = parseInt(selectedPaymentAmount) + parseInt(blance);
 
-    setSelectedPaymentAmount(updatedAmount);
-  };
-
-  console.log(payment_type);
-
-  const [options, setOptions] = useState([]);
-
-  const fetchGetAllBonuses = async () => {
-    try {
-      const response = await GetAllBonuses();
-      setOptions(response?.data?.data);
-      // setGatewaysCount(response.data.Getwaycount);
-      console.log(response.data.data);
-      // if (response.data.paymentMethods.length > 0) {
-      //   setLoading(false);
-      // }
-    } catch (error) {
-      console.error("Error fetching gateways:", error);
-    }
-  };
-
+  // Fetch payment methods
   useEffect(() => {
-    if (activeModal === modalName) {
-    fetchGetAllBonuses();
-    }
-  }, [userId, token, modalName, activeModal]);
-
-  useEffect(() => {
-    // Fetch gateway list from backend on component mount
-    const fetchGateways = async () => {
-      console.log(data);
+    const fetchPaymentMethods = async () => {
+      if(!userDeatils) return null
       try {
-        const response = await GatWaySystem(data);
-        setpaymentMethods(response?.data?.paymentMethods);
-        // setGatewaysCount(response.data.Getwaycount);
-        console.log(response.data.paymentMethods);
-        if (response.data.paymentMethods.length > 0) {
-          setLoading(false);
+        const response = await GatWaySystem({ userId: userDeatils?.userId });
+        if (response.data?.paymentMethods) {
+          setPaymentMethods(response.data.paymentMethods);
+          // Set default payment method if available
+          if (response.data.paymentMethods.length > 0) {
+            setPayment(response.data.paymentMethods[0]);
+            setGateway_name(response.data.paymentMethods[0].gateway_name);
+            setGateway_Number(response.data.paymentMethods[0].gateway_Number);
+            setPayment_type(response.data.paymentMethods[0].payment_type);
+          }
         }
+        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching gateways:", error);
+        console.error("Error fetching payment methods:", error);
+        setIsLoading(false);
       }
     };
 
     if (activeModal === modalName) {
-      fetchGateways();
+      fetchPaymentMethods();
     }
-  }, [userDeatils.userId, token, modalName]);
+  }, [userDeatils, token, modalName, activeModal]);
 
-  const handleChangeAmount = (e) => {
-    selectedPaymentAmount = e.target.value;
-    setSelectedPaymentAmount(selectedPaymentAmount);
-  };
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setSelectedOption(event.target.value);
-  };
-
-
-
-
-    useEffect(() => {
-    if (options.length > 0) {
-      if (activeModal === modalName) {
-        setSelectedOption(options[0]?._id);
+  // Fetch bonuses
+  useEffect(() => {
+    const fetchBonuses = async () => {
+      if(!userDeatils) return null
+      try {
+        const response = await GetAllBonuses();
+        if (response.data?.data) {
+          setBonuses(response.data.data);
+          // Set default bonus if available
+          if (response.data.data.length > 0) {
+            setSelectedOption(response.data.data[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching bonuses:", error);
       }
+    };
+
+    if (activeModal === modalName) {
+      fetchBonuses();
     }
-  }, [options]);
-  console.log(selectedOption);
-  console.log(options);
+  }, [modalName, activeModal]);
 
-  // userId: userId,
+  // Handle amount selection
+  const handleAmountSelection = (amount) => {
+    setSelectedPaymentAmount(amount);
+  };
 
-  console.log(newAmount);
+  // Handle manual amount input
+  const handleAmountChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    setSelectedPaymentAmount(value ? parseInt(value) : 0);
+  };
 
-  setGateway_name(
-    Payment === null ? paymentMethods[0]?.gateway_name : Payment?.gateway_name
-  );
-  setGateway_Number(
-    Payment === null
-      ? paymentMethods[0]?.gateway_Number
-      : Payment?.gateway_Number
-  );
-  setPayment_type(
-    Payment === null ? paymentMethods[0]?.payment_type : Payment?.payment_type
-  );
-  // referredbyCode: userDeatils.referredbyCode
+  // Handle payment method selection
+  const handlePaymentMethodSelect = (method) => {
+    setPayment(method);
+    setGateway_name(method.gateway_name);
+    setGateway_Number(method.gateway_Number);
+    setPayment_type(method.payment_type);
+  };
 
+  // Handle bonus selection
+  const handleBonusSelect = (e) => {
+    const selectedBonusId = e.target.value;
+    const bonus = bonuses.find(b => b._id === selectedBonusId);
+    setSelectedOption(bonus);
+  };
 
-  useEffect(() => {
-    if (paymentMethods.length > 0) {
-      if (activeModal === modalName) {
-        setGateway_name(paymentMethods[0]?.gateway_name);
-      }
-    }
-  }, [paymentMethods]);
-
-  useEffect(() => {
-    if (paymentMethods.length > 0) {
-      setGateway_Number(paymentMethods[0]?.gateway_Number);
-    }
-  }, [paymentMethods, modalName]);
-
-  useEffect(() => {
-    if (paymentMethods.length) {
-      setPayment(paymentMethods[0] || Payment);
-    }
-  }, [paymentMethods, modalName]);
-
-  useEffect(() => {
-    if (paymentMethods.length > 0) {
-      setPayment_type(paymentMethods[0]?.payment_type);
-    }
-  }, [paymentMethods, modalName]);
-
-  const navigate = useNavigate();
-  console.log(gateway_name);
-  console.log(payment_type);
-  setNewAmountPay(selectedPaymentAmount);
+  // Validate and submit payment
   const handlePaymentSubmit = () => {
-    if (selectedPaymentAmount > 199 && selectedPaymentAmount < 25001) {
-      openModal(`${gateway_name}`); // Call the modal open function here
-    } else {
+    if(!userDeatils) return null
+    if (selectedPaymentAmount < selectedOption ? selectedOption.minDeposit : 200 || selectedPaymentAmount > 25000) {
       setShowAmountLimit(
-        "Sorry! your amount Invalid. Please enter amount between ৳ 200 and ৳ 25,000."
-      ); // Show limit modal if outside the valid range
+        `Sorry! Your amount is invalid. Please enter an amount between ৳${selectedOption ? selectedOption.minDeposit : 200} and ৳25,000.`
+      );
+      return;
     }
+    
+    setNewAmountPay(selectedPaymentAmount);
+    openModal(`${gateway_name}`);
   };
 
-  // const handlePaymentAmount = async () => {
-  //   // Force context update before opening modal
-  //   setNewAmountPay(selectedPaymentAmount);
-  // };
+    const quickAmounts = [
+    { id: "0", value: 2000, label: "2,000" },
+    { id: "1", value: 5000, label: "5,000" },
+    { id: "2", value: 10000, label: "10,000" },
+    { id: "3", value: 15000, label: "15,000" },
+    { id: "4", value: 20000, label: "20,000" },
+    { id: "5", value: 25000, label: "25,000" },
+    { id: "6", value: 1000, label: "1,000" },
+    { id: "7", value: selectedOption ? selectedOption.minDeposit : 200 , label: selectedOption ? selectedOption.minDeposit : "200" },
+  ];
 
-  const userVarifayed = false;
-
-  console.log(paymentMethods);
-  console.log(Payment);
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setSelectedPayment(null);
-    setShowVerification(false);
-  };
-  const handlePaymentSelect = (method) => {
-    setSelectedPayment(method);
-  };
-
-  // const [activeTab, setActiveTab] = useState('deposit');
+  if (activeModal !== modalName) return null;
+  if (isLoading) return <div className="loading-spinner">Loading...</div>;
 
   return (
     <div className="mcd-popup-page popup-page-wrapper active">
@@ -267,23 +160,15 @@ export default ({ modalName }) => {
             <div className="content mcd-style fixed-tab player-content">
               <div className="tab-btn-section tab-btn-wrap">
                 <div className="tab-btn tab-btn-bar">
-                  <div
-                    className="line"
-                    style={{ width: "50%", transform: "translate(0%, 0px)" }}
-                  ></div>
-
+                  <div className="line" style={{ width: "50%", transform: "translate(0%, 0px)" }}></div>
                   <div className="btn">
                     <div className="text">
                       Deposit
                       <div className="badge"></div>
                     </div>
                   </div>
-
                   <div className="btn">
-                    <div
-                      className="text"
-                      onClick={() => openModal("WidthrawModel")}
-                    >
+                    <div className="text" onClick={() => openModal("WidthrawModel")}>
                       Withdrawal
                       <div className="badge"></div>
                     </div>
@@ -294,7 +179,9 @@ export default ({ modalName }) => {
               <div className="tab-content tab-content-page">
                 <div className="inner-wrap">
                   <div className="inner-box deposit-wallet">
+                    <div className="player-deposit-wrap">
                     <div className="player-deposit-step1">
+                      {/* Bonus Selection */}
                       <div className="option-group select-bar">
                         <label>
                           <span
@@ -306,30 +193,27 @@ export default ({ modalName }) => {
                           ></span>
                           <div>Select Promotion</div>
                         </label>
-                        <select value={selectedOption} onChange={handleChange}>
-                          {options.map((option, index) => (
-                            <option key={index} value={option._id}>
-                              {option.name}
+                        <select 
+                          value={selectedOption?._id || ''} 
+                          onChange={handleBonusSelect}
+                        >
+                          {bonuses.map((bonus) => (
+                            <option key={bonus._id} value={bonus._id}>
+                              {bonus.name}
+                              {bonus.maxBonus ? ` with max bonus ${bonus.maxBonus}` : ''}
+                              {bonus.percentage ? ` (${bonus.percentage}%)` : ''}
                             </option>
                           ))}
                         </select>
                       </div>
 
+                      {/* Verification Notice (if needed) */}
                       {!isVerified && (
                         <div className="tips-info verify-tips tips-info-toggle">
                           <div className="title-box">
                             <h5>
-                              <i
-                                className="tips-icon"
-                                style={{
-                                  maskImage:
-                                    "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-tips-type02.svg?v=1745315543147)",
-                                }}
-                              ></i>
-                              <span>
-                                Below info are required to proceed deposit
-                                request.
-                              </span>
+                              <i className="tips-icon"></i>
+                              <span>Below info are required to proceed deposit request.</span>
                             </h5>
                           </div>
                           <ol className="tips-info-block active">
@@ -345,6 +229,7 @@ export default ({ modalName }) => {
                         </div>
                       )}
 
+                      {/* Payment Methods */}
                       <div className="menu-box">
                         {!isVerified && (
                           <div className="kyc-verify-mask">
@@ -356,47 +241,39 @@ export default ({ modalName }) => {
                           </div>
                         )}
                         <div className="title">
-                          <h2>
-                            <span>Payment Method</span>
-                          </h2>
+                          <h2><span>Payment Method</span></h2>
                         </div>
                         <div className="select-group checkbox-style">
                           <ul className="col3">
-                            {paymentMethods.map((paymentMethod, index) => (
-                              <li key={paymentMethod._id}>
+                            {paymentMethods.map((method) => (
+                              <li key={method._id}>
                                 <input
                                   type="radio"
                                   name="paymentMethod"
-                                  id={`paymentMethod_${paymentMethod._id}`}
-                                  checked={Payment === paymentMethod}
-                                  onChange={() => setPayment(paymentMethod)}
+                                  id={`paymentMethod_${method._id}`}
+                                  checked={Payment?._id === method._id}
+                                  onChange={() => handlePaymentMethodSelect(method)}
                                 />
-                                <label
-                                  htmlFor={`paymentMethod_${paymentMethod._id}`}
-                                >
+                                <label htmlFor={`paymentMethod_${method._id}`}>
                                   <div className="bank">
                                     <img
-                                      alt={paymentMethod.gateway_name}
-                                      src={paymentMethod.image_url}
+                                      alt={method.gateway_name}
+                                      src={method.image_url}
                                       loading="lazy"
                                     />
                                   </div>
-                                  <span>{paymentMethod.gateway_name}</span>
-
-                                  <div className="tag-rebate-money ng-star-inserted">
-                                    <p>
-                                      <span>+</span>3.5<span>%</span>
-                                    </p>
-                                  </div>
+                                  <span>{method.gateway_name}</span>
+                                  {selectedOption?.percentage && (
+                                    <div className="tag-rebate-money">
+                                      <p>
+                                        <span>+</span>{selectedOption.percentage}<span>%</span>
+                                      </p>
+                                    </div>
+                                  )}
                                   <span
-                                    className={`${
-                                      Payment === paymentMethod
-                                        ? "item-icon"
-                                        : ""
-                                    }`}
+                                    className={`${Payment?._id === method._id ? "item-icon" : ""}`}
                                     style={{
-                                      maskImage:
-                                        'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
+                                      maskImage: 'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
                                     }}
                                   ></span>
                                 </label>
@@ -405,108 +282,50 @@ export default ({ modalName }) => {
                           </ul>
                         </div>
 
+                        {/* Payment Type */}
                         <div className="select-group">
-                          <ul className="col2 ">
-                            <li className="ng-star-inserted">
-                              <input
-                                type="radio"
-                                name="paymentType"
-                                id="paymentType_0"
-                                value="বিকাশ পেমেন্ট"
-                                checked={Payment?._id === Payment?._id}
-                              />
-                              <label htmlFor="paymentType_0">
-                                {/* <span>{Payment?.gateway_name}</span> */}
-                                <span>
-                                  {Payment === null
-                                    ? paymentMethods[0]?.gateway_name
-                                    : Payment?.gateway_name}
-                                </span>
-                              </label>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div className="menu-box">
-                        <div className="title">
-                          <h2>
-                            <span>Deposit Channel</span>
-                          </h2>
-                        </div>
-                        <div className="select-group checkbox-style">
                           <ul className="col2">
                             <li>
                               <input
                                 type="radio"
-                                name="depositSetting"
-                                id={`depositSetting_`}
-                                // checked={Mood == Mathod.name}
+                                name="paymentType"
+                                id="paymentType_0"
+                                checked={true}
+                                readOnly
                               />
-                              <label htmlFor={`depositSetting`}>
-                                <span>{payment_type}</span>
+                              <label htmlFor="paymentType_0">
+                                <span>{payment_type || Payment?.payment_type}</span>
                               </label>
                             </li>
-
-                            {/* {paymentTypes.map((type) => (
-                                    <li key={type.id} className="payment-type">
-                                      <input
-                                        type="radio"
-                                        name="paymentType"
-                                        id={`paymentType_${type.id}`}
-                                        checked={paymentType === type.id}
-                                        onChange={() => setPaymentType(type.id)}
-                                      />
-                                      <label htmlFor={`paymentType_${type.id}`}>
-                                        <span>{type.name}</span>
-                                        <span
-                                          className="item-icon"
-                                          style={{
-                                            maskImage:
-                                              "url(https://img.s628b.com/sb/h5/assets/images/player/select-check.svg?v=1745315543147)",
-                                          }}
-                                        ></span>
-                                      </label>
-                                    </li>
-                                  ))} */}
                           </ul>
                         </div>
                       </div>
 
+                      {/* Amount Selection */}
                       <div className="menu-box active">
                         <div className="title">
                           <h2>
                             <span>Amount</span>
-                            <i>৳ 200.00 - ৳ 25,000.00</i>
+                            <i>৳ {selectedOption ? selectedOption.minDeposit : "200.00"}  - ৳ 25,000.00</i>
                           </h2>
                         </div>
                         <div className="select-group style-add-amount">
                           <ul className="col4">
-                            {Amount &&
-                              Amount.map((amount, index) => (
-                                <li key={index}>
-                                  <input
-                                    type="radio"
-                                    name="depositAmount"
-                                    value={amount.value}
-                                    checked={
-                                      selectedPaymentAmount == amount.value
-                                    }
-                                    id={`depositAmount_${amount.id}`}
-                                    placeholder={amount?.value}
-                                    onClick={() => handelAmount(amount.value)}
-                                  />
-                                  {/* {console.log("selectedPaymentAmount",selectedPaymentAmount)}
-                                {console.log("amount.value",amount.value)} */}
-                                  <label
-                                    htmlFor={`depositAmount_${
-                                      index ? index : ""
-                                    }`}
-                                  >
-                                    <span>{amount.value}</span>
-                                  </label>
-                                </li>
-                              ))}
+                            {quickAmounts.map((amount) => (
+                              <li key={amount.id}>
+                                <input
+                                  type="radio"
+                                  name="depositAmount"
+                                  value={amount.value}
+                                  checked={selectedPaymentAmount === amount.value}
+                                  id={`depositAmount_${amount.id}`}
+                                  onChange={() => handleAmountSelection(amount.value)}
+                                />
+                                <label htmlFor={`depositAmount_${amount.id}`}>
+                                  <span>{amount.label}</span>
+                                </label>
+                              </li>
+                            ))}
                           </ul>
                         </div>
                         <div className="input-group money">
@@ -516,32 +335,23 @@ export default ({ modalName }) => {
                               type="text"
                               placeholder="0.00"
                               inputMode="numeric"
-                              value={selectedPaymentAmount}
-                              onChange={(e) =>
-                                setSelectedPaymentAmount(e.target.value)
-                              }
+                              value={selectedPaymentAmount || ''}
+                              onChange={handleAmountChange}
                             />
-                            {selectedPaymentAmount && (
+                            {selectedPaymentAmount > 0 && (
                               <Link
-                                className={`delete-btn ${
-                                  selectedPaymentAmount ? "" : "active"
-                                }`}
-                                onClick={() => setSelectedPaymentAmount("0")}
-                                // style={{
-                                //   maskImage:
-                                //     "url(https://img.s628b.com/sb/h5/assets/images/icon-set/icon-cross-type09.svg?v=1745315543147)",
-                                // }}
+                                className="delete-btn"
+                                onClick={() => setSelectedPaymentAmount(0)}
                               ></Link>
                             )}
                           </div>
                         </div>
 
+                        {/* Important Notes */}
                         <h5>
                           <div className="tips-info note">
                             <i className="tips-icon"></i>
-                            <span
-                              style={{ whiteSpace: "pre-wrap", color: "white" }}
-                            >
+                            <span style={{ whiteSpace: "pre-wrap", color: "white" }}>
                               ১/ব্যক্তিগত তথ্য"-এর অধীনে ক্যাশ আউট করার আগে
                               সর্বোচ্চ ৩টি মোবাইল নম্বর যোগ করুন এবং ভেরিফাই
                               করুন। ২/আপনার ডিপোজিট প্রক্রিয়ার দ্রুত সফল করতে
@@ -558,14 +368,13 @@ export default ({ modalName }) => {
                         </h5>
                       </div>
 
+                      {/* Submit Button */}
                       <div className="member-content">
-                        <div
-                          className="button submit"
-                          onClick={() => handlePaymentSubmit()}
-                        >
+                        <div className="button submit" onClick={handlePaymentSubmit}>
                           <a>Submit</a>
                         </div>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -577,3 +386,5 @@ export default ({ modalName }) => {
     </div>
   );
 };
+
+export default DepositModal;

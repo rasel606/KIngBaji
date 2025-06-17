@@ -407,8 +407,8 @@ const BettingRecordModal = ({ modalName }) => {
                                   <div
                                     className={`item profit ${
                                       item.totalPayout < item.totalBet
-                                        ? "negative"
-                                        : "positive"
+                                        ? "positive"
+                                        : "negative"
                                     }`}
                                   >
                                     <i
@@ -559,19 +559,20 @@ const BettingRecordModal = ({ modalName }) => {
                           </div>
                           <div
                             className={`item profit ${
-                              betTxnRecord.bet - betTxnRecord.payout < 0
+                              betTxnRecord.payout > betTxnRecord.bet 
                                 ? "negative"
                                 : "positive"
                             }`}
                           >
                             <i
-                              style={{
-                                color: betTxnRecord.payout ? "green" : "red",
-                              }}
+                              className={`item profit ${
+                              betTxnRecord.payout > betTxnRecord.bet
+                                ? "negative"
+                                : "positive"
+                            }`}
                             >
                               {(betTxnRecord.payout
-                                ? betTxnRecord.payout
-                                : betTxnRecord.bet
+                                
                               )?.toFixed(2) || "0.00"}
                             </i>
                           </div>

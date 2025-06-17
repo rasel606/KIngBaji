@@ -60,6 +60,7 @@ import TermsAndConditions from "../Pages/TermsAndConditions";
 import Promotions from "../Pages/Promotions";
 import TurnOverPopUp from "./TurnOverPopUp";
 import { UserAllDetails } from "./Axios-API-Service/AxiosAPIService";
+import PromotionDetailsPopUp from "./PromotionDetailsPopUp";
 
 export default () => {
   // const [isOpen, setIsOpen] = useState(false);
@@ -90,6 +91,7 @@ export default () => {
     chat,
     userDeatils,
     setChat,
+    showPromoDetails, setShowPromoDetails
   } = useAuth();
   const { showAmountLimit, setShowAmountLimit } = usePayNow();
   const {
@@ -124,7 +126,7 @@ export default () => {
     try {
       if (userId) {
         const response = await fetch(
-          "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+          "http://localhost:5000/api/v1/launch_gamePlayer",
           {
             method: "POST",
             headers: {
@@ -170,7 +172,7 @@ export default () => {
       await handelUserDetails(userId);
       // if(userId){
       const response = await axios.post(
-        "https://api.kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         { userId }
       );
       setBalance(response.data.balance);
@@ -443,6 +445,13 @@ export default () => {
           title={`${showAmountLimitw ? "Notification" : ""}`}
         />
       )}
+      {showAmountLimitw && (
+        <NotificationMiniPopUp
+          showAmountLimit={showAmountLimitw}
+          setShowAmountLimit={setShowAmountLimitw}
+          title={`${showAmountLimitw ? "Notification" : ""}`}
+        />
+      )}
       {isLoginNotify && (
         <NotificationMiniPopUp
           showAmountLimit={isLoginNotify}
@@ -455,6 +464,12 @@ export default () => {
           showAmountLimit={isLoginNotify}
           setShowAmountLimit={setIsLoginNotify}
           title={`${isPasswordresetNotify ? "Notification" : ""}`}
+        />
+      )}
+      {showPromoDetails && (
+        <PromotionDetailsPopUp
+          showPromoDetails={showPromoDetails}
+          setShowPromoDetails={setShowPromoDetails}
         />
       )}
     </>
