@@ -135,11 +135,11 @@ export default ({ showPromoDetails, setShowPromoDetails }) => {
                     </a>
                     <div className="detail-banner">
                       {/* You can add a default image or use promo-specific images if available */}
-                      <img 
+                      {/* <img 
                         src="https://img.s628b.com/upload/h5Announcement/image_219729.jpg" 
                         alt={showPromoDetails.name} 
                         loading="lazy" 
-                      />
+                      /> */}
                     </div>
                     <div className="pop-title">
                       <h3>{showPromoDetails.name}</h3>
