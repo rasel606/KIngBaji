@@ -128,7 +128,7 @@ const [lastClickedAmount, setLastClickedAmount] = useState(null);
   setNewAmountPay(selectedPaymentAmount);
   // Validate and submit payment
   const handlePaymentSubmit = () => {
-    if (selectedPaymentAmount < 200 || selectedPaymentAmount > 25000) {
+    if (selectedPaymentAmount <selectedOption ? selectedOption.minDeposit : 200 || selectedPaymentAmount > 25000) {
       setShowAmountLimit(
         "Sorry! Your amount is invalid. Please enter an amount between ৳200 and ৳25,000."
       );
