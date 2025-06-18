@@ -6,6 +6,7 @@ import {
   GatWaySystem,
   GatWaySystemWidthrow,
   GetCheckTurnoverEligibility,
+  UserAllDetails,
 } from "../Component/Axios-API-Service/AxiosAPIService";
 import { usePayNow } from "../PaymentContext/PaymenyContext";
 import axios from "axios";
@@ -174,6 +175,22 @@ showEligibilityCheck, setShowEligibilityCheck,
 
 
 
+  const userBalance =userDeatils ? userDeatils.balance : ""
+  const [balance, setBalance] = useState(userBalance);
+
+
+  const handelUserDetails = async (userId) => {
+      const result = await UserAllDetails(userId);
+      setBalance(result.data.user.balance);
+    };
+
+    useEffect(() => {
+      if (userDeatils) {
+        handelUserDetails(userDeatils.userId);
+      }
+    }, [userDeatils,modalName]);
+
+
  const checkEligibility = async () => {
     try {
       setIsChecking(true);
@@ -340,7 +357,7 @@ showEligibilityCheck, setShowEligibilityCheck,
                             <span>Main Wallet</span>
                             <div className="icon-refresh"></div>
                           </div>
-                          <h4>{userDeatils.balance.toFixed(2)}</h4>
+                          <h4>{userDeatils ? balance.toFixed(2) : "0.00"}</h4>
                         </div>
                         <span className="item-bg"></span>
                       </div>
