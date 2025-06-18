@@ -10,10 +10,7 @@ import { usePayNow } from "../PaymentContext/PaymenyContext";
 
 const DepositModal = ({ modalName }) => {
   const { activeModal, openModal, closeModal } = useModal();
-  const {
-    userDeatils,
-    token,
-  } = useAuth();
+  const { userDeatils, token } = useAuth();
   const {
     gateway_name,
     gateway_Number,
@@ -37,16 +34,24 @@ const DepositModal = ({ modalName }) => {
   const [selectedPaymentAmount, setSelectedPaymentAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isVerified] = useState(true);
-  
+const [lastClickedAmount, setLastClickedAmount] = useState(null);
   // Default amounts for quick selection
-
+  const quickAmounts = [
+    { id: "0", value: 2000, label: "2,000" },
+    { id: "1", value: 5000, label: "5,000" },
+    { id: "2", value: 10000, label: "10,000" },
+    { id: "3", value: 15000, label: "15,000" },
+    { id: "4", value: 20000, label: "20,000" },
+    { id: "5", value: 25000, label: "25,000" },
+    { id: "6", value: 1000, label: "1,000" },
+    { id: "7", value:selectedOption ? selectedOption.minDeposit : 200, label: selectedOption ? selectedOption.minDeposit : "200" },
+  ];
 
   // Fetch payment methods
   useEffect(() => {
     const fetchPaymentMethods = async () => {
-      if(!userDeatils) return null
       try {
-        const response = await GatWaySystem({ userId: userDeatils?.userId });
+        const response = await GatWaySystem({ userId: userDeatils.userId });
         if (response.data?.paymentMethods) {
           setPaymentMethods(response.data.paymentMethods);
           // Set default payment method if available
@@ -67,12 +72,11 @@ const DepositModal = ({ modalName }) => {
     if (activeModal === modalName) {
       fetchPaymentMethods();
     }
-  }, [userDeatils, token, modalName, activeModal]);
+  }, [userDeatils.userId, token, modalName, activeModal]);
 
   // Fetch bonuses
   useEffect(() => {
     const fetchBonuses = async () => {
-      if(!userDeatils) return null
       try {
         const response = await GetAllBonuses();
         if (response.data?.data) {
@@ -92,14 +96,18 @@ const DepositModal = ({ modalName }) => {
     }
   }, [modalName, activeModal]);
 
+  console.log("bonuses", selectedOption);
   // Handle amount selection
   const handleAmountSelection = (amount) => {
-    setSelectedPaymentAmount(amount);
+   let updatedAmount = amount;
+    updatedAmount = parseInt(selectedPaymentAmount) + parseInt(amount);
+
+    setSelectedPaymentAmount(updatedAmount);
   };
 
   // Handle manual amount input
   const handleAmountChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
+    const value = e.target.value.replace(/[^0-9]/g, "");
     setSelectedPaymentAmount(value ? parseInt(value) : 0);
   };
 
@@ -114,34 +122,21 @@ const DepositModal = ({ modalName }) => {
   // Handle bonus selection
   const handleBonusSelect = (e) => {
     const selectedBonusId = e.target.value;
-    const bonus = bonuses.find(b => b._id === selectedBonusId);
+    const bonus = bonuses.find((b) => b._id === selectedBonusId);
     setSelectedOption(bonus);
   };
-
+  setNewAmountPay(selectedPaymentAmount);
   // Validate and submit payment
   const handlePaymentSubmit = () => {
-    if(!userDeatils) return null
-    if (selectedPaymentAmount < selectedOption ? selectedOption.minDeposit : 200 || selectedPaymentAmount > 25000) {
+    if (selectedPaymentAmount < 200 || selectedPaymentAmount > 25000) {
       setShowAmountLimit(
-        `Sorry! Your amount is invalid. Please enter an amount between ৳${selectedOption ? selectedOption.minDeposit : 200} and ৳25,000.`
+        "Sorry! Your amount is invalid. Please enter an amount between ৳200 and ৳25,000."
       );
       return;
     }
-    
-    setNewAmountPay(selectedPaymentAmount);
+
     openModal(`${gateway_name}`);
   };
-
-    const quickAmounts = [
-    { id: "0", value: 2000, label: "2,000" },
-    { id: "1", value: 5000, label: "5,000" },
-    { id: "2", value: 10000, label: "10,000" },
-    { id: "3", value: 15000, label: "15,000" },
-    { id: "4", value: 20000, label: "20,000" },
-    { id: "5", value: 25000, label: "25,000" },
-    { id: "6", value: 1000, label: "1,000" },
-    { id: "7", value: selectedOption ? selectedOption.minDeposit : 200 , label: selectedOption ? selectedOption.minDeposit : "200" },
-  ];
 
   if (activeModal !== modalName) return null;
   if (isLoading) return <div className="loading-spinner">Loading...</div>;
@@ -160,7 +155,10 @@ const DepositModal = ({ modalName }) => {
             <div className="content mcd-style fixed-tab player-content">
               <div className="tab-btn-section tab-btn-wrap">
                 <div className="tab-btn tab-btn-bar">
-                  <div className="line" style={{ width: "50%", transform: "translate(0%, 0px)" }}></div>
+                  <div
+                    className="line"
+                    style={{ width: "50%", transform: "translate(0%, 0px)" }}
+                  ></div>
                   <div className="btn">
                     <div className="text">
                       Deposit
@@ -168,7 +166,10 @@ const DepositModal = ({ modalName }) => {
                     </div>
                   </div>
                   <div className="btn">
-                    <div className="text" onClick={() => openModal("WidthrawModel")}>
+                    <div
+                      className="text"
+                      onClick={() => openModal("WidthrawModel")}
+                    >
                       Withdrawal
                       <div className="badge"></div>
                     </div>
@@ -179,7 +180,6 @@ const DepositModal = ({ modalName }) => {
               <div className="tab-content tab-content-page">
                 <div className="inner-wrap">
                   <div className="inner-box deposit-wallet">
-                    <div className="player-deposit-wrap">
                     <div className="player-deposit-step1">
                       {/* Bonus Selection */}
                       <div className="option-group select-bar">
@@ -193,15 +193,19 @@ const DepositModal = ({ modalName }) => {
                           ></span>
                           <div>Select Promotion</div>
                         </label>
-                        <select 
-                          value={selectedOption?._id || ''} 
+                        <select
+                          value={selectedOption?._id || ""}
                           onChange={handleBonusSelect}
                         >
                           {bonuses.map((bonus) => (
                             <option key={bonus._id} value={bonus._id}>
                               {bonus.name}
-                              {bonus.maxBonus ? ` with max bonus ${bonus.maxBonus}` : ''}
-                              {bonus.percentage ? ` (${bonus.percentage}%)` : ''}
+                              {bonus.maxBonus
+                                ? ` with max bonus ${bonus.maxBonus}`
+                                : ""}
+                              {bonus.percentage
+                                ? ` (${bonus.percentage}%)`
+                                : ""}
                             </option>
                           ))}
                         </select>
@@ -213,7 +217,10 @@ const DepositModal = ({ modalName }) => {
                           <div className="title-box">
                             <h5>
                               <i className="tips-icon"></i>
-                              <span>Below info are required to proceed deposit request.</span>
+                              <span>
+                                Below info are required to proceed deposit
+                                request.
+                              </span>
                             </h5>
                           </div>
                           <ol className="tips-info-block active">
@@ -241,7 +248,9 @@ const DepositModal = ({ modalName }) => {
                           </div>
                         )}
                         <div className="title">
-                          <h2><span>Payment Method</span></h2>
+                          <h2>
+                            <span>Payment Method</span>
+                          </h2>
                         </div>
                         <div className="select-group checkbox-style">
                           <ul className="col3">
@@ -252,7 +261,9 @@ const DepositModal = ({ modalName }) => {
                                   name="paymentMethod"
                                   id={`paymentMethod_${method._id}`}
                                   checked={Payment?._id === method._id}
-                                  onChange={() => handlePaymentMethodSelect(method)}
+                                  onChange={() =>
+                                    handlePaymentMethodSelect(method)
+                                  }
                                 />
                                 <label htmlFor={`paymentMethod_${method._id}`}>
                                   <div className="bank">
@@ -266,14 +277,21 @@ const DepositModal = ({ modalName }) => {
                                   {selectedOption?.percentage && (
                                     <div className="tag-rebate-money">
                                       <p>
-                                        <span>+</span>{selectedOption.percentage}<span>%</span>
+                                        <span>+</span>
+                                        {selectedOption.percentage}
+                                        <span>%</span>
                                       </p>
                                     </div>
                                   )}
                                   <span
-                                    className={`${Payment?._id === method._id ? "item-icon" : ""}`}
+                                    className={`${
+                                      Payment?._id === method._id
+                                        ? "item-icon"
+                                        : ""
+                                    }`}
                                     style={{
-                                      maskImage: 'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
+                                      maskImage:
+                                        'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
                                     }}
                                   ></span>
                                 </label>
@@ -294,7 +312,9 @@ const DepositModal = ({ modalName }) => {
                                 readOnly
                               />
                               <label htmlFor="paymentType_0">
-                                <span>{payment_type || Payment?.payment_type}</span>
+                                <span>
+                                  {payment_type || Payment?.payment_type}
+                                </span>
                               </label>
                             </li>
                           </ul>
@@ -306,7 +326,7 @@ const DepositModal = ({ modalName }) => {
                         <div className="title">
                           <h2>
                             <span>Amount</span>
-                            <i>৳ {selectedOption ? selectedOption.minDeposit : "200.00"}  - ৳ 25,000.00</i>
+                            <i>৳ {selectedOption ? selectedOption.minDeposit :"200.00"} - ৳ 25,000.00</i>
                           </h2>
                         </div>
                         <div className="select-group style-add-amount">
@@ -317,9 +337,13 @@ const DepositModal = ({ modalName }) => {
                                   type="radio"
                                   name="depositAmount"
                                   value={amount.value}
-                                  checked={selectedPaymentAmount === amount.value}
+                                  checked={
+                                    selectedPaymentAmount === amount.value
+                                  }
                                   id={`depositAmount_${amount.id}`}
-                                  onChange={() => handleAmountSelection(amount.value)}
+                                  onChange={() =>
+                                    handleAmountSelection(amount.value)
+                                  }
                                 />
                                 <label htmlFor={`depositAmount_${amount.id}`}>
                                   <span>{amount.label}</span>
@@ -335,7 +359,7 @@ const DepositModal = ({ modalName }) => {
                               type="text"
                               placeholder="0.00"
                               inputMode="numeric"
-                              value={selectedPaymentAmount || ''}
+                              value={selectedPaymentAmount || ""}
                               onChange={handleAmountChange}
                             />
                             {selectedPaymentAmount > 0 && (
@@ -351,7 +375,9 @@ const DepositModal = ({ modalName }) => {
                         <h5>
                           <div className="tips-info note">
                             <i className="tips-icon"></i>
-                            <span style={{ whiteSpace: "pre-wrap", color: "white" }}>
+                            <span
+                              style={{ whiteSpace: "pre-wrap", color: "white" }}
+                            >
                               ১/ব্যক্তিগত তথ্য"-এর অধীনে ক্যাশ আউট করার আগে
                               সর্বোচ্চ ৩টি মোবাইল নম্বর যোগ করুন এবং ভেরিফাই
                               করুন। ২/আপনার ডিপোজিট প্রক্রিয়ার দ্রুত সফল করতে
@@ -370,11 +396,13 @@ const DepositModal = ({ modalName }) => {
 
                       {/* Submit Button */}
                       <div className="member-content">
-                        <div className="button submit" onClick={handlePaymentSubmit}>
+                        <div
+                          className="button submit"
+                          onClick={handlePaymentSubmit}
+                        >
                           <a>Submit</a>
                         </div>
                       </div>
-                    </div>
                     </div>
                   </div>
                 </div>
