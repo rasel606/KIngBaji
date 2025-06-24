@@ -65,7 +65,7 @@ export default ({ modalName }) => {
        response.data.groupedNotifications[0].notifications.forEach(notification => {
         console.log(notification);
       if (!notification.read) {
-        playNotificationSound(notification.type);
+        // playNotificationSound(notification.type);
       }
     });
         setMessagesByDate(response.data.groupedNotifications);
@@ -89,18 +89,18 @@ export default ({ modalName }) => {
       fetchMessages();
     }, [userDeatils.userId, token]);
 
-  function playNotificationSound(type) {
-  const soundMap = {
-    deposit_request: ringtone,
-    deposit_approved: ringtone,
-    withdrawal_processed: '/sounds/withdrawal.mp3',
-    balance_added: '/sounds/balance.mp3',
-    general: '/sounds/default.mp3'
-  };
+  // function playNotificationSound(type) {
+  // const soundMap = {
+  //   deposit_request: ringtone,
+  //   deposit_approved: ringtone,
+  //   withdrawal_processed: '/sounds/withdrawal.mp3',
+  //   balance_added: '/sounds/balance.mp3',
+  //   general: '/sounds/default.mp3'
+  // };
 
-  const audio = new Audio(soundMap[type] || soundMap.general);
-  audio.play();
-}
+  // const audio = new Audio(soundMap[type] || soundMap.general);
+  // audio.play();
+// }
 
 // Poll for new notifications every 30 seconds
 setInterval(() => {

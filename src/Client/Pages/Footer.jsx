@@ -3,18 +3,63 @@ import { Link } from "react-router-dom";
 import { useModal } from "../Component/ModelContext";
 
 const Footer = () => {
-    const { activeModal, openModal, closeModal } = useModal();
+  const { activeModal, openModal, closeModal } = useModal();
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpand = () => {
     setExpanded(!expanded);
   };
 
+  const socialMedia = [
+    {
+      name: "telegram",
+      alt: "telegram-channel",
+      href: "",
+      width: 30,
+      height: 30,
+    },
+    {
+      name: "facebook",
+      alt: "facebook",
+      href: "",
+      width: 30,
+      height: 30,
+    },
+    {
+      name: "instagram",
+      alt: "instagram",
+      href: "",
+      width: 30,
+      height: 30,
+    },
+    {
+      name: "twitter",
+      alt: "twitter",
+      href: "",
+      width: 30,
+      height: 30,
+    },
+    {
+      name: "pinterest",
+      alt: "pinterest",
+      href: "",
+      width: 30,
+      height: 30,
+    },
+    {
+      name: "whatsapp",
+      alt: "whatsapp-channel",
+      href: "",
+      width: 30,
+      height: 30,
+    },
+  ];
+
   return (
     <div className="footer">
       <div className="footer-top">
-        <div className="payment-methods">
-          <h2>মুল্য পরিশোধ পদ্ধতি</h2>
+        <div className="pay ng-star-inserted">
+          <h2>Payment Methods</h2>
           <ul>
             {[16, 17, 22, 33, 34, 45, 46, 59, 60, 61].map((num) => (
               <li key={num}>
@@ -28,71 +73,32 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="social-media">
-          <h2>কমিউনিটি ওয়েবসাইট</h2>
-          <ul>
-            <li>
-              <Link>
-                <img
-                  src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/telegram-channel.png?v=1745315543147&source=mcdsrc"
-                  alt="telegram-channel"
-                  loading="lazy"
-                />
-              </Link>
-            </li>
-            <li>
-              <Link>
-                <img
-                  src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/facebook.png?v=1745315543147&source=mcdsrc"
-                  alt="facebook"
-                  loading="lazy"
-                />
-              </Link>
-            </li>
-            <li>
-              <Link
-                
-              >
-                <img
-                  src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/instagram.png?v=1745315543147&source=mcdsrc"
-                  alt="instagram"
-                  loading="lazy"
-                />
-              </Link>
-            </li>
-            <li>
-              <Link
-                
-              >
-                <img
-                  src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/twitter.png?v=1745315543147&source=mcdsrc"
-                  alt="twitter"
-                  loading="lazy"
-                />
-              </Link>
-            </li>
-            <li>
-              <Link
-              >
-                <img
-                  src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/pinterest.png?v=1745315543147&source=mcdsrc"
-                  alt="pinterest"
-                  loading="lazy"
-                />
-              </Link>
-            </li>
-            <li>
-              <Link
-                
-              >
-                <img
-                  src="https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/whatsapp-channel.png?v=1745315543147&source=mcdsrc"
-                  alt="whatsapp-channel"
-                  loading="lazy"
-                />
-              </Link>
-            </li>
-          </ul>
+        <div className="safe">
+          <div>
+            <h2>Community Websites</h2>
+            <ul>
+              {socialMedia.map((platform) => (
+                <li key={platform.name} className="ng-star-inserted">
+                  <a
+                    target="_blank"
+                    href={platform.href}
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      alt={platform.alt}
+                      src={`https://img.s628b.com/sb/h5/assets/images/footer/color-white/social/${platform.alt}.png?v=1750226172178&source=mcdsrc`}
+                      loading="lazy"
+                      width={platform.width}
+                      height={platform.height}
+                      style={{
+                        aspectRatio: `${platform.width} / ${platform.height}`,
+                      }}
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <div className="sponsor-ambassadors">
@@ -114,47 +120,34 @@ const Footer = () => {
       </div>
 
       <div className="footer-logo-wrap">
-        <div className="link-wrap" onClick={()=>openModal("TermsAndConditions")}>
+        <div
+          className="link-wrap"
+          onClick={() => openModal("TermsAndConditions")}
+        >
           <ul>
             <li>
-              <Link>
-                আমাদের সম্পর্কে
-              </Link>
+              <Link>আমাদের সম্পর্কে</Link>
             </li>
             <li>
-              <Link>
-                যোগাযোগ করুন
-              </Link>
+              <Link>যোগাযোগ করুন</Link>
             </li>
             <li>
-              <Link>
-                গোপনীয়তা নীতি
-              </Link>
+              <Link>গোপনীয়তা নীতি</Link>
             </li>
             <li>
-              <Link>
-                শর্তাবলী
-              </Link>
+              <Link>শর্তাবলী</Link>
             </li>
             <li>
-              <Link>
-                বিধি ও প্রবিধান
-              </Link>
+              <Link>বিধি ও প্রবিধান</Link>
             </li>
             <li>
-              <Link>
-                দায়িত্বশীল গেম্বলিং
-              </Link>
+              <Link>দায়িত্বশীল গেম্বলিং</Link>
             </li>
             <li>
-              <Link>
-                সচরাচর জিজ্ঞাস্য
-              </Link>
+              <Link>সচরাচর জিজ্ঞাস্য</Link>
             </li>
             <li>
-              <Link>
-                এফিলিয়েট
-              </Link>
+              <Link>এফিলিয়েট</Link>
             </li>
           </ul>
         </div>

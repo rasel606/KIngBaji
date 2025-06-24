@@ -2243,6 +2243,7 @@ html.is-desktop .nav-category {
 
 .footer-top div a {
   display: block;
+  width: 6.4vw
 }
 
 .footer-top .pay,
@@ -2261,6 +2262,7 @@ html.is-desktop .nav-category {
 
 .footer-top .safe img {
   height: 6.4vw;
+  width: 6.4;
   opacity: 0.7;
 }
 
@@ -10418,6 +10420,20 @@ font-weight: 700;
   color: #fff;
   font-size: 4vw;
   text-shadow: 0 0 2.6666666667vw rgba(0, 0, 0, 0.5);
+}
+.games .jackpot-banner-wrapper .jackpot-banner-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 1.0666666667vw;
+}
+.games .game-jackpot-number-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Helvetica Neue;
 }
 
 .games .jackpot span {
@@ -21271,7 +21287,7 @@ header.empty .header-right-btn-group {
 }
 
 .record-item .item.profit.positive {
-  color: #28b849;
+  color: red;
 }
 
 .record-item .item + .item {
@@ -21428,7 +21444,7 @@ a.record-item:active {
 }
 
 .betting-record-sum .item.positive .text {
-  color: #28b849;
+  color: red;
 }
 
 .accordion-card-wrap {
@@ -28904,6 +28920,7 @@ header .logo {
 
 .footer-top .safe img {
   opacity: 0.7;
+  width:6.4vw
 }
 
 .footer-top .sponsor-ambassadors .official-partner {

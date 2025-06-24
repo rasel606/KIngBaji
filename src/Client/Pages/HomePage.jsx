@@ -121,19 +121,20 @@ const [loading,
     handleRefresh();
     setLoading(true);
     const url = "https://api.kingbaji.live/api/v1/New-table-categories";
-    const response = fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mood: "no-cors",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setLoading(false);
-        setData(data);
-        console.log(data);
-      });
+    const response = axios.get(url);
+
+    // setData(response);
+    console.log(response);
+    if (response.length) {
+      setData(response.data);
+      setLoading(false);
+    }
+      // .then((response) => response.json())
+      // .then((data) => {
+      //   setLoading(false);
+      //   setData(data);
+      //   console.log(data);
+      // });
   }, []);
 
   useEffect(() => {

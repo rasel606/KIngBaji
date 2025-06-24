@@ -1,37 +1,96 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useModal } from "../Component/ModelContext";
+
 import {
-  GetBettingHistoryByMember,
-  GetGameCategory,
+
   GetGameProvider,
+  GetGameCategory
 } from "../Component/Axios-API-Service/AxiosAPIService";
+import { useModal } from "../Component/ModelContext";
 import { useAuth } from "../Component/AuthContext";
+import axios from "axios";
+
+
+const API_BASE_URL = "https://api.kingbaji.live/api/v1";
+
+// Fetch betting summary
+export const GetBettingRecordSummary = async ({ userId, dateRange, site, product, status }) => {
+  const params = new URLSearchParams({ userId, dateRange, status });
+  
+  if (site && site.length > 0) params.append('platform', site.join(','));
+  if (product && product.length > 0) params.append('gameType', product.join(','));
+  
+  try {
+    const response = await axios.get(`https://api.kingbaji.live/api/v1/betting-records/summary`, { params });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching betting summary:", error);
+    throw error;
+  }
+};
+
+// Fetch betting details
+export const GetBettingRecordDetails = async ({ userId, date, platform, gameType, status }) => {
+  const params = { userId, date, platform, gameType, status };
+  
+  try {
+    const response = await axios.get(`https://api.kingbaji.live/api/v1/betting-records/detail`, { params });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching betting details:", error);
+    throw error;
+  }
+};
+
+// Fetch game providers
+export const GetGameProviders = async () => {
+  try {
+    const response = await GetGameProvider();
+    if (response.data.errCode === 200) {
+      return response.data.data;
+    }
+    throw new Error('Failed to fetch providers');
+  } catch (error) {
+    console.error("Error fetching game providers:", error);
+    return [];
+  }
+};
+
+// Fetch game categories
+export const GetGameCategorys = async () => {
+  try {
+    const response = await GetGameCategory();
+    if (response.data.errCode === 200) {
+      return response.data.data;
+    }
+    throw new Error('Failed to fetch categories');
+  } catch (error) {
+    console.error("Error fetching game categories:", error);
+    return [];
+  }
+};
 
 const BettingRecordModal = ({ modalName }) => {
   const { activeModal, closeModal } = useModal();
   const { userId } = useAuth();
 
-  // State management
-  const [state, setState] = useState({
-    isFilterOpen: false,
-    filters: {
-      product: [],
-      site: [],
-      date: "last7days",
-    },
-    activeTab: "settled",
-    providers: [],
-    categories: [],
-    bettingData: [],
-    selectedRecord: null,
-    showDetails: false,
-    isLoading: false,
-    error: null,
+  // Separate state management
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    product: [],
+    site: [],
+    date: "last7days"
   });
 
-  console.log(state.bettingData);
 
-  // Memoized date options
+  console.log(filters);
+  const [activeTab, setActiveTab] = useState("settled");
+  const [providers, setProviders] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [bettingData, setBettingData] = useState([]);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const dateOptions = useMemo(
     () => [
       { label: "Today", value: "today" },
@@ -41,102 +100,143 @@ const BettingRecordModal = ({ modalName }) => {
     []
   );
 
-  // Update state helper
-  const updateState = (updates) => {
-    setState((prev) => ({ ...prev, ...updates }));
-  };
-
-  // Fetch data when modal becomes active or filters change
+  // Fetch initial data when modal becomes active
   useEffect(() => {
     if (activeModal === modalName) {
-      fetchData();
+      fetchInitialData();
     }
-  }, [activeModal, modalName, state.filters, state.activeTab]);
+  }, [activeModal, modalName]);
 
-  // Main data fetching function
-  const fetchData = async () => {
-    updateState({ isLoading: true, error: null });
-
+  const fetchInitialData = async () => {
+    setIsLoading(true);
+    setError(null);
+    
     try {
-      const [providersRes, categoriesRes] = await Promise.all([
-        GetGameProvider(),
-        GetGameCategory(),
+      const [providersData, categoriesData] = await Promise.all([
+        GetGameProviders(),
+        GetGameCategorys()
       ]);
-
-      const providers =
-        providersRes.data?.errCode === 200 ? providersRes.data.data : [];
-      const categories =
-        categoriesRes.data?.errCode === 200 ? categoriesRes.data.data : [];
-
-      const historyRes = await GetBettingHistoryByMember({
-        userId,
-        filters: state.filters,
-        status: state.activeTab === "settled" ? "settled" : "unsettled",
-      });
-
-      if (historyRes.data?.success) {
-        updateState({
-          providers,
-          categories,
-          bettingData: historyRes.data.data || [],
-        });
-      } else {
-        throw new Error("Failed to load betting history");
-      }
+      
+      setProviders(providersData);
+      setCategories(categoriesData);
+      fetchBettingData();
     } catch (error) {
-      console.error("Error fetching data:", error);
-      updateState({ error: error.message });
-    } finally {
-      updateState({ isLoading: false });
+      console.error("Error fetching initial data:", error);
+      setError("Failed to load game data");
+      setIsLoading(false);
     }
   };
+
+  // Fetch betting data when filters or tab change
+  const fetchBettingData = async () => {
+    if (!userId) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const summaryData = await GetBettingRecordSummary({
+        userId,
+        dateRange: filters.date,
+        site: filters.site,
+        product: filters.product,
+        status: activeTab
+      });
+
+      // Transform data to match frontend structure
+      const groupedData = summaryData.reduce((acc, record) => {
+        if (!acc[record.date]) {
+          acc[record.date] = [];
+        }
+        
+        acc[record.date].push({
+          provider_name: record.platform,
+          category_name: record.gameType,
+          totalTurnover: record.turnover,
+          profitLoss: record.profitLoss
+        });
+        
+        return acc;
+      }, {});
+      
+      const transformedData = Object.keys(groupedData).map(date => ({
+        date,
+        items: groupedData[date]
+      }));
+
+      setBettingData(transformedData);
+    } catch (error) {
+      console.error("Error fetching betting data:", error);
+      setError("Failed to load betting records");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (providers.length > 0 && categories.length > 0) {
+      fetchBettingData();
+    }
+  }, [filters, activeTab, providers, categories]);
 
   // Filter handlers
   const handleFilterChange = (filterType, value) => {
-    setState((prev) => {
+    setFilters(prev => {
       if (filterType === "date") {
-        return {
-          ...prev,
-          filters: { ...prev.filters, date: value },
-        };
+        return { ...prev, date: value };
       }
-
+      
       return {
         ...prev,
-        filters: {
-          ...prev.filters,
-          [filterType]: prev.filters[filterType].includes(value)
-            ? prev.filters[filterType].filter((v) => v !== value)
-            : [...prev.filters[filterType], value],
-        },
+        [filterType]: prev[filterType].includes(value)
+          ? prev[filterType].filter(v => v !== value)
+          : [...prev[filterType], value]
       };
     });
   };
-  const [showRecordDetails, setShowRecordDetails] = useState(false);
-  const toggleFilter = () => {
-    updateState({ isFilterOpen: !state.isFilterOpen });
-  };
 
-  // Record detail handlers
-  const viewRecordDetails = (record) => {
-    updateState({ selectedRecord: record, showDetails: true });
-    setShowRecordDetails(true);
-  };
-
-  const closeDetails = () => {
-    updateState({ showDetails: false, selectedRecord: null });
+  // View record details
+  const viewRecordDetails = async (item, groupDate) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const details = await GetBettingRecordDetails({
+        userId,
+        date: groupDate,
+        platform: item.provider_name,
+        gameType: item.category_name,
+        status: activeTab
+      });
+      
+      setSelectedRecord({
+        ...item,
+        date: groupDate,
+        records: details.map(record => ({
+          ...record,
+          start_time: record.start_time,
+          game: record.game,
+          turnover: record.turnover,
+          profitLoss: record.profitLoss,
+          status: record.status
+        }))
+      });
+    } catch (error) {
+      console.error("Error fetching record details:", error);
+      setError("Failed to load record details");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Helper functions
   const getProviderName = (providerCode) => {
-    const provider = state.providers.find(
-      (p) => p.providercode === providerCode
-    );
+    const provider = providers.find(p => p.providercode === providerCode);
     return provider ? provider.company : providerCode;
   };
 
   const getCategoryName = (categoryType) => {
-    const category = state.categories.find((c) => c.g_type === categoryType);
+    const category = categories.find(c => c.g_type === categoryType);
     return category ? category.category_name : categoryType;
   };
 
@@ -148,21 +248,28 @@ const BettingRecordModal = ({ modalName }) => {
     });
   };
 
-  // Calculate totals for display
-  // const calculateTotals = () => {
-  //   return state.bettingData.reduce(
-  //     (acc, dateGroup) => {
-  //       dateGroup.items.forEach((item) => {
-  //         acc.totalTurnover += item.totalTurnover || 0;
-  //         acc.totalProfit += item.totalBet - item.totalPayout || 0;
-  //       });
-  //       return acc;
-  //     },
-  //     { totalTurnover: 0, totalProfit: 0 }
-  //   );
-  // };
+  const formatTime = (dateString) => {
+    return new Date(dateString).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
-  // const { totalTurnover, totalProfit } = calculateTotals();
+  // Calculate totals for display
+  const calculateTotals = () => {
+    return bettingData.reduce(
+      (acc, dateGroup) => {
+        dateGroup.items.forEach((item) => {
+          acc.totalTurnover += item.totalTurnover || 0;
+          acc.totalProfit += item.profitLoss || 0;
+        });
+        return acc;
+      },
+      { totalTurnover: 0, totalProfit: 0 }
+    );
+  };
+
+  const { totalTurnover, totalProfit } = calculateTotals();
 
   if (activeModal !== modalName) return null;
 
@@ -177,8 +284,9 @@ const BettingRecordModal = ({ modalName }) => {
             <div className="popup-page-main__title">Betting Records</div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
+          
           <div className="popup-page-main__container">
-            <div className="content mcd-style fixed-tab player-content ">
+            <div className="content mcd-style fixed-tab player-content">
               {/* Tab Navigation */}
               <div className="tab-btn-section">
                 <div className="tab-btn tab-btn-page">
@@ -187,23 +295,19 @@ const BettingRecordModal = ({ modalName }) => {
                     style={{
                       width: "50%",
                       transform: `translate(${
-                        state.activeTab === "settled" ? 0 : 100
+                        activeTab === "settled" ? 0 : 100
                       }%, 0px)`,
                     }}
                   ></div>
                   <div
-                    className={`btn ${
-                      state.activeTab === "settled" ? "active" : ""
-                    }`}
-                    onClick={() => updateState({ activeTab: "settled" })}
+                    className={`btn ${activeTab === "settled" ? "active" : ""}`}
+                    onClick={() => setActiveTab("settled")}
                   >
                     <div className="text">Settled</div>
                   </div>
                   <div
-                    className={`btn ${
-                      state.activeTab === "unsettled" ? "active" : ""
-                    }`}
-                    onClick={() => updateState({ activeTab: "unsettled" })}
+                    className={`btn ${activeTab === "unsettled" ? "active" : ""}`}
+                    onClick={() => setActiveTab("unsettled")}
                   >
                     <div className="text">Unsettled</div>
                   </div>
@@ -212,11 +316,9 @@ const BettingRecordModal = ({ modalName }) => {
 
               {/* Filter Panel */}
               <div className="content">
-                <div
-                  className={`searchpage ${state.isFilterOpen ? "active" : ""}`}
-                >
+                <div className={`searchpage ${isFilterOpen ? "active" : ""}`}>
                   <div className="search-top-info">
-                    <div className="back" onClick={toggleFilter}>
+                    <div className="back" onClick={() => setIsFilterOpen(false)}>
                       <span className="item-icon"></span>
                       Back
                     </div>
@@ -232,12 +334,12 @@ const BettingRecordModal = ({ modalName }) => {
                     <div className="search-checkbox-group check-group">
                       <h2>Platform</h2>
                       <ul>
-                        {state.providers.map((provider) => (
+                        {providers.map((provider) => (
                           <li key={provider.providercode}>
                             <input
                               type="checkbox"
                               id={`site-${provider.providercode}`}
-                              checked={state.filters.site.includes(
+                              checked={filters.site.includes(
                                 provider.providercode
                               )}
                               onChange={() =>
@@ -259,19 +361,19 @@ const BettingRecordModal = ({ modalName }) => {
                     <div className="search-checkbox-group check-group">
                       <h2>Game Type</h2>
                       <ul>
-                        {state.categories.map((category) => (
-                          <li key={category.g_type}>
+                        {categories.map((category) => (
+                          <li key={category.category_name}>
                             <input
                               type="checkbox"
-                              id={`product-${category.g_type}`}
-                              checked={state.filters.product.includes(
-                                category.g_type
+                              id={`product-${category.category_name}`}
+                              checked={filters.product.includes(
+                                category.category_name
                               )}
                               onChange={() =>
-                                handleFilterChange("product", category.g_type)
+                                handleFilterChange("product", category.category_name)
                               }
                             />
-                            <label htmlFor={`product-${category.g_type}`}>
+                            <label htmlFor={`product-${category.category_name}`}>
                               {category.category_name}
                             </label>
                           </li>
@@ -289,7 +391,7 @@ const BettingRecordModal = ({ modalName }) => {
                               type="radio"
                               id={`date-${option.value}`}
                               name="date"
-                              checked={state.filters.date === option.value}
+                              checked={filters.date === option.value}
                               onChange={() =>
                                 handleFilterChange("date", option.value)
                               }
@@ -304,7 +406,7 @@ const BettingRecordModal = ({ modalName }) => {
                   </div>
 
                   <div className="searchpage-bar">
-                    <button className="button" onClick={toggleFilter}>
+                    <button className="button" onClick={() => setIsFilterOpen(false)}>
                       Confirm
                     </button>
                   </div>
@@ -312,14 +414,14 @@ const BettingRecordModal = ({ modalName }) => {
 
                 {/* Quick Filter Header */}
                 <div className="container">
-                  <div className="filter-header" onClick={toggleFilter}>
+                  <div className="filter-header" onClick={() => setIsFilterOpen(true)}>
                     <div className="tab filter-tab">
                       <ul className="item-ani">
                         {dateOptions.map((option) => (
                           <li
                             key={option.value}
                             className={
-                              state.filters.date === option.value
+                              filters.date === option.value
                                 ? "active"
                                 : ""
                             }
@@ -341,25 +443,24 @@ const BettingRecordModal = ({ modalName }) => {
                 <div className="inner-wrap">
                   <div className="inner-box">
                     {/* Summary Bar */}
-                    <div className="betting-summary-bar">
-                      {/* <div className="summary-item">
+                    {/* <div className="betting-summary-bar">
+                      <div className="summary-item">
                         <span className="label">Total Turnover:</span>
                         <span className="value">
                           {totalTurnover.toFixed(2)}
                         </span>
-                      </div> */}
-                      {/* <div className="summary-item">
+                      </div>
+                      <div className="summary-item">
                         <span className="label">Total Profit/Loss:</span>
                         <span
                           className={`value ${
                             totalProfit < 0 ? "negative" : "positive"
                           }`}
-                          style={{ color: totalProfit < 0 ? "red" : "green" }}
                         >
                           {totalProfit.toFixed(2)}
                         </span>
-                      </div> */}
-                    </div>
+                      </div>
+                    </div> */}
 
                     {/* Records List Header */}
                     <div className="record-item betting-record-list item-title">
@@ -371,12 +472,12 @@ const BettingRecordModal = ({ modalName }) => {
 
                     {/* Records List */}
                     <div className="list list-betting-record">
-                      {state.isLoading ? (
+                      {isLoading ? (
                         <div className="loading-message">Loading...</div>
-                      ) : state.error ? (
-                        <div className="error-message">{state.error}</div>
-                      ) : state.bettingData.length > 0 ? (
-                        state.bettingData.map((dateGroup) => (
+                      ) : error ? (
+                        <div className="error-message">{error}</div>
+                      ) : bettingData.length > 0 ? (
+                        bettingData.map((dateGroup) => (
                           <React.Fragment key={dateGroup.date}>
                             <div className="date-title">
                               <div className="date">
@@ -390,39 +491,25 @@ const BettingRecordModal = ({ modalName }) => {
                               <div
                                 className="list-content"
                                 key={`${dateGroup.date}-${index}`}
-                                onClick={() => viewRecordDetails(item)}
+                                onClick={() => viewRecordDetails(item, dateGroup.date)}
                               >
                                 <div className="record-item">
                                   <div className="item platform">
+                                    {console.log(item)}
                                     {getProviderName(item.provider_name)}
                                   </div>
                                   <div className="item type">
                                     {getCategoryName(item.category_name)}
                                   </div>
                                   <div className="item bet">
-                                    <i>
-                                      {item.totalTurnover?.toFixed(2) || "0.00"}
-                                    </i>
+                                    {item.totalTurnover?.toFixed(2) || "0.00"}
                                   </div>
                                   <div
-                                    className={`item profit ${
-                                      item.totalPayout < item.totalBet
-                                        ? "positive"
-                                        : "negative"
-                                    }`}
+                                    className={`item ${
+                                      item.profitLoss >= 0 ? "green" : "positive"
+                                    } profit`}
                                   >
-                                    <i
-                                      style={{
-                                        color:
-                                          item.totalBet - item.totalPayout < 0
-                                            ? "red"
-                                            : "green",
-                                      }}
-                                    >
-                                      {(
-                                        item.totalBet - item.totalPayout
-                                      )?.toFixed(2) || "0.00"}
-                                    </i>
+                                    {item.profitLoss?.toFixed(2) || "0.00"}
                                   </div>
                                   <div className="list-arrow"></div>
                                 </div>
@@ -451,140 +538,100 @@ const BettingRecordModal = ({ modalName }) => {
       </div>
 
       {/* Record Details Modal */}
-      {showRecordDetails && state.showDetails && state.selectedRecord && (
+      {selectedRecord && (
         <div className="popup">
           <div className="popup__content">
             <div className="dialog-wrap">
               <div className="top-bar">
                 <div className="bar-title">Betting Record Details</div>
-                <div
-                  className="back-btn"
-                  onClick={() => setShowRecordDetails(false)}
-                ></div>
+                <div className="back-btn" onClick={() => setSelectedRecord(null)}></div>
               </div>
+              
               <div className="betting-record-sum">
                 <div className="item platform">
                   <div className="title">Platform</div>
                   <div className="text">
-                    {getProviderName(state.selectedRecord.site)}
+                    {getProviderName(selectedRecord.provider_name)}
                   </div>
                 </div>
                 <div className="item type">
                   <div className="title">Game Type</div>
                   <div className="text">
-                    {getCategoryName(state.selectedRecord.product)}
+                    {getCategoryName(selectedRecord.category_name)}
                   </div>
                 </div>
                 <div className="item bet">
                   <div className="title">Turnover</div>
                   <div className="text">
-                    {state.selectedRecord.totalTurnover?.toFixed(2) || "0.00"}
+                    {selectedRecord.totalTurnover?.toFixed(2) || "0.00"}
                   </div>
                 </div>
-                <div
-                  className={`item profit ${
-                    state.selectedRecord.totalBet -
-                      state.selectedRecord.totalPayout <
-                    0
-                      ? "negative"
-                      : ""
-                  }`}
-                >
+                <div className={`item ${
+                              selectedRecord.profitLoss >= 0 ? "negative" : "positive"
+                            } profit`}>
                   <div className="title">Profit/Loss</div>
                   <div className="text">
-                    <i
-                      style={{
-                        color:
-                          state.selectedRecord.totalBet -
-                            state.selectedRecord.totalPayout <
-                          0
-                            ? "red"
-                            : "green",
-                      }}
-                    >
-                      {(
-                        state.selectedRecord.totalBet -
-                        state.selectedRecord.totalPayout
-                      )?.toFixed(2) || "0.00"}
-                    </i>
+                    <span >
+                      {selectedRecord.profitLoss?.toFixed(2) || "0.00"}
+                    </span>
                   </div>
                 </div>
               </div>
+              
               <div className="record-item betting-record-list item-title">
                 <div className="item time">Txn Date</div>
                 <div className="item game">Game</div>
                 <div className="item bet">Turnover</div>
                 <div className="item profit">Profit/Loss</div>
               </div>
+              
               <div className="list list-betting-record">
-                {/* <div className="list-bar"> */}
                 <div className="date-title">
                   <div className="date">
                     <span className="item-icon"></span>
-                    {formatDate(state.selectedRecord.date)}
+                    {formatDate(selectedRecord.date)}
                   </div>
                   <div className="time-zone">GMT+6</div>
                 </div>
-                {/* <div className="tip-area">
-                    <div className="tip-icon"></div>
-                    <div className="tip-box">
-                      <span>Revocation</span>
-                      <span>Void</span>
-                      <span>Refund</span>
-                    </div>
-                  </div> */}
-                {/* </div> */}
+                
                 <div className="list-content">
                   <ul>
-                    {state.selectedRecord?.records?.map(
-                      (betTxnRecord, index) => (
+                    {isLoading ? (
+                      <li className="loading-message">Loading details...</li>
+                    ) : selectedRecord.records && selectedRecord.records.length > 0 ? (
+                      selectedRecord.records.map((record, index) => (
                         <li
                           key={index}
                           className={`betting-record-list record-item ${
-                            state.activeTab === "settled"
-                              ? "settled"
-                              : "unsettled"
+                            record.status === "settled" ? "settled" : "unsettled"
                           }`}
                         >
                           <div className="item time">
-                            {new Date(
-                              betTxnRecord.end_time
-                            ).toLocaleTimeString()}
+                            {formatTime(record.start_time)}
                           </div>
                           <div className="item game">
-                            {betTxnRecord?.game_id}
+                            {record.game}
                           </div>
                           <div className="item bet">
-                            <i>{betTxnRecord.turnover?.toFixed(2) || "0.00"}</i>
+                            {record.turnover?.toFixed(2) || "0.00"}
                           </div>
                           <div
                             className={`item profit ${
-                              betTxnRecord.payout > betTxnRecord.bet 
-                                ? "negative"
-                                : "positive"
+                              record.profitLoss >= 0 ?  "negative" : "positive"
                             }`}
                           >
-                            <i
-                              className={`item profit ${
-                              betTxnRecord.payout > betTxnRecord.bet
-                                ? "negative"
-                                : "positive"
-                            }`}
-                            >
-                              {(betTxnRecord.payout
-                                
-                              )?.toFixed(2) || "0.00"}
-                            </i>
+                            {record.profitLoss?.toFixed(2) || "0.00"}
                           </div>
-                          <div className="item-status">
+                          {/* <div className="item-status">
                             <div className="tags">
-                              {state.activeTab === "settled"
-                                ? "Settled"
-                                : "Unsettled"}
+                              {record.status || 
+                                (activeTab === "settled" ? "Settled" : "Unsettled")}
                             </div>
-                          </div>
+                          </div> */}
                         </li>
-                      )
+                      ))
+                    ) : (
+                      <li className="no-result">No transaction details found</li>
                     )}
                   </ul>
                 </div>
@@ -598,7 +645,6 @@ const BettingRecordModal = ({ modalName }) => {
 };
 
 export default BettingRecordModal;
-
 // import React, { useEffect, useState } from "react";
 // import { useModal } from "../Component/ModelContext";
 // import {

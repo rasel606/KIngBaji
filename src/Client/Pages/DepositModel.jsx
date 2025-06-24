@@ -72,7 +72,7 @@ const [lastClickedAmount, setLastClickedAmount] = useState(null);
     if (activeModal === modalName) {
       fetchPaymentMethods();
     }
-  }, [userDeatils.userId, token, modalName, activeModal]);
+  }, [userDeatils, token, modalName, activeModal]);
 
   // Fetch bonuses
   useEffect(() => {

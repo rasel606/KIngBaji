@@ -352,13 +352,13 @@ export default () => {
               className="register-button"
               onClick={() => openModal("SingUpModal")}
             >
-              <p>Sign Up</p>
+              <p style={{ color: "white" }}>Sign Up</p>
             </div>
             <div
               className="login-button"
               onClick={() => openModal("LoginModel")}
             >
-              <p>Login</p>
+              <p style={{ color: "white" }}>Login</p>
             </div>
           </div>
         )}
