@@ -10,7 +10,7 @@ import { useAuth } from "../Component/AuthContext";
 import axios from "axios";
 
 
-const API_BASE_URL = "https://api.kingbaji.live/api/v1";
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
 // Fetch betting summary
 export const GetBettingRecordSummary = async ({ userId, dateRange, site, product, status }) => {
@@ -20,7 +20,7 @@ export const GetBettingRecordSummary = async ({ userId, dateRange, site, product
   if (product && product.length > 0) params.append('gameType', product.join(','));
   
   try {
-    const response = await axios.get(`https://api.kingbaji.live/api/v1/betting-records/summary`, { params });
+    const response = await axios.get(`http://localhost:5000/api/v1/betting-records/summary`, { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching betting summary:", error);
@@ -33,7 +33,7 @@ export const GetBettingRecordDetails = async ({ userId, date, platform, gameType
   const params = { userId, date, platform, gameType, status };
   
   try {
-    const response = await axios.get(`https://api.kingbaji.live/api/v1/betting-records/detail`, { params });
+    const response = await axios.get(`http://localhost:5000/api/v1/betting-records/detail`, { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching betting details:", error);
