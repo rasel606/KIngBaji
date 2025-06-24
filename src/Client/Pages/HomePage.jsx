@@ -120,21 +120,22 @@ const [loading,
   useEffect(() => {
     handleRefresh();
     setLoading(true);
-    const url = "https://api.kingbaji.live/api/v1/New-table-categories";
-    const response = axios.get(url);
+    const url = "http://localhost:5000/api/v1/New-table-categories";
+    const response = fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mood: "no-cors",
+    })
 
-    // setData(response);
-    console.log(response);
-    if (response.length) {
-      setData(response.data);
-      setLoading(false);
-    }
-      // .then((response) => response.json())
-      // .then((data) => {
-      //   setLoading(false);
-      //   setData(data);
-      //   console.log(data);
-      // });
+    setData(response.data);
+      .then((response) => response.json())
+      .then((data) => {
+        setLoading(false);
+        setData(data);
+        console.log(data);
+      });
   }, []);
 
   useEffect(() => {
@@ -173,7 +174,7 @@ const [loading,
     try {
       if (userId) {
         const response = await fetch(
-          "https://api.kingbaji.live/api/v1/launch_gamePlayer",
+          "http://localhost:5000/api/v1/launch_gamePlayer",
           {
             method: "POST",
             headers: {
@@ -222,7 +223,7 @@ const [loading,
       await handelUserDetails(userId);
       // if(userId){
       const response = await axios.post(
-        "https://api.kingbaji.live/api/v1/user_balance",
+        "http://localhost:5000/api/v1/user_balance",
         { userId }
       );
       setBalance(response.data.balance);
