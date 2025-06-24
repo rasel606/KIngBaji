@@ -128,8 +128,6 @@ const [loading,
       },
       mood: "no-cors",
     })
-
-    
       .then((response) => response.json())
       .then((data) => {
         setLoading(false);
